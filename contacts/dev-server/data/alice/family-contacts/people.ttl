@@ -1,0 +1,4 @@
+<http://localhost:3000/alice/family-contacts/Person/dea08a0d-e99c-43e0-9b8d-673c125b18f1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/family-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Gerson Knops".
+<http://localhost:3000/alice/family-contacts/Person/2de2abdb-7b66-4b80-b6df-3676462f57aa/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/family-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Yvonne Bijl".

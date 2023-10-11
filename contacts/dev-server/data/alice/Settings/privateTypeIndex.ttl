@@ -1,0 +1,4 @@
+<#id1697053098899> <http://www.w3.org/ns/solid/terms#instance> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook>.
+<#id1697053118448> <http://www.w3.org/ns/solid/terms#instance> <http://localhost:3000/alice/family-contacts/index.ttl#this>;
+    <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook>.
