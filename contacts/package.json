@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "pod": "community-solid-server --config @css:config/file-no-setup.json --seededPodConfigJson ./dev-server/seed.json --rootFilePath ./dev-server/data"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/solid-contrib/data-modules#readme",
   "devDependencies": {
+    "@solid/community-server": "^6.1.0",
     "@types/jest": "^29.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",

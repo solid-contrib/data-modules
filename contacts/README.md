@@ -20,3 +20,10 @@ npm test
 npm run build
 ```
 
+## Development server
+
+You can start a development solid server with example data via:
+
+```shell
+npm run pod
+```
