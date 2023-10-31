@@ -6,3 +6,5 @@ Solid Data Modules
 [conventions](https://pdsinterop.org/conventions/overview/)
 
 [plan](https://hackmd.io/@michielbdejong/HyIMjmoxn)
+
+Weekly meeting: Fridays 4pm-5pm Amsterdam time in https://meet.jit.si/solid-data-modules
