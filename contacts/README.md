@@ -1,11 +1,12 @@
 # Contacts - Solid Data Module
 
-A data module to manage address books and contacts in Solid Pods in an interoperable way.
+A data module to manage address books and contacts in Solid Pods in an
+interoperable way.
 
 ## Specification
 
-- [Client-to-Client specification](https://github.com/solid/contacts) for contacts.
-
+- [Client-to-Client specification](https://github.com/solid/contacts) for
+  contacts.
 - [Description of SolidOS de-facto standard](https://pdsinterop.org/conventions/addressbook/).
 
 ## Run tests
@@ -28,7 +29,8 @@ You can start a development solid server via:
 npm run pod
 ```
 
-This will seed an account and pod for test user alice. Find the credentials of that account in [./dev-server/seed.json](./dev-server/seed.json)
+This will seed an account and pod for test user alice. Find the credentials of
+that account in [./dev-server/seed.json](./dev-server/seed.json)
 
 To add some example data to this pod run
 
