@@ -22,8 +22,24 @@ npm run build
 
 ## Development server
 
-You can start a development solid server with example data via:
+You can start a development solid server via:
 
 ```shell
 npm run pod
 ```
+
+This will seed an account and pod for test user alice. Find the credentials of that account in [./dev-server/seed.json](./dev-server/seed.json)
+
+To add some example data to this pod run
+
+```shell
+npm run pod:init
+```
+
+To start from scratch run
+
+```shell
+npm run pod:clean
+```
+
+and repeat from start of the section.
