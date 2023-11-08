@@ -69,13 +69,15 @@ export class ContactsModule {
   private queryContacts(
     nameEmailIndex: Node | null,
     addressBookNode: NamedNode,
-  ) {
+  ): Contact[] {
     return nameEmailIndex && isNamedNode(nameEmailIndex)
       ? this.store
           .each(null, vcard("inAddressBook"), addressBookNode, nameEmailIndex)
           .filter((it): it is NamedNode => isNamedNode(it))
           .map((node) => ({
-            name: this.store.anyValue(node, vcard("fn"), null, nameEmailIndex),
+            name:
+              this.store.anyValue(node, vcard("fn"), null, nameEmailIndex) ??
+              "",
             uri: node.value,
           }))
       : [];
@@ -89,6 +91,9 @@ export interface AddressBook {
   groups: Group[];
 }
 
-export interface Contact {}
+export interface Contact {
+  uri: string;
+  name: string;
+}
 
 export interface Group {}
