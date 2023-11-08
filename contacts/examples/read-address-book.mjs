@@ -1,4 +1,4 @@
-import {ContactsModule} from '../dist/index.js';
+import {ContactsModule} from '../dist/rdflib/index.js';
 
 const contacts = new ContactsModule({})
 

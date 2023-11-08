@@ -1,5 +1,5 @@
-import { ContactsModule } from "./";
 import { when } from "jest-when";
+import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
 
 describe("read existing address book", () => {
   it("empty address book returns the title and uri but no contacts and groups", async () => {
@@ -7,7 +7,7 @@ describe("read existing address book", () => {
 
     const authenticatedFetch = jest.fn();
 
-    const contacts = new ContactsModule({
+    const contacts = new ContactsModuleRdfLib({
       fetch: authenticatedFetch,
     });
 
@@ -52,7 +52,7 @@ describe("read existing address book", () => {
 
     const authenticatedFetch = jest.fn();
 
-    const contacts = new ContactsModule({
+    const contacts = new ContactsModuleRdfLib({
       fetch: authenticatedFetch,
     });
 
