@@ -45,3 +45,13 @@ npm run pod:clean
 ```
 
 and repeat from start of the section.
+
+## Example scripts
+
+Example scripts how to use the module can be found in [./examples](./examples) folder. To run a script call it like
+
+```shell
+node ./examples/read-address-book.mjs
+```
+
+The development server needs to be running for this!
