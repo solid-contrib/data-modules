@@ -1,14 +1,6 @@
-import {
-  Fetcher,
-  graph,
-  IndexedFormula,
-  isNamedNode,
-  NamedNode,
-  sym,
-  Node,
-} from "rdflib";
-import { dc, vcard } from "./namespaces";
-import { AddressBook, Contact, ContactsModule, ModuleConfig } from "..";
+import { Fetcher, graph, IndexedFormula, Node, sym } from "rdflib";
+import { AddressBook, ContactsModule, ModuleConfig } from "..";
+import { AddressBookQuery } from "./AddressBookQuery";
 
 export class ContactsModuleRdfLib implements ContactsModule {
   private fetcher: Fetcher;
@@ -23,10 +15,13 @@ export class ContactsModuleRdfLib implements ContactsModule {
     let addressBookNode = sym(uri);
     await this.fetchNode(addressBookNode);
 
-    const { title, nameEmailIndex } = this.queryAddressBook(addressBookNode);
+    let query = new AddressBookQuery(this.store, addressBookNode);
+    const title = query.queryTitle();
+    const nameEmailIndex = query.queryNameEmailIndex();
+
     await this.fetchNode(nameEmailIndex);
 
-    const contacts = this.queryContacts(nameEmailIndex, addressBookNode);
+    const contacts = query.queryContacts();
     return {
       uri,
       title,
@@ -39,44 +34,5 @@ export class ContactsModuleRdfLib implements ContactsModule {
     if (node) {
       await this.fetcher.load(node.value);
     }
-  }
-
-  private queryAddressBook(addressBookNode: NamedNode) {
-    let addressBookDoc = addressBookNode.doc();
-    const title =
-      this.store.anyValue(
-        addressBookNode,
-        dc("title"),
-        undefined,
-        addressBookDoc,
-      ) ?? "";
-
-    const nameEmailIndex = this.store.any(
-      addressBookNode,
-      vcard("nameEmailIndex"),
-      undefined,
-      addressBookDoc,
-    );
-    return {
-      title,
-      nameEmailIndex,
-    };
-  }
-
-  private queryContacts(
-    nameEmailIndex: Node | null,
-    addressBookNode: NamedNode,
-  ): Contact[] {
-    return nameEmailIndex && isNamedNode(nameEmailIndex)
-      ? this.store
-          .each(null, vcard("inAddressBook"), addressBookNode, nameEmailIndex)
-          .filter((it): it is NamedNode => isNamedNode(it))
-          .map((node) => ({
-            name:
-              this.store.anyValue(node, vcard("fn"), null, nameEmailIndex) ??
-              "",
-            uri: node.value,
-          }))
-      : [];
   }
 }
