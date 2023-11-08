@@ -1,4 +1,12 @@
-import { Fetcher, graph, IndexedFormula, sym } from "rdflib";
+import {
+  Fetcher,
+  graph,
+  IndexedFormula,
+  isNamedNode,
+  NamedNode,
+  sym,
+} from "rdflib";
+import { dc, vcard } from "./namespaces";
 
 interface ModuleConfig {
   fetch: typeof global.fetch;
@@ -15,39 +23,40 @@ export class ContactsModule {
 
   async readAddressBook(uri: string): Promise<AddressBook> {
     await this.fetcher.load(uri);
+    let addressBookNode = sym(uri);
+    let addressBookDoc = addressBookNode.doc();
     const title =
       this.store.anyValue(
-        sym(uri),
-        sym("http://purl.org/dc/elements/1.1/title"),
+        addressBookNode,
+        dc("title"),
         undefined,
-        sym(uri).doc(),
+        addressBookDoc,
       ) ?? "";
 
-    const nameEmailIndex = this.store.anyValue(
-      sym(uri),
-      sym("http://www.w3.org/2006/vcard/ns#nameEmailIndex"),
+    const nameEmailIndex = this.store.any(
+      addressBookNode,
+      vcard("nameEmailIndex"),
       undefined,
-      sym(uri).doc(),
+      addressBookDoc,
     );
     if (nameEmailIndex) {
-      await this.fetcher.load(nameEmailIndex);
+      await this.fetcher.load(nameEmailIndex.value);
     }
-    const contacts = nameEmailIndex
-      ? this.store
-          .each(
-            null,
-            sym("http://www.w3.org/2006/vcard/ns#inAddressBook"),
-            sym(uri),
-            sym(nameEmailIndex),
-          )
-          .map((node) => ({
-            name: this.store.anyValue(
-              sym(node.value),
-              sym("http://www.w3.org/2006/vcard/ns#fn"),
-            ),
-            uri: node.value,
-          }))
-      : [];
+    const contacts =
+      nameEmailIndex && isNamedNode(nameEmailIndex)
+        ? this.store
+            .each(null, vcard("inAddressBook"), addressBookNode, nameEmailIndex)
+            .filter((it): it is NamedNode => isNamedNode(it))
+            .map((node) => ({
+              name: this.store.anyValue(
+                node,
+                vcard("fn"),
+                null,
+                nameEmailIndex,
+              ),
+              uri: node.value,
+            }))
+        : [];
     return {
       uri,
       title,
