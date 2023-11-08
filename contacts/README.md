@@ -51,6 +51,7 @@ and repeat from start of the section.
 Example scripts how to use the module can be found in [./examples](./examples) folder. To run a script call it like
 
 ```shell
+npm run build
 node ./examples/read-address-book.mjs
 ```
 

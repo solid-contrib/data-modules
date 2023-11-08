@@ -22,10 +22,36 @@ export class ContactsModule {
         undefined,
         sym(uri).doc(),
       ) ?? "";
+
+    const nameEmailIndex = this.store.anyValue(
+      sym(uri),
+      sym("http://www.w3.org/2006/vcard/ns#nameEmailIndex"),
+      undefined,
+      sym(uri).doc(),
+    );
+    if (nameEmailIndex) {
+      await this.fetcher.load(nameEmailIndex);
+    }
+    const contacts = nameEmailIndex
+      ? this.store
+          .each(
+            null,
+            sym("http://www.w3.org/2006/vcard/ns#inAddressBook"),
+            sym(uri),
+            sym(nameEmailIndex),
+          )
+          .map((node) => ({
+            name: this.store.anyValue(
+              sym(node.value),
+              sym("http://www.w3.org/2006/vcard/ns#fn"),
+            ),
+            uri: node.value,
+          }))
+      : [];
     return {
       uri,
       title,
-      contacts: [],
+      contacts,
       groups: [],
     };
   }
