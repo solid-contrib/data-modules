@@ -1,0 +1,7 @@
+<http://localhost:3000/alice/my-contacts/index.ttl#this> <http://www.w3.org/2006/vcard/ns#includesGroup> <#this>.
+<#this> a <http://www.w3.org/2006/vcard/ns#Group>;
+    <http://www.w3.org/2006/vcard/ns#fn> "friends";
+    <http://www.w3.org/2006/vcard/ns#hasMember> <http://localhost:3000/alice/my-contacts/Person/b03d5982-63da-469a-9f29-4794268fdaa3/index.ttl#this>, <http://localhost:3000/alice/my-contacts/Person/ce50941f-1e07-4951-bdd7-7ced287ca976/index.ttl#this>, <http://localhost:3000/alice/my-contacts/Person/82965378-1c3b-434b-ba25-436cd5541658/index.ttl#this>.
+<http://localhost:3000/alice/my-contacts/Person/b03d5982-63da-469a-9f29-4794268fdaa3/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Wazir Bakr Naifeh".
+<http://localhost:3000/alice/my-contacts/Person/ce50941f-1e07-4951-bdd7-7ced287ca976/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Jennifer B. Simpson".
+<http://localhost:3000/alice/my-contacts/Person/82965378-1c3b-434b-ba25-436cd5541658/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Tobias Herrmann".

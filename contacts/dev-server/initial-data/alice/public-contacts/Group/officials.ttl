@@ -1,0 +1,6 @@
+<http://localhost:3000/alice/public-contacts/index.ttl#this> <http://www.w3.org/2006/vcard/ns#includesGroup> <#this>.
+<#this> a <http://www.w3.org/2006/vcard/ns#Group>;
+    <http://www.w3.org/2006/vcard/ns#fn> "officials";
+    <http://www.w3.org/2006/vcard/ns#hasMember> <http://localhost:3000/alice/public-contacts/Person/811fe7e5-1593-4590-86df-2b516d960010/index.ttl#this>, <http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this>.
+<http://localhost:3000/alice/public-contacts/Person/811fe7e5-1593-4590-86df-2b516d960010/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Alphonsine Migneault".
+<http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Molly Braaten".
