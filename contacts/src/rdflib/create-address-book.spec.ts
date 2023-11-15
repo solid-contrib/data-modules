@@ -1,9 +1,15 @@
 import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
 import { mockNotFound } from "../test-support/mockResponses";
 
+import { v4 as uuid } from "uuid";
+
+jest.mock("uuid");
+
 describe("create address book", () => {
   it("creates the address book resource", async () => {
     const authenticatedFetch = jest.fn();
+
+    (uuid as jest.Mock).mockReturnValue("c1eabcdb-fd69-4889-9ab2-f06be49d27d3");
 
     const contacts = new ContactsModuleRdfLib({
       fetch: authenticatedFetch,

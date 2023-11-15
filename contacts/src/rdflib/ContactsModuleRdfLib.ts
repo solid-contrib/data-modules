@@ -10,6 +10,7 @@ import {
 import { AddressBook, ContactsModule, ModuleConfig } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { vcard } from "./namespaces";
+import { v4 as uuid } from "uuid";
 
 interface CreateAddressBookCommand {
   container: string;
@@ -58,8 +59,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async createAddressBook({ container }: CreateAddressBookCommand) {
-    const uri =
-      container + "c1eabcdb-fd69-4889-9ab2-f06be49d27d3/index.ttl#this";
+    const uri = `${container}${uuid()}/index.ttl#this`;
     await this.updater.update(
       [],
       [
