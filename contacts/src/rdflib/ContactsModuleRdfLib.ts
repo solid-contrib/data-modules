@@ -2,6 +2,7 @@ import {
   Fetcher,
   graph,
   IndexedFormula,
+  lit,
   Node,
   st,
   sym,
@@ -9,7 +10,7 @@ import {
 } from "rdflib";
 import { AddressBook, ContactsModule, ModuleConfig } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
-import { vcard } from "./namespaces";
+import { dc, vcard } from "./namespaces";
 import { v4 as uuid } from "uuid";
 
 interface CreateAddressBookCommand {
@@ -58,8 +59,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
     }
   }
 
-  async createAddressBook({ container }: CreateAddressBookCommand) {
+  async createAddressBook({ container, name }: CreateAddressBookCommand) {
     const uri = `${container}${uuid()}/index.ttl#this`;
+    const nameEmailIndexUri = `${container}${uuid()}/people.ttl`;
+    const groupIndexUri = `${container}${uuid()}/groups.ttl`;
     await this.updater.update(
       [],
       [
@@ -69,6 +72,14 @@ export class ContactsModuleRdfLib implements ContactsModule {
           vcard("AddressBook"),
           sym(uri).doc(),
         ),
+        st(sym(uri), dc("title"), lit(name), sym(uri).doc()),
+        st(
+          sym(uri),
+          vcard("nameEmailIndex"),
+          sym(nameEmailIndexUri),
+          sym(uri).doc(),
+        ),
+        st(sym(uri), vcard("groupIndex"), sym(groupIndexUri), sym(uri).doc()),
       ],
     );
     return uri;
