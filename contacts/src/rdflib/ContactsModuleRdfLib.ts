@@ -12,21 +12,26 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async readAddressBook(uri: string): Promise<AddressBook> {
-    let addressBookNode = sym(uri);
+    const addressBookNode = sym(uri);
     await this.fetchNode(addressBookNode);
 
-    let query = new AddressBookQuery(this.store, addressBookNode);
+    const query = new AddressBookQuery(this.store, addressBookNode);
     const title = query.queryTitle();
     const nameEmailIndex = query.queryNameEmailIndex();
+    const groupIndex = query.queryGroupIndex();
 
-    await this.fetchNode(nameEmailIndex);
+    await Promise.allSettled([
+      this.fetchNode(nameEmailIndex),
+      this.fetchNode(groupIndex),
+    ]);
 
     const contacts = query.queryContacts();
+    const groups = query.queryGroups();
     return {
       uri,
       title,
       contacts,
-      groups: [],
+      groups,
     };
   }
 
