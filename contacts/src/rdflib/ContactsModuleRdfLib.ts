@@ -60,9 +60,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async createAddressBook({ container, name }: CreateAddressBookCommand) {
-    const uri = `${container}${uuid()}/index.ttl#this`;
-    const nameEmailIndexUri = `${container}${uuid()}/people.ttl`;
-    const groupIndexUri = `${container}${uuid()}/groups.ttl`;
+    const id = uuid();
+    const uri = `${container}${id}/index.ttl#this`;
+    const nameEmailIndexUri = `${container}${id}/people.ttl`;
+    const groupIndexUri = `${container}${id}/groups.ttl`;
     await this.updater.update(
       [],
       [
@@ -82,6 +83,12 @@ export class ContactsModuleRdfLib implements ContactsModule {
         st(sym(uri), vcard("groupIndex"), sym(groupIndexUri), sym(uri).doc()),
       ],
     );
+    await this.fetcher.webOperation("PUT", nameEmailIndexUri, {
+      contentType: "text/turtle",
+    });
+    await this.fetcher.webOperation("PUT", groupIndexUri, {
+      contentType: "text/turtle",
+    });
     return uri;
   }
 }

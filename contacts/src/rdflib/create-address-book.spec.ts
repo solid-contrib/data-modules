@@ -2,7 +2,10 @@ import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
 import { mockNotFound } from "../test-support/mockResponses";
 
 import { v4 as uuid } from "uuid";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import {
+  expectPatchRequest,
+  expectPutEmptyTurtleFile,
+} from "../test-support/expectRequests";
 
 jest.mock("uuid");
 
@@ -10,7 +13,9 @@ describe("create address book", () => {
   it("creates the address book resource", async () => {
     const authenticatedFetch = jest.fn();
 
-    (uuid as jest.Mock).mockReturnValue("c1eabcdb-fd69-4889-9ab2-f06be49d27d3");
+    (uuid as jest.Mock).mockReturnValueOnce(
+      "c1eabcdb-fd69-4889-9ab2-f06be49d27d3",
+    );
 
     const contacts = new ContactsModuleRdfLib({
       fetch: authenticatedFetch,
@@ -19,6 +24,14 @@ describe("create address book", () => {
     mockNotFound(
       authenticatedFetch,
       "https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/index.ttl",
+    );
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/people.ttl",
+    );
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/groups.ttl",
     );
 
     const createdUri = await contacts.createAddressBook({
@@ -37,6 +50,14 @@ describe("create address book", () => {
 <https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/index.ttl#this> <http://www.w3.org/2006/vcard/ns#nameEmailIndex> <https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/people.ttl> .
 <https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/index.ttl#this> <http://www.w3.org/2006/vcard/ns#groupIndex> <https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/groups.ttl> .
  }`,
+    );
+    expectPutEmptyTurtleFile(
+      authenticatedFetch,
+      "https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/people.ttl",
+    );
+    expectPutEmptyTurtleFile(
+      authenticatedFetch,
+      "https://pod.test/alice/c1eabcdb-fd69-4889-9ab2-f06be49d27d3/groups.ttl",
     );
   });
 });

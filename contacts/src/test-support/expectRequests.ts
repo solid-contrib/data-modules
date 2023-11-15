@@ -13,3 +13,18 @@ export function expectPatchRequest(
   const body = updateRequest[1].body;
   expect(body.trim()).toEqual(expectedBody);
 }
+
+export function expectPutEmptyTurtleFile(
+  authenticatedFetch: jest.Mock,
+  url: string,
+) {
+  expect(authenticatedFetch).toHaveBeenCalledWith(url, expect.anything());
+
+  const calls = authenticatedFetch.mock.calls;
+  const updateRequest = calls.find(
+    (it) => it[0] === url && it[1].method === "PUT",
+  );
+  expect(updateRequest).toBeDefined();
+  const body = updateRequest[1].body;
+  expect(body).toEqual(undefined);
+}
