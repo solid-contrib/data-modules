@@ -1,29 +1,29 @@
-import {
-  Fetcher,
-  graph,
-  IndexedFormula,
-  Node,
-  sym,
-  UpdateManager,
-} from "rdflib";
-import { AddressBook, ContactsModule, ModuleConfig } from "..";
+import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
+import { AddressBook, ContactsModule } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { createAddressBook } from "./createAddressBook";
+import { executeUpdate } from "./executeUpdate";
 
 interface CreateAddressBookCommand {
   container: string;
   name: string;
 }
 
+interface ModuleConfig {
+  store: IndexedFormula;
+  fetcher: Fetcher;
+  updater: UpdateManager;
+}
+
 export class ContactsModuleRdfLib implements ContactsModule {
-  private fetcher: Fetcher;
-  private store: IndexedFormula;
-  private updater: UpdateManager;
+  private readonly fetcher: Fetcher;
+  private readonly store: IndexedFormula;
+  private readonly updater: UpdateManager;
 
   constructor(config: ModuleConfig) {
-    this.store = graph();
-    this.fetcher = new Fetcher(this.store, { fetch: config.fetch });
-    this.updater = new UpdateManager(this.store);
+    this.store = config.store;
+    this.fetcher = config.fetcher;
+    this.updater = config.updater;
   }
 
   async readAddressBook(uri: string): Promise<AddressBook> {
@@ -58,16 +58,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async createAddressBook({ container, name }: CreateAddressBookCommand) {
     const operation = createAddressBook(container, name);
-    await this.updater.update(operation.deletions, operation.insertions);
-    operation.filesToCreate.map((file) => {
-      this.createEmptyTurtleFile(file.uri);
-    });
+    await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
-  }
-
-  private async createEmptyTurtleFile(uri: string) {
-    await this.fetcher.webOperation("PUT", uri, {
-      contentType: "text/turtle",
-    });
   }
 }

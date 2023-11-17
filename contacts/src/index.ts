@@ -1,7 +1,3 @@
-export interface ModuleConfig {
-  fetch: typeof global.fetch;
-}
-
 export interface ContactsModule {
   readAddressBook(uri: string): Promise<AddressBook>;
 }
