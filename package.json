@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "npx lerna run build",
-    "publish": "npm run build && npx lerna publish --registry http://localhost:4873"
+    "publish": "npm run build && npx lerna publish"
   },
   "devDependencies": {
     "lerna": "^7.4.2",
