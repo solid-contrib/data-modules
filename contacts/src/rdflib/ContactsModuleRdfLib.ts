@@ -2,16 +2,13 @@ import {
   Fetcher,
   graph,
   IndexedFormula,
-  lit,
   Node,
-  st,
   sym,
   UpdateManager,
 } from "rdflib";
 import { AddressBook, ContactsModule, ModuleConfig } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
-import { dc, vcard } from "./namespaces";
-import { v4 as uuid } from "uuid";
+import { createAddressBook } from "./createAddressBook";
 
 interface CreateAddressBookCommand {
   container: string;
@@ -60,35 +57,17 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async createAddressBook({ container, name }: CreateAddressBookCommand) {
-    const id = uuid();
-    const uri = `${container}${id}/index.ttl#this`;
-    const nameEmailIndexUri = `${container}${id}/people.ttl`;
-    const groupIndexUri = `${container}${id}/groups.ttl`;
-    await this.updater.update(
-      [],
-      [
-        st(
-          sym(uri),
-          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          vcard("AddressBook"),
-          sym(uri).doc(),
-        ),
-        st(sym(uri), dc("title"), lit(name), sym(uri).doc()),
-        st(
-          sym(uri),
-          vcard("nameEmailIndex"),
-          sym(nameEmailIndexUri),
-          sym(uri).doc(),
-        ),
-        st(sym(uri), vcard("groupIndex"), sym(groupIndexUri), sym(uri).doc()),
-      ],
-    );
-    await this.fetcher.webOperation("PUT", nameEmailIndexUri, {
+    const operation = createAddressBook(container, name);
+    await this.updater.update(operation.deletions, operation.insertions);
+    operation.filesToCreate.map((file) => {
+      this.createEmptyTurtleFile(file.uri);
+    });
+    return operation.uri;
+  }
+
+  private async createEmptyTurtleFile(uri: string) {
+    await this.fetcher.webOperation("PUT", uri, {
       contentType: "text/turtle",
     });
-    await this.fetcher.webOperation("PUT", groupIndexUri, {
-      contentType: "text/turtle",
-    });
-    return uri;
   }
 }
