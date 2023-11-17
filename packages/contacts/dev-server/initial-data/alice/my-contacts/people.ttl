@@ -1,0 +1,14 @@
+<http://localhost:3000/alice/my-contacts/Person/ce50941f-1e07-4951-bdd7-7ced287ca976/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Jennifer B. Simpson".
+<http://localhost:3000/alice/my-contacts/Person/c71a360e-a164-45db-9a0d-c81a314e0866/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Mark C. Joseph".
+<http://localhost:3000/alice/my-contacts/Person/a635e47d-8a66-4d21-a83b-2088513edd67/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Kacey Nielsen".
+<http://localhost:3000/alice/my-contacts/Person/b03d5982-63da-469a-9f29-4794268fdaa3/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Wazir Bakr Naifeh".
+<http://localhost:3000/alice/my-contacts/Person/ad949651-5fbd-4c2f-b0bf-05821e937bed/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Sophia Azevedo Silva".
+<http://localhost:3000/alice/my-contacts/Person/82965378-1c3b-434b-ba25-436cd5541658/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Tobias Herrmann".
+<http://localhost:3000/alice/my-contacts/Person/08c4ca88-0b12-4cf3-ae53-95469d1705fc/index.ttl#this> <http://www.w3.org/2006/vcard/ns#inAddressBook> <http://localhost:3000/alice/my-contacts/index.ttl#this>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Segan Aziz".

@@ -1,0 +1,5 @@
+<http://localhost:3000/alice/my-contacts/index.ttl#this> <http://www.w3.org/2006/vcard/ns#includesGroup> <http://localhost:3000/alice/my-contacts/Group/colleagues.ttl#this>, <http://localhost:3000/alice/my-contacts/Group/friends.ttl#this>.
+<http://localhost:3000/alice/my-contacts/Group/colleagues.ttl#this> a <http://www.w3.org/2006/vcard/ns#Group>;
+    <http://www.w3.org/2006/vcard/ns#fn> "colleagues".
+<http://localhost:3000/alice/my-contacts/Group/friends.ttl#this> a <http://www.w3.org/2006/vcard/ns#Group>;
+    <http://www.w3.org/2006/vcard/ns#fn> "friends".

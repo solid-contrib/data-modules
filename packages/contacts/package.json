@@ -1,0 +1,48 @@
+{
+  "name": "@solid-data-modules/contacts",
+  "version": "0.1.0",
+  "description": "A library to manage address books and contacts in Solid Pods",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "pod": "community-solid-server --config @css:config/file.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
+    "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
+    "pod:clean": "rm -rf ./dev-server/data"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solid-contrib/data-modules.git"
+  },
+  "keywords": [
+    "solid",
+    "data-modules",
+    "contacts"
+  ],
+  "author": {
+    "name": "Angelo Veltens",
+    "email": "angelo.veltens@online.de",
+    "url": "https://angelo.veltens.org/profile/card#me"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/solid-contrib/data-modules/issues"
+  },
+  "homepage": "https://github.com/solid-contrib/data-modules#readme",
+  "devDependencies": {
+    "@solid/community-server": "^7.0.1",
+    "@types/jest": "^29.5.8",
+    "@types/jest-when": "^3.5.5",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
+    "jest": "^29.7.0",
+    "jest-when": "^3.6.0",
+    "prettier": "^3.0.3",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "rdflib": "^2.2.32"
+  }
+}

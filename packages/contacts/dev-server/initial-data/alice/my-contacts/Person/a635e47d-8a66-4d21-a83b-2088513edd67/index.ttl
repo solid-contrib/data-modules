@@ -1,0 +1,4 @@
+<#this> <http://www.w3.org/2006/vcard/ns#fn> "Kacey Nielsen";
+    a <http://www.w3.org/2006/vcard/ns#Individual>;
+    <http://www.w3.org/2006/vcard/ns#role> "Executive Director".
+<http://localhost:3000/alice/my-contacts/Person/a635e47d-8a66-4d21-a83b-2088513edd67/index.ttl> <http://purl.org/dc/terms/created> "2023-10-11T19:28:25Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
