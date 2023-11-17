@@ -1,0 +1,3 @@
+<#this> <http://www.w3.org/2006/vcard/ns#fn> "Sophia Azevedo Silva";
+    a <http://www.w3.org/2006/vcard/ns#Individual>.
+<http://localhost:3000/alice/my-contacts/Person/ad949651-5fbd-4c2f-b0bf-05821e937bed/index.ttl> <http://purl.org/dc/terms/created> "2023-10-11T19:29:55Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.

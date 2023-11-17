@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "demos/*",
+    "shared/*",
+    "packages/**/*"
+  ],
+  "scripts": {
+    "build": "npx lerna run build",
+    "publish": "npm run build && npx lerna publish --registry http://localhost:4873"
+  },
+  "devDependencies": {
+    "lerna": "^7.4.2",
+    "nx": "^17.1.2"
+  }
+}

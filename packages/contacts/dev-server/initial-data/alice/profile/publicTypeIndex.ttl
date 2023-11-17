@@ -1,0 +1,2 @@
+<#id1697053287983> <http://www.w3.org/ns/solid/terms#instance> <http://localhost:3000/alice/public-contacts/index.ttl#this>;
+    <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook>.

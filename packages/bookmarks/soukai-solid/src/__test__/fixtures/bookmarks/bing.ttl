@@ -1,0 +1,16 @@
+@prefix : <#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix bookm: <http://www.w3.org/2002/01/bookmark#>.
+@prefix crdt: <https://vocab.noeldemartin.com/crdt/>.
+
+:it
+    a bookm:Bookmark;
+    rdfs:label "Bing";
+    bookm:hasTopic "Search Engine";
+    bookm:recalls <https://bing.com>.
+:it-metadata
+    a crdt:Metadata;
+    crdt:createdAt "2023-11-08T13:00:35.986Z"^^xsd:dateTime;
+    crdt:resource :it;
+    crdt:updatedAt "2023-11-08T13:00:35.986Z"^^xsd:dateTime.
