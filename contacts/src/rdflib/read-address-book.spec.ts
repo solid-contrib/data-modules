@@ -1,5 +1,5 @@
-import { when } from "jest-when";
 import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
+import { mockTurtleResponse } from "../test-support/mockResponses";
 
 describe("read existing address book", () => {
   it("empty address book returns the title and uri but no contacts and groups", async () => {
@@ -187,17 +187,3 @@ describe("read existing address book", () => {
     ]);
   });
 });
-
-function mockTurtleResponse(fetch: jest.Mock, uri: string, ttl: string) {
-  when(fetch)
-    .calledWith(uri, expect.anything())
-    .mockResolvedValue({
-      ok: true,
-      status: 200,
-      statusText: "OK",
-      headers: new Headers({
-        "Content-Type": "text/turtle",
-      }),
-      text: () => Promise.resolve(ttl),
-    } as Response);
-}
