@@ -3,3 +3,4 @@ node_modules/
 apps/
 dist/
 .nx
+.DS_Store
