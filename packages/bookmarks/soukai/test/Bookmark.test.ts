@@ -2,10 +2,10 @@ import { tap } from "@noeldemartin/utils";
 import { readFileSync } from "fs";
 import { bootModels, setEngine } from "soukai";
 import { SolidEngine } from "soukai-solid";
-import { Bookmark } from "../modules/Bookmarks";
-import StubFetcher from "../utils/StubFetcher";
-import RDFDocument from "../utils/solid/RDFDocument";
-import RDFResourceProperty from "../utils/solid/RDFResourceProperty";
+import { Bookmark } from "../src/modules/Bookmarks";
+import StubFetcher from "../src/utils/StubFetcher";
+import RDFDocument from "../src/utils/solid/RDFDocument";
+import RDFResourceProperty from "../src/utils/solid/RDFResourceProperty";
 
 export function loadFixture<T = string>(name: string): T {
   const raw = readFileSync(`${__dirname}/fixtures/${name}`).toString();
