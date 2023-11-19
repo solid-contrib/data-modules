@@ -4,8 +4,8 @@ import { tap } from "@noeldemartin/utils";
 import { readFileSync } from "fs";
 import { bootModels, setEngine } from "soukai";
 import { SolidEngine } from "soukai-solid";
-import { VisitedPlace } from "../modules/VisitedPlace";
-import StubFetcher from "../utils/StubFetcher";
+import { VisitedPlace } from "../src/modules/VisitedPlace";
+import StubFetcher from "../src/utils/StubFetcher";
 
 export function loadFixture<T = string>(name: string): T {
   const raw = readFileSync(`${__dirname}/fixtures/${name}`).toString();

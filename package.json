@@ -7,8 +7,8 @@
     "packages/**/*"
   ],
   "scripts": {
-    "test": "npx lerna run test",
     "build": "npx lerna run build",
+    "test": "npm run build && npx lerna run test",
     "publish": "npm run build && npx lerna publish"
   },
   "devDependencies": {
