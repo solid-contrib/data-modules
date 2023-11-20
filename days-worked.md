@@ -37,4 +37,4 @@ Code: https://github.com/pondersource/remotestorage-widget/
 
 ## Contacts Module for rdflib.js
 Code: https://github.com/solid-contrib/data-modules/tree/contacts/contacts
-Days Angelo: 2
+Days Angelo: 1
