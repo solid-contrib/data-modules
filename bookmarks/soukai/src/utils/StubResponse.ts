@@ -1,5 +1,3 @@
-// import StubHeaders from '@/testing/lib/stubs/StubHeaders';
-
 import StubHeaders from "./StubHeaders";
 
 export default class StubResponse implements Response {

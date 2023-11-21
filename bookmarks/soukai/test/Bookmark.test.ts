@@ -1,14 +1,11 @@
-import RDFDocument from "@/utils/solid/RDFDocument";
-import RDFResourceProperty from "@/utils/solid/RDFResourceProperty";
 import { tap } from "@noeldemartin/utils";
 import { readFileSync } from "fs";
 import { bootModels, setEngine } from "soukai";
 import { SolidEngine } from "soukai-solid";
-import { Bookmark } from "../modules/Bookmarks";
-import StubFetcher from "../utils/StubFetcher";
-// import { fakeDocumentUrl } from "@/testing/utils";
-// import RDFDocument from "soukai-solid/src/solid/RDFDocument"
-// import RDFResourceProperty from "soukai-solid/src/solid/RDFResourceProperty"
+import { Bookmark } from "../src/modules/Bookmarks";
+import StubFetcher from "../src/utils/StubFetcher";
+import RDFDocument from "../src/utils/solid/RDFDocument";
+import RDFResourceProperty from "../src/utils/solid/RDFResourceProperty";
 
 export function loadFixture<T = string>(name: string): T {
   const raw = readFileSync(`${__dirname}/fixtures/${name}`).toString();
@@ -16,7 +13,7 @@ export function loadFixture<T = string>(name: string): T {
   return /\.json(ld)$/.test(name) ? JSON.parse(raw) : raw;
 }
 
-const fixture = (name: string) => loadFixture(`bookmarks/${name}`);
+const fixture = (name: string) => loadFixture(name);
 
 describe("Bookmark CRUD", () => {
   let fetch: jest.Mock<Promise<Response>, [RequestInfo, RequestInit?]>;
@@ -48,13 +45,18 @@ describe("Bookmark CRUD", () => {
     bookmark.metadata.createdAt = date;
     bookmark.metadata.updatedAt = date;
 
-    await bookmark.save();
+    const res = await bookmark.save();
 
     // Assert
+    expect(res.label).toEqual(label);
+    expect(res.topic).toEqual(topic);
+    expect(res.link).toEqual(link);
+
     expect(fetch).toHaveBeenCalledTimes(2);
-    
+    // console.log("🚀 ~ file: Bookmark.test.ts:64 ~ it ~ fetch.mock.calls[1]?.[1]?.body:", fetch.mock.calls[1]?.[1]?.body)
+
     expect(fetch.mock.calls[1]?.[1]?.body).toEqualSparql(`
-      INSERT DATA { 
+      INSERT DATA {
         <#it> a <http://www.w3.org/2002/01/bookmark#Bookmark> .
         <#it> <http://www.w3.org/2000/01/rdf-schema#label> "Google" .
         <#it> <http://www.w3.org/2002/01/bookmark#hasTopic> "Search Engine" .
@@ -62,21 +64,10 @@ describe("Bookmark CRUD", () => {
         <#it-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata> .
         <#it-metadata> <https://vocab.noeldemartin.com/crdt/createdAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
         <#it-metadata> <https://vocab.noeldemartin.com/crdt/resource> <#it> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/updatedAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> . 
-      }
+        <#it-metadata> <https://vocab.noeldemartin.com/crdt/updatedAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+    }
+    
     `);
-    // expect(fetch.mock.calls[1]?.[1]?.body).toEqualSparql(`
-    //   INSERT DATA { 
-    //     <#it> a <http://www.w3.org/2002/01/bookmark#Bookmark> .
-    //     <#it> <http://www.w3.org/2002/01/bookmark#hasTopic> "Search Engine" .
-    //     <#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://google.com> .
-    //     <#it> <http://www.w3.org/2002/01/bookmark#label> "Google" .
-    //     <#it-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata> .
-    //     <#it-metadata> <https://vocab.noeldemartin.com/crdt/createdAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-    //     <#it-metadata> <https://vocab.noeldemartin.com/crdt/resource> <#it> .
-    //     <#it-metadata> <https://vocab.noeldemartin.com/crdt/updatedAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> . 
-    //   }
-    // `);
   });
 
   it("Read", async () => {

@@ -10,7 +10,7 @@ import {
   createTypeIndex,
   getTypeIndexFromPofile,
   registerInTypeIndex
-} from "../utils/typeIndexHelpers";
+} from "soukai-solid-utils";
 
 export type ICreateBookmark = {
   topic: string;
