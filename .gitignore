@@ -1,3 +1,4 @@
 node_modules
 bookmarks/node_modules
 bookmarks/dist
+bookmarks/soukai/demo/.vite
