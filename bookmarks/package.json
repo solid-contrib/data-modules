@@ -38,11 +38,23 @@
   },
   "homepage": "https://github.com/pondersource/soukai-solid-data-modules#readme",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.13.8",
+    "@microsoft/api-extractor": "^7.18.5",
+    "@noeldemartin/eslint-config-typescript": "^0.1.1",
+    "@noeldemartin/faker": "^7.6.0",
+    "@noeldemartin/scripts": "^0.1.2",
     "@types/jest": "^29.4.0",
+    "@types/jsonld": "^1.5.5",
+    "@types/n3": "^1.1.6",
     "@types/node": "^18.13.0",
+    "@types/rdf-js": "^3.0.0",
+    "@types/uuid": "^9.0.6",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "ansi-regex": ">=6.0.1",
+    "cross-env": "^5.2.0",
+    "dayjs": "^1.10.5",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-standard": "^17.0.0",
@@ -50,26 +62,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^29.4.1",
-    "ts-jest": "^29.0.5",
-    "@types/uuid": "^9.0.6",
-    "typescript": "^4.9.5",
-
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-transform-runtime": "^7.13.8",
-    "@microsoft/api-extractor": "^7.18.5",
-    "@noeldemartin/eslint-config-typescript": "^0.1.1",
-    "@noeldemartin/faker": "^7.6.0",
-    "@noeldemartin/scripts": "^0.1.2",
-    "@types/jsonld": "^1.5.5",
-    "@types/n3": "^1.1.6",
-    "@types/rdf-js": "^3.0.0",
-    "cross-env": "^5.2.0",
-    "dayjs": "^1.10.5",
     "jest-summary-reporter": "0.0.2",
-    "soukai": "~0.5.1"
+    "soukai": "~0.5.1",
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "uuid": "^9.0.1",
-    "soukai-solid": "^0.5.2"
+    "soukai-solid": "^0.5.2",
+    "uuid": "^9.0.1"
   }
 }
