@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "recoil": "^0.7.7",
     "soukai-solid": "^0.5.2",
+    "soukai-solid-bookmarks": "^0.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

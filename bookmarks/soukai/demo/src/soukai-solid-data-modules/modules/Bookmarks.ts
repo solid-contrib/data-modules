@@ -14,33 +14,17 @@ import {
 } from "soukai-solid";
 import { ISoukaiDocumentBase } from "../shared/contracts";
 import { v4 } from "uuid";
+import { GetInstanceArgs } from "soukai-solid-utils";
+
+
+
 export type ICreateBookmark = {
   topic: string;
   label: string;
   link: string;
 };
 
-export interface GetInstanceArgs {
-  webId: string;
-  fetch?: Fetch;
-  isPrivate?: boolean;
-}
-
 export type IBookmark = ISoukaiDocumentBase & ICreateBookmark;
-
-export const TopicSchema = defineSolidModelSchema({
-  rdfContexts: {
-    bk: "http://www.w3.org/2002/01/bookmark#",
-  },
-  rdfsClasses: ["bk:hasTopic"],
-  timestamps: false,
-});
-
-export class Topic extends TopicSchema {
-  // topicRelationship() {
-  //   return this.belongsToMany(Bookmark, "topic");
-  // }
-}
 
 export const BookmarkSchema = defineSolidModelSchema({
   rdfContexts: {
@@ -49,11 +33,11 @@ export const BookmarkSchema = defineSolidModelSchema({
 
   rdfsClasses: ["bk:Bookmark"],
 
-  timestamps: false,
+  timestamps: [TimestampField.CreatedAt, TimestampField.UpdatedAt],
 
   fields: {
     topic: {
-      type: FieldType.Any,
+      type: FieldType.String,
       rdfProperty: "bk:hasTopic",
     },
     label: {
@@ -65,22 +49,24 @@ export const BookmarkSchema = defineSolidModelSchema({
       rdfProperty: "bk:recalls",
     },
   },
+
 });
 
 export class Bookmark extends BookmarkSchema {
-  topicRelationship() {
-    return this.hasOne(Topic, "topic");
-  }
-  // public relatedTopics!: SolidHasManyRelation<Bookmark, Topic, typeof Topic>;
+  // protected initialize(attributes: Attributes, exists: boolean): void {
+  // }
+  // newInstance({ url: "url" }, true)
+  // newInstance<T extends Model>(this: T, attributes?: Attributes | undefined, exists?: boolean | undefined): T {
+  // }
 }
-// Bookmark
+
 export class BookmarkFactory {
   private static instance: BookmarkFactory;
 
   private constructor(
     private containerUrls: string[] = [],
     private instancesUrls: string[] = []
-  ) {}
+  ) { }
 
   public static async getInstance(
     args?: GetInstanceArgs,
@@ -90,9 +76,7 @@ export class BookmarkFactory {
       try {
         const baseURL = args?.webId.split("profile")[0]; // https://example.solidcommunity.net/
 
-        defaultContainerUrl = `${baseURL}${
-          defaultContainerUrl ?? "bookmarks/"
-        }`;
+        defaultContainerUrl = `${baseURL}${defaultContainerUrl ?? "bookmarks/"}`;
 
         let _containerUrls: string[] = [];
         let _instancesUrls: string[] = [];
@@ -143,7 +127,7 @@ export class BookmarkFactory {
           // Create TypeIndex
           const typeIndexUrl = await createTypeIndex(
             args?.webId ?? "",
-            "private",
+            args?.isPrivate ? "private" : "public",
             args?.fetch
           );
           _containerUrls.push(defaultContainerUrl);
@@ -178,10 +162,6 @@ export class BookmarkFactory {
     const allPromise = Promise.all([...containerPromises, ...instancePromises]);
 
     try {
-      console.log(
-        "🚀 ~ file: Bookmarks.ts:197 ~ BookmarkFactory ~ getAll ~ await allPromise:",
-        await allPromise
-      );
       const values = (await allPromise).flat();
       return values;
     } catch (error) {
@@ -212,25 +192,13 @@ export class BookmarkFactory {
 
   async create(payload: ICreateBookmark) {
     const id = v4();
-    const { topic, ...rest } = payload;
+
     const bookmark = new Bookmark({
-      ...rest,
-      // id: id,
+      ...payload,
+      id: id,
       url: `${this.containerUrls[0]}${id}`,
     });
 
-    // bookmark.relatedTopics.create({ topic: "..." });
-    bookmark.topicRelationship().create(
-      Topic.at("https://solid-dm.solidcommunity.net/bookmarks/").create({
-        // url: "https://solid-dm.solidcommunity.net/topics/",
-        title: "soukai-solid",
-      })
-    );
-    // .create(new Topic({
-    // url: "https://solid-dm.solidcommunity.net/topics/",
-    // topic: "soukai-solid",
-    // }));
-    // bookmark.topic.create({topic:"https://soukai.js.org/guide/defining-models.html#a-word-about-constructors"})
     // bookmark.url = `${this.containerUrls[0]}${id}#it`
 
     return await bookmark.save();
