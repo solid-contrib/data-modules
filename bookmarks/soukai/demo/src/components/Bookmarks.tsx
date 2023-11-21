@@ -14,7 +14,7 @@ import {
 import {
   Bookmark,
   BookmarkFactory,
-} from "../soukai-solid-data-modules/modules/Bookmarks";
+} from "../../../src/modules/Bookmarks";
 
 import { FC, useEffect, useState } from "react";
 import { FieldType } from "soukai";

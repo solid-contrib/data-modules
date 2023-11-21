@@ -1,16 +1,18 @@
 import { FieldType, TimestampField } from "soukai";
 import {
-  defineSolidModelSchema, SolidContainer,
+  SolidContainer,
   SolidDocument,
-  SolidModel
+  SolidModel,
+  defineSolidModelSchema
 } from "soukai-solid";
-import { v4 } from "uuid";
-import { GetInstanceArgs, ISoukaiDocumentBase } from "../types";
 import {
+  GetInstanceArgs, ISoukaiDocumentBase,
   createTypeIndex,
   getTypeIndexFromPofile,
-  registerInTypeIndex
+  registerInTypeIndex,
 } from "soukai-solid-utils";
+import { v4 } from "uuid";
+
 
 export type ICreateBookmark = {
   topic: string;
@@ -18,6 +20,11 @@ export type ICreateBookmark = {
   link: string;
 };
 
+
+
+export const sayHello = () => {
+  alert("Hello")
+}
 export type IBookmark = ISoukaiDocumentBase & ICreateBookmark;
 
 export const BookmarkSchema = defineSolidModelSchema({

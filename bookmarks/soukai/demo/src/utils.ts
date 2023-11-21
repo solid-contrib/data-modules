@@ -6,7 +6,7 @@ import {
   login,
   logout,
 } from "@inrupt/solid-client-authn-browser";
-import { Bookmark } from "@soukai-solid-data-modules/modules/Bookmarks";
+import { Bookmark } from "../../src/modules/Bookmarks";
 import { bootModels, getEngine, setEngine } from "soukai";
 import {
   Fetch,
