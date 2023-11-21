@@ -126,7 +126,7 @@ export class BookmarkFactory {
           }
         } else {
           // Create TypeIndex
-          const typeIndexUrl = await createTypeIndex(
+          const typeIndexDocument = await createTypeIndex(
             args?.webId ?? "",
             args?.isPrivate ? "private" : "public",
             args?.fetch
@@ -137,7 +137,7 @@ export class BookmarkFactory {
           await registerInTypeIndex({
             forClass: Bookmark.rdfsClasses[0],
             instanceContainer: _containerUrls[0],
-            typeIndexUrl: typeIndexUrl,
+            typeIndexUrl: typeIndexDocument.url || "",
           });
         }
 
