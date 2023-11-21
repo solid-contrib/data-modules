@@ -3,6 +3,15 @@ Implemented conventions
 
 - [Bookmark](https://pdsinterop.org/conventions/bookmark/)
 
+## Development
+```
+git clone https://github.com/solid-contrib/data-modules
+cd data-modules
+cd bookmarks
+npm install
+npm run test
+```
+
 ## Usage
 
 ### Install and use the package
