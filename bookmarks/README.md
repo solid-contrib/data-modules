@@ -13,20 +13,30 @@ npm run test
 ```
 
 ## Usage
+To use the Bookmarks data module, first decide if you want to use it on top of:
+* inrupt-solid-client
+* rdflib-js
+* soukai
+* LDO
 
-### Install and use the package
-```bash
-npm i soukai-solid-data-modules
-```
 
-### Import modules
+### Usage with Soukai
 
-```ts
+To try this out, create a file `test.mjs` inside the root of your clone of the data-modules repo.
+In there, write:
+```js
 import { bootModels, setEngine } from "soukai";
 import { SolidEngine, bootSolidModels } from "soukai-solid";
-
-import { Bookmark, BookmarkFactory } from "soukai-solid-data-modules";
+import { Bookmark } from "./bookmarks/lib";
 ```
+
+Now install the dependencies and run the file:
+```
+npm install soukai
+npm install soukai-solid
+node test.js
+```
+
 ### Boot Engine
 ```ts
 bootSolidModels();
