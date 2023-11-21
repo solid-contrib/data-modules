@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "soukai-solid": "^0.5.2",
-    "soukai-solid-utils": "^0.0.1",
+    "soukai-solid-utils": "^0.0.2",
     "ts-node": "^10.9.1",
     "uuid": "^9.0.1"
   }

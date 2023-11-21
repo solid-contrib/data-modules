@@ -14,7 +14,7 @@ import {
 import { v4 } from "uuid";
 import { urlParentDirectory } from "./urlHelpers";
 
-export async function getTypeIndexFromPofile(args: {
+export async function getTypeIndexFromProfile(args: {
   webId: string;
   fetch?: Fetch;
   typePredicate: "solid:publicTypeIndex" | "solid:privateTypeIndex";

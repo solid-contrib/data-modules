@@ -7,8 +7,8 @@ import {
 } from "soukai-solid";
 import {
   GetInstanceArgs, ISoukaiDocumentBase,
+  getTypeIndexFromProfile,
   createTypeIndex,
-  getTypeIndexFromPofile,
   registerInTypeIndex,
 } from "soukai-solid-utils";
 import { v4 } from "uuid";
@@ -82,7 +82,7 @@ export class BookmarkFactory {
         let _containerUrls: string[] = [];
         let _instancesUrls: string[] = [];
 
-        const typeIndexUrl = await getTypeIndexFromPofile({
+        const typeIndexUrl = await getTypeIndexFromProfile({
           webId: args?.webId ?? "",
           fetch: args?.fetch,
           typePredicate: args?.isPrivate
