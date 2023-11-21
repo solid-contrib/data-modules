@@ -13,14 +13,11 @@ import {
 import {
   Bookmark,
   BookmarkFactory,
-} from "@soukai-solid-data-modules/modules/Bookmarks";
+} from "../../../src";
 import { FC, useEffect, useState } from "react";
-import { SolidDocument, SolidHasManyRelation, SolidModel } from "soukai-solid";
+import { SolidHasManyRelation, SolidModel } from "soukai-solid";
 import { useUserSession } from "../atoms/userSession.atom";
-import { v4 } from "uuid";
-import { FieldType, TimestampField } from "soukai";
-import { all } from "axios";
-
+import { FieldType } from "soukai";
 
 // import Movie from "soukai-solid/src/testing/lib/stubs/Movie"
 const Bookmarks: FC = () => {

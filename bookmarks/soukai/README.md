@@ -13,7 +13,8 @@ npm run test
 Assuming you just ran the 'development' steps above and are now in the bookmarks/soukai folder.
 ```
 cd demo
-node test.mjs
+npm install
+npm run dev
 ```
 
 ## Explanation of the demo app
