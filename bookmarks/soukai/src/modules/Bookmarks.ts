@@ -137,7 +137,7 @@ export class BookmarkFactory {
           await registerInTypeIndex({
             forClass: Bookmark.rdfsClasses[0],
             instanceContainer: _containerUrls[0],
-            typeIndexUrl: typeIndexDocument.url || "",
+            typeIndexUrl: typeIndexDocument?.url || "",
           });
         }
 
