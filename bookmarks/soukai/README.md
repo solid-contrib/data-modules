@@ -1,7 +1,4 @@
-# Implemented conventions
-Implemented conventions
-
-- [Bookmark](https://pdsinterop.org/conventions/bookmark/)
+# Bookmarks Data Module for Soukai
 
 ## Development
 ```
@@ -12,31 +9,14 @@ npm install
 npm run test
 ```
 
-## Usage
-To use the Bookmarks data module, first decide if you want to use it on top of:
-* inrupt-solid-client
-* rdflib-js
-* soukai
-* LDO
-
-
-### Usage with Soukai
-
-To try this out, create a file `test.mjs` inside the root of your clone of the data-modules repo.
-In there, write:
-```js
-import { bootModels, setEngine } from "soukai";
-import { SolidEngine, bootSolidModels } from "soukai-solid";
-import { Bookmark } from "./bookmarks/lib";
+## Demo app
+Assuming you just ran the 'development' steps above and are now in the bookmarks/soukai folder.
+```
+cd demo
+node test.mjs
 ```
 
-Now install the dependencies and run the file:
-```
-npm install soukai
-npm install soukai-solid
-node test.js
-```
-
+## Explanation of the demo app
 ### Boot Engine
 ```ts
 bootSolidModels();
