@@ -84,57 +84,27 @@ const Bookmarks: FC = () => {
 
         <Button
           onClick={async () => {
-            // const topic = await TopicModel
-            //   .at("https://solid-dm.solidcommunity.net/topics/")
-            //   .create({ label: "soukai-solid" })
+            const factory = await BookmarkFactory.getInstance(
+              {
+                webId: userSession?.info.webId ?? "",
+                fetch: userSession?.fetch,
+                isPrivate: true,
+              }
+            );
 
-            // await topic.save()
-
-
-            const bookmark = await BookmarkModel.at('https://solid-dm.solidcommunity.net/bookmarks/').create({
-              label: "label",
-              link: "https://podpro.dev/",
-              // topic: topic.getAttribute("url")
-            });
-
-            // bookmark.topicRelationship()
-            //   .attach(topic)
-            bookmark.topicRelationship().create({
-              topic: "test"
-            })
-
-            // bookmark.label = ""
-
-            bookmark.save()
-
-
-            console.log("🚀 ~ file: Bookmarks.tsx:108 ~ (await BookmarkModel.at('https://solid-dm.solidcommunity.net/bookmarks/').all()).map.getAttributes():",
-              (await BookmarkModel.at('https://solid-dm.solidcommunity.net/bookmarks/')
-                .all())
-                .map((x) => x.getAttributes()))
-
-
-            // const factory = await BookmarkFactory.getInstance(
-            //   {
-            //     webId: userSession?.info.webId ?? "",
-            //     fetch: userSession?.fetch,
-            //     isPrivate: true,
-            //   }
-            // );
-
-            // console.log("🚀 ~ file: Bookmarks.tsx:99 ~ onClick={ ~ form:", form)
-            // const bookmark = await factory.create(form);
-            // console.log("🚀 ~ file: Bookmarks.tsx:100 ~ bookmark:", bookmark)
+            console.log("🚀 ~ file: Bookmarks.tsx:99 ~ onClick={ ~ form:", form)
+            const bookmark = await factory.create(form);
+            console.log("🚀 ~ file: Bookmarks.tsx:100 ~ bookmark:", bookmark)
 
 
 
 
-            // setForm({ label: "", link: "", topic: "" });
+            setForm({ label: "", link: "", topic: "" });
 
-            // const bookmarks = await factory.getAll();
-            // console.log("🚀 ~ file: Bookmarks.tsx:112 ~ bookmarks:", bookmarks)
-            // console.log("🚀 ~ file: Bookmarks.tsx:46 ~ bookmarks:", bookmarks.map(x => x.getAttributes()))
-            // setBookmarks(bookmarks);
+            const bookmarks = await factory.getAll();
+            console.log("🚀 ~ file: Bookmarks.tsx:112 ~ bookmarks:", bookmarks)
+            console.log("🚀 ~ file: Bookmarks.tsx:46 ~ bookmarks:", bookmarks.map(x => x.getAttributes()))
+            setBookmarks(bookmarks);
           }}
         >
           ADD
