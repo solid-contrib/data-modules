@@ -10,10 +10,12 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+
 import {
   Bookmark,
   BookmarkFactory,
-} from "@soukai-solid-data-modules/modules/Bookmarks";
+} from "../../../dist/index";
+
 import { FC, useEffect, useState } from "react";
 import { SolidDocument, SolidHasManyRelation, SolidModel } from "soukai-solid";
 import { useUserSession } from "../atoms/userSession.atom";
