@@ -7,7 +7,7 @@ Implemented conventions
 ```
 git clone https://github.com/solid-contrib/data-modules
 cd data-modules
-cd bookmarks
+cd bookmarks/soukai
 npm install
 npm run test
 ```
