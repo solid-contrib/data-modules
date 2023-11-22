@@ -1,0 +1,41 @@
+{
+  "name": "inrupt",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist/",
+    "build": "npm run clean && tsc",
+    "test": "jest"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solid-contrib/data-modules.git"
+  },
+  "keywords": [
+    "solid",
+    "data-modules",
+    "bookmarks"
+  ],
+  "author": {
+    "name": "Reza Soltani",
+    "email": "soltanireza65@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/solid-contrib/data-modules/issues"
+  },
+  "homepage": "https://github.com/solid-contrib/data-modules#readme",
+  "dependencies": {
+    "@inrupt/solid-client": "^1.30.2",
+    "@inrupt/solid-client-authn-browser": "^1.17.5",
+    "@inrupt/vocab-common-rdf": "^1.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}

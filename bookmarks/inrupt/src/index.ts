@@ -1,0 +1,1 @@
+export { IBookmark, Bookmark } from "./modules/Bookmark"
