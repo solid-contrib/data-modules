@@ -23,24 +23,35 @@ export interface IBookmark {
     title: string
     link: string
 }
-export const getBookmarksIndexUrl = async (session: Session) => {
-    const pods = await getPodUrlAll(session.info.webId!, {
-        fetch: session.fetch,
-    });
-    const bookmarksContainerUri = `${pods[0]}bookmarks/`;
-    return `${bookmarksContainerUri}index.ttl`;
-};
 
 export class Bookmark {
-    constructor() { }
+
+    /**
+     * 
+     * @param session Session
+     * @returns string
+     */
+    public static async getIndexUrl(session: Session) {
+        const pods = await getPodUrlAll(session.info.webId!, {
+            fetch: session.fetch,
+        });
+        const bookmarksContainerUri = `${pods[0]}bookmarks/`;
+        return `${bookmarksContainerUri}index.ttl`;
+    }
+
+    /**
+     * 
+     * @param session Session
+     * @returns IBookmark[]
+     */
     public static async getAll(session: Session) {
-        const indexUrl = await getBookmarksIndexUrl(session);
+        const indexUrl = await this.getIndexUrl(session);
         try {
             const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
             const things = getThingAll(ds)
 
-            return things.map(thing => {
+            const bookmarks = things.map(thing => {
                 return {
                     url: thing.url,
                     title: getLiteral(thing, DCTERMS.title)?.value,
@@ -48,15 +59,21 @@ export class Bookmark {
                 }
             }) as IBookmark[]
 
+            return bookmarks
+
         } catch (error) {
             return []
         }
     }
 
-
+    /**
+     * 
+     * @param url string
+     * @param session Session
+     * @returns IBookmark
+     */
     public static async get(url: string, session: Session) {
-        const indexUrl = await getBookmarksIndexUrl(session);
-        // const indexUrl = getSourceUrl(ds);
+        const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
@@ -73,14 +90,19 @@ export class Bookmark {
         return undefined
     }
 
+    /**
+     * 
+     * @param url string
+     * @param session Session
+     * @returns IBookmark[]
+     */
     public static async delete(url: string, session: Session) {
-        const indexUrl = await getBookmarksIndexUrl(session);
+        const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
         const thing = getThing(ds, url);
         if (thing) {
-            alert("sdh")
             const updatedBookmarks = removeThing(ds, thing);
             const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch: session.fetch });
 
@@ -96,9 +118,17 @@ export class Bookmark {
         }
     };
 
+
+    /**
+     * 
+     * @param title string
+     * @param link string
+     * @param session Session
+     * @returns IBookmark[]
+     */
     public static async create(title: string, link: string, session: Session) {
 
-        const indexUrl = await getBookmarksIndexUrl(session);
+        const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
@@ -119,42 +149,26 @@ export class Bookmark {
                 link: getLiteral(thing, BOOKMARK.recalls)?.value
             }
         }) as IBookmark[]
-
-        // const indexUrl = await getBookmarksIndexUrl(session);
-        // const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
-
-        // let thing = createThing()
-
-        // const bookmarkWithTitle = addStringNoLocale(thing, DCTERMS.title, title);
-        // const bookmarkWithLink = addStringNoLocale(bookmarkWithTitle, BOOKMARK.recalls, link);
-
-        // const bookmarkWithType = addUrl(bookmarkWithLink, RDF.type, BOOKMARK.Bookmark);
-
-        // const updatedBookmarkList = setThing(ds, bookmarkWithType);
-
-        // const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-
-        // const things = getThingAll(updatedDataset)
-
-        // return things.map(thing => {
-        //     return {
-        //         url: thing.url,
-        //         title: getLiteral(thing, DCTERMS.title)?.value,
-        //         link: getLiteral(thing, BOOKMARK.recalls)?.value
-        //     }
-        // }) as IBookmark[]
     };
 
 
-    public static async update(url: string, session: Session) {
-        const indexUrl = await getBookmarksIndexUrl(session);
+    /**
+     * 
+     * @param url string
+     * @param title string
+     * @param link string
+     * @param session Session
+     * @returns IBookmark[]
+     */
+    public static async update(url: string, title: string, link: string, session: Session) {
+        const indexUrl = await this.getIndexUrl(session);
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
         const thing = getThing(ds, url)
 
         if (thing) {
             let updatedBookmarkThing = buildThing(thing)
-                .setStringNoLocale(DCTERMS.title, "updated")
-                .setStringNoLocale(BOOKMARK.recalls, "http://goo.com")
+                .setStringNoLocale(DCTERMS.title, title)
+                .setStringNoLocale(BOOKMARK.recalls, link)
                 .setUrl(RDF.type, BOOKMARK.Bookmark)
                 .build();
 

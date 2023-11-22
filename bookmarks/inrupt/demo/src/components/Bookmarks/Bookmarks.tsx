@@ -156,7 +156,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
                         DEL
                       </IconButton>
                       <IconButton
-                        onClick={async () => console.log(await Bookmark.update(row.url, session))}
+                        onClick={async () => console.log(await Bookmark.update("sdvsdv", "sdvs", row.url, session))}
                       >
                         UPD
                       </IconButton>
