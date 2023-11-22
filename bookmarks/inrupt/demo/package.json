@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@inrupt/lit-generated-vocab-common": "^0.3.11",
     "@inrupt/solid-client": "^1.30.0",
-    "@inrupt/solid-client-authn-browser": "^1.17.1",
+    "@inrupt/solid-client-authn-browser": "^1.17.5",
     "@inrupt/solid-ui-react": "^2.8.2",
     "@inrupt/vocab-common-rdf": "^1.0.5",
     "@inrupt/vocab-solid": "^1.0.4",

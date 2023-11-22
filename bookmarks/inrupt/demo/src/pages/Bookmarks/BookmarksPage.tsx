@@ -7,10 +7,7 @@ import { FC } from "react";
 type IProps = {};
 
 const BookmarksPage: FC<IProps> = ({ }) => {
-  const { session } = useSession();
-  const {
-    info: { webId },
-  } = session;
+  const { session: { info: { webId } } } = useSession();
 
   return (
     <AppFlex>
@@ -26,3 +23,12 @@ const BookmarksPage: FC<IProps> = ({ }) => {
 };
 
 export default BookmarksPage;
+
+
+
+
+// const BookmarksList: FC<any> = ({ }) => {
+//   return (
+//     <div>BookmarksPage</div>
+//   )
+// }

@@ -1,9 +1,12 @@
+import { IBookmark } from "@/utils";
 import { SolidDataset } from "@inrupt/solid-client";
 import { atom, useRecoilState } from "recoil";
 
-const bookmarksAtom = atom<SolidDataset>({
+
+
+const bookmarksAtom = atom<IBookmark[]>({
     key: 'bookmarksAtom',
-    default: {} as SolidDataset,
+    default: [],
 });
 
 
