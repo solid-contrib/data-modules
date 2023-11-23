@@ -1,4 +1,5 @@
 import {
+    ThingPersisted,
     buildThing,
     createThing,
     getLiteral,
@@ -27,9 +28,8 @@ export interface IBookmark {
 }
 
 export class Bookmark {
-
     /**
-     * 
+     *
      * @param session Session
      * @returns string
      */
@@ -42,7 +42,7 @@ export class Bookmark {
     }
 
     /**
-     * 
+     *
      * @param session Session
      * @returns IBookmark[]
      */
@@ -51,25 +51,24 @@ export class Bookmark {
         try {
             const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
-            const things = getThingAll(ds)
+            const things = getThingAll(ds);
 
-            const bookmarks = things.map(thing => {
+            const bookmarks = things.map((thing) => {
                 return {
                     url: thing.url,
                     title: getLiteral(thing, DCTERMS.title)?.value,
-                    link: getLiteral(thing, BOOKMARK.recalls)?.value
-                }
-            }) as IBookmark[]
+                    link: getLiteral(thing, BOOKMARK.recalls)?.value,
+                };
+            }) as IBookmark[];
 
-            return bookmarks
-
+            return bookmarks;
         } catch (error) {
-            return []
+            return [];
         }
     }
 
     /**
-     * 
+     *
      * @param url string
      * @param session Session
      * @returns IBookmark
@@ -79,32 +78,24 @@ export class Bookmark {
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
-        const thing = getThing(ds, url)
+        const thing = getThing(ds, url);
 
         if (thing) {
             return {
                 url: thing.url,
-                // TODO: extract to a private methon: mapTitle()
-                title:
-                    getLiteral(thing, DCTERMS.title)?.value
-                    ??
-                    getLiteral(thing, RDFS.label)?.value,
-                // TODO: extract to a private methon: mapLink()
-                link:
-                    getLiteral(thing, BOOKMARK.recalls)?.value
-                    ??
-                    getNamedNode(thing, BOOKMARK.recalls)?.value,
+                title: this.mapTitle(thing),
+                link: this.mapLink(thing),
                 created: getLiteral(thing, DCTERMS.created)?.value,
                 updated: getLiteral(thing, "http://purl.org/dc/terms/updated")?.value,
                 creator: getNamedNode(thing, DCTERMS.creator)?.value,
-            } as IBookmark
+            } as IBookmark;
         }
 
-        return undefined
+        return undefined;
     }
 
     /**
-     * 
+     *
      * @param url string
      * @param session Session
      * @returns IBookmark[]
@@ -117,30 +108,32 @@ export class Bookmark {
         const thing = getThing(ds, url);
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
-            const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch: session.fetch });
+            const updatedDataset = await saveSolidDatasetAt(
+                indexUrl,
+                updatedBookmarks,
+                { fetch: session.fetch }
+            );
 
-            const things = getThingAll(updatedDataset)
+            const things = getThingAll(updatedDataset);
 
-            return things.map(thing => {
+            return things.map((thing) => {
                 return {
                     url: thing.url,
                     title: getLiteral(thing, DCTERMS.title)?.value,
-                    link: getLiteral(thing, BOOKMARK.recalls)?.value
-                }
-            }) as IBookmark[]
+                    link: getLiteral(thing, BOOKMARK.recalls)?.value,
+                };
+            }) as IBookmark[];
         }
-    };
-
+    }
 
     /**
-     * 
+     *
      * @param title string
      * @param link string
      * @param session Session
      * @returns IBookmark[]
      */
     public static async create(title: string, link: string, session: Session) {
-
         const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
@@ -152,31 +145,39 @@ export class Bookmark {
             .build();
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
-        const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-        const things = getThingAll(updatedDataset)
+        const updatedDataset = await saveSolidDatasetAt(
+            indexUrl,
+            updatedBookmarkList,
+            { fetch: session.fetch }
+        );
+        const things = getThingAll(updatedDataset);
 
-        return things.map(thing => {
+        return things.map((thing) => {
             return {
                 url: thing.url,
                 title: getLiteral(thing, DCTERMS.title)?.value,
-                link: getLiteral(thing, BOOKMARK.recalls)?.value
-            }
-        }) as IBookmark[]
-    };
-
+                link: getLiteral(thing, BOOKMARK.recalls)?.value,
+            };
+        }) as IBookmark[];
+    }
 
     /**
-     * 
+     *
      * @param url string
      * @param title string
      * @param link string
      * @param session Session
      * @returns IBookmark[]
      */
-    public static async update(url: string, title: string, link: string, session: Session) {
+    public static async update(
+        url: string,
+        title: string,
+        link: string,
+        session: Session
+    ) {
         const indexUrl = await this.getIndexUrl(session);
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
-        const thing = getThing(ds, url)
+        const thing = getThing(ds, url);
 
         if (thing) {
             let updatedBookmarkThing = buildThing(thing)
@@ -186,18 +187,35 @@ export class Bookmark {
                 .build();
 
             const updatedBookmarkList = setThing(ds, updatedBookmarkThing);
-            const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-            const things = getThingAll(updatedDataset)
+            const updatedDataset = await saveSolidDatasetAt(
+                indexUrl,
+                updatedBookmarkList,
+                { fetch: session.fetch }
+            );
+            const things = getThingAll(updatedDataset);
 
-            return things.map(thing => {
+            return things.map((thing) => {
                 return {
                     url: thing.url,
                     title: getLiteral(thing, DCTERMS.title)?.value,
-                    link: getLiteral(thing, BOOKMARK.recalls)?.value
-                }
-            }) as IBookmark[]
+                    link: getLiteral(thing, BOOKMARK.recalls)?.value,
+                };
+            }) as IBookmark[];
         }
+    }
 
-    };
-
+    private static mapTitle(thing: ThingPersisted): string {
+        return (
+            getLiteral(thing, DCTERMS.title)?.value ??
+            getLiteral(thing, RDFS.label)?.value ??
+            ""
+        );
+    }
+    private static mapLink(thing: ThingPersisted): string {
+        return (
+            getLiteral(thing, BOOKMARK.recalls)?.value ??
+            getNamedNode(thing, BOOKMARK.recalls)?.value ??
+            ""
+        );
+    }
 }
