@@ -16,6 +16,7 @@ import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
     DCTERMS,
+    FOAF,
     RDF,
     RDFS
 } from "@inrupt/vocab-common-rdf";
@@ -79,6 +80,7 @@ export class Bookmark {
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
         const thing = getThing(ds, url);
+        console.log("🚀 ~ file: Bookmark.ts:83 ~ Bookmark ~ get ~ thing:", thing)
 
         return thing ? this.mapBookmark(thing) : undefined
     }
@@ -193,6 +195,16 @@ export class Bookmark {
         }
     }
 
+    private static mapBookmark(thing: ThingPersisted): Bookmark {
+        return {
+            url: thing.url,
+            title: this.mapTitle(thing),
+            link: this.mapLink(thing),
+            created: this.mapCreated(thing),
+            updated: this.mapUpdated(thing),
+            creator: this.mapCreator(thing),
+        }
+    }
     private static mapTitle(thing: ThingPersisted): string {
         return (
             getLiteral(thing, DCTERMS.title)?.value ??
@@ -207,14 +219,20 @@ export class Bookmark {
             ""
         );
     }
-    private static mapBookmark(thing: ThingPersisted): Bookmark {
-        return {
-            url: thing.url,
-            title: this.mapTitle(thing),
-            link: this.mapLink(thing),
-            created: getLiteral(thing, DCTERMS.created)?.value,
-            updated: getLiteral(thing, "http://purl.org/dc/terms/updated")?.value,
-            creator: getNamedNode(thing, DCTERMS.creator)?.value,
-        }
+    private static mapCreated(thing: ThingPersisted): string {
+        return getLiteral(thing, DCTERMS.created)?.value ?? ""
+    }
+    private static mapUpdated(thing: ThingPersisted): string {
+        return (
+            getLiteral(thing, "http://purl.org/dc/terms/updated")?.value ??
+            ""
+        );
+    }
+    private static mapCreator(thing: ThingPersisted): string {
+        return (
+            getNamedNode(thing, DCTERMS.creator)?.value ??
+            getNamedNode(thing, FOAF.maker)?.value ??
+            ""
+        );
     }
 }

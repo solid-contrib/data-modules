@@ -190,6 +190,36 @@ describe("Bookmark", () => {
 
     });
     it("should parse bookmarks in format two", async () => {
-        // etc
+        const url = 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#two';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#two',
+            title: 'two',
+            link: 'http://example.com',
+            created: undefined,
+            updated: undefined,
+            creator: undefined
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/two.json")));
+
+        const res = await Bookmark.get(url, session);
+        console.log("🚀 ~ file: Bookmark.test.ts:219 ~ it ~ res:", res)
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
     });
 });
