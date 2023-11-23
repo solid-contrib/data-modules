@@ -156,12 +156,12 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it("should parse bookmarks in several formats", async () => {
+    it("should parse bookmarks in format one", async () => {
         const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#one';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b69996-88c4a430a16d',
+            url: 'https://fake-pod.net/bookmarks/index.ttl#one',
             title: 'updated',
             link: 'http://goo.com'
         }
@@ -186,5 +186,8 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
 
+    });
+    it("should parse bookmarks in format two", async () => {
+        // etc
     });
 });
