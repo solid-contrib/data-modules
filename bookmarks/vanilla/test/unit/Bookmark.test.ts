@@ -179,6 +179,7 @@ describe("Bookmark", () => {
             }
         };
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
 
         const res = await Bookmark.get(url, session);
 
