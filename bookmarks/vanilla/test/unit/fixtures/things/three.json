@@ -1,0 +1,28 @@
+{
+    "type": "Subject",
+    "url": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#three",
+    "predicates": {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+            "namedNodes": [
+                "http://www.w3.org/2002/01/bookmark#Bookmark"
+            ]
+        },
+        "http://www.w3.org/2000/01/rdf-schema#label": {
+            "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": [
+                    "sdf"
+                ]
+            }
+        },
+        "http://www.w3.org/2002/01/bookmark#hasTopic": {
+            "namedNodes": [
+                "http://wikipedia.org/sdfg"
+            ]
+        },
+        "http://www.w3.org/2002/01/bookmark#recalls": {
+            "namedNodes": [
+                "http://example.com"
+            ]
+        }
+    }
+}

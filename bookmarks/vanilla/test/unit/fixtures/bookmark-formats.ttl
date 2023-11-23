@@ -9,7 +9,7 @@
 
 :one
   a boo:Bookmark;
-  rdfs:label "asdf";
+  rdfs:label "one";
   dc:created "2023-10-21T14:16:16Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   dc:updated "2023-11-21T14:16:16Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
   dc:creator <https://michielbdejong.solidcommunity.net/profile/card#me>;
@@ -17,13 +17,13 @@
 
 :two
   a boo:Bookmark;
-  dc:title "asdf";
+  dc:title "two";
   foaf:maker <https://michielbdejong.solidcommunity.net/profile/card#me>;
   boo:recalls "http://example.com".
 
 :three
     a boo:Bookmark;
-    rdfs:label "sdf";
+    rdfs:label "three";
     boo:hasTopic <http://wikipedia.org/sdfg>;
     boo:recalls <http://example.com>.
 

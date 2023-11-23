@@ -1,0 +1,30 @@
+{
+    "type": "Subject",
+    "url": "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763-metadata",
+    "predicates": {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+            "namedNodes": [
+                "https://vocab.noeldemartin.com/crdt/Metadata"
+            ]
+        },
+        "https://vocab.noeldemartin.com/crdt/createdAt": {
+            "literals": {
+                "http://www.w3.org/2001/XMLSchema#dateTime": [
+                    "2023-11-21T12:50:32.051Z"
+                ]
+            }
+        },
+        "https://vocab.noeldemartin.com/crdt/resource": {
+            "namedNodes": [
+                "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763"
+            ]
+        },
+        "https://vocab.noeldemartin.com/crdt/updatedAt": {
+            "literals": {
+                "http://www.w3.org/2001/XMLSchema#dateTime": [
+                    "2023-11-21T12:50:32.051Z"
+                ]
+            }
+        }
+    }
+}
