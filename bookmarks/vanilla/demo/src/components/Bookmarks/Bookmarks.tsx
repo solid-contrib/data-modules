@@ -60,35 +60,6 @@ const Bookmarks: FC<IProps> = ({ }) => {
     setbookmarkLink("");
   };
 
-  // const deleteBookmark = async (args: any, session: Session) => {
-  //   const indexUrl = await getBookmarksIndexUrl(session);
-  //   // const indexUrl = getSourceUrl(ds);
-
-  //   const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
-
-  //   const thing = getThing(ds, args.url)
-  //   const updatedBookmarks = removeThing(ds, thing!);
-  //   const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch });
-
-  //   const things = getThingAll(updatedDataset)
-
-  //   const res = things.map(thing => {
-  //     return {
-  //       url: thing.url,
-  //       title: getLiteral(thing, DCTERMS.title)?.value,
-  //       link: getLiteral(thing, BOOKMARK.recalls)?.value
-  //     }
-  //   }) as IBookmark[]
-  //   // setBookmarks(res);
-  // };
-
-  // const bookmarkThings =
-  //   bookmarks && bookmarks?.graphs?.default ? getThingAll(bookmarks) : [];
-
-  // const thingsArray = bookmarkThings
-  //   .filter((t) => getUrl(t, RDF.type) === BOOKMARK.Bookmark)
-  //   .map((t) => ({ dataset: bookmarks, thing: t }));
-
   return (
     <Box>
       <Card>
