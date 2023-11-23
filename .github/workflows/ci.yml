@@ -2,11 +2,11 @@ name: jest
 run-name: ${{ github.actor }} is running jest
 on: [push]
 jobs:
-  test-inrupt:
+  test-bookmarks-vanilla:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./bookmarks/inrupt/
+        working-directory: ./bookmarks/vanilla/
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -14,7 +14,7 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm run test
-  test-soukai:
+  test-bookmarks-soukai:
     runs-on: ubuntu-latest
     defaults:
       run:
