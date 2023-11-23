@@ -80,18 +80,7 @@ export class Bookmark {
 
         const thing = getThing(ds, url);
 
-        if (thing) {
-            return {
-                url: thing.url,
-                title: this.mapTitle(thing),
-                link: this.mapLink(thing),
-                created: getLiteral(thing, DCTERMS.created)?.value,
-                updated: getLiteral(thing, "http://purl.org/dc/terms/updated")?.value,
-                creator: getNamedNode(thing, DCTERMS.creator)?.value,
-            } as IBookmark;
-        }
-
-        return undefined;
+        return thing ? this.mapBookmark(thing) : undefined
     }
 
     /**
@@ -217,5 +206,15 @@ export class Bookmark {
             getNamedNode(thing, BOOKMARK.recalls)?.value ??
             ""
         );
+    }
+    private static mapBookmark(thing: ThingPersisted): Bookmark {
+        return {
+            url: thing.url,
+            title: this.mapTitle(thing),
+            link: this.mapLink(thing),
+            created: getLiteral(thing, DCTERMS.created)?.value,
+            updated: getLiteral(thing, "http://purl.org/dc/terms/updated")?.value,
+            creator: getNamedNode(thing, DCTERMS.creator)?.value,
+        }
     }
 }
