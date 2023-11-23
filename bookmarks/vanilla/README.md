@@ -12,7 +12,6 @@ npm run test
 ## Demo app
 Assuming you just ran the 'development' steps above and are now in the bookmarks/vanilla folder.
 ```bash
-npm install
 npm run build
 cd demo
 npm install
