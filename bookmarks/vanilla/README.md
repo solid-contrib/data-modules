@@ -1,16 +1,16 @@
-# Bookmarks Data Module for Soukai
+# Bookmarks Data Module using vanilla JavaScript
 
 ## Development
 ```bash
 git clone https://github.com/solid-contrib/data-modules
 cd data-modules
-cd bookmarks/inrupt
+cd bookmarks/vanilla
 npm install
 npm run test
 ```
 
 ## Demo app
-Assuming you just ran the 'development' steps above and are now in the bookmarks/inrupt folder.
+Assuming you just ran the 'development' steps above and are now in the bookmarks/vanilla folder.
 ```bash
 npm install
 npm run build
