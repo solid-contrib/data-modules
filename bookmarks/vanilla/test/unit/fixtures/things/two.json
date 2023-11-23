@@ -1,6 +1,6 @@
 {
     "type": "Subject",
-    "url": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#two",
+    "url": "https://fake-pod.net/bookmarks/bookmark-formats.ttl#two",
     "predicates": {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
             "namedNodes": [

@@ -2,6 +2,7 @@ import {
     buildThing,
     createThing,
     getLiteral,
+    getNamedNode,
     getPodUrlAll,
     getSolidDataset,
     getThing,
@@ -14,7 +15,8 @@ import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
     DCTERMS,
-    RDF
+    RDF,
+    RDFS
 } from "@inrupt/vocab-common-rdf";
 
 
@@ -82,8 +84,19 @@ export class Bookmark {
         if (thing) {
             return {
                 url: thing.url,
-                title: getLiteral(thing, DCTERMS.title)?.value,
-                link: getLiteral(thing, BOOKMARK.recalls)?.value
+                // TODO: extract to a private methon: mapTitle()
+                title:
+                    getLiteral(thing, DCTERMS.title)?.value
+                    ??
+                    getLiteral(thing, RDFS.label)?.value,
+                // TODO: extract to a private methon: mapLink()
+                link:
+                    getLiteral(thing, BOOKMARK.recalls)?.value
+                    ??
+                    getNamedNode(thing, BOOKMARK.recalls)?.value,
+                created: getLiteral(thing, DCTERMS.created)?.value,
+                updated: getLiteral(thing, "http://purl.org/dc/terms/updated")?.value,
+                creator: getNamedNode(thing, DCTERMS.creator)?.value,
             } as IBookmark
         }
 
