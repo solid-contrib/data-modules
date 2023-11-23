@@ -156,4 +156,35 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
+    it("should parse bookmarks in several formats", async () => {
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b69996-88c4a430a16d',
+            title: 'updated',
+            link: 'http://goo.com'
+        }
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+
+        const res = await Bookmark.get(url, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
+
+    });
 });
