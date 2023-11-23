@@ -1,0 +1,10 @@
+@prefix : <#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix bookm: <http://www.w3.org/2002/01/bookmark#>.
+
+:221d1ac0-6c0a-40cd-8855-6602cee5a24e
+a bookm:Bookmark; dct:title "updated"; bookm:recalls "http://goo.com".
+:bookmark a bookm:Bookmark; dct:title "updated"; bookm:recalls "http://goo.com".
+
+:d2d50f70-8eb0-40b6-9996-88c4a430a16d
+a bookm:Bookmark; dct:title "updated"; bookm:recalls "http://goo.com".

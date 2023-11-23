@@ -1,0 +1,21 @@
+[
+  {
+    "type": "Subject",
+    "url": "https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d",
+    "predicates": {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+        "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
+      },
+      "http://purl.org/dc/terms/title": {
+        "literals": {
+          "http://www.w3.org/2001/XMLSchema#string": ["updated"]
+        }
+      },
+      "http://www.w3.org/2002/01/bookmark#recalls": {
+        "literals": {
+          "http://www.w3.org/2001/XMLSchema#string": ["http://goo.com"]
+        }
+      }
+    }
+  }
+]

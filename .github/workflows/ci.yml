@@ -1,0 +1,28 @@
+name: jest
+run-name: ${{ github.actor }} is running jest
+on: [push]
+jobs:
+  test-bookmarks-vanilla:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./bookmarks/vanilla/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run test
+  test-bookmarks-soukai:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./bookmarks/soukai/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run test
