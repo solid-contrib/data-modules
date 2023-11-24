@@ -32,9 +32,9 @@ describe("Bookmark", () => {
     // TODO: Improve existing tests to mock fetch and not getSolidDataset etc
     // See https://github.com/solid-contrib/data-modules/issues/23
     
-    it("should return index url", async () => {
+    it("The getIndexUrl function should return index url", async () => {
         const podUrls = ["https://fake-pod.net/"];
-        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        const expectedIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
         jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
@@ -42,11 +42,11 @@ describe("Bookmark", () => {
 
         expect(inruptClient.getPodUrlAll).toHaveBeenCalled();
 
-        expect(res).toBe(typeIndexUrl);
+        expect(res).toBe(expectedIndexUrl);
     });
 
-    it("should get all bookmarks", async () => {
-        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+    it("the getAll function should get all bookmarks", async () => {
+        const defaultBookmarksDocUrl = "https://fake-pod.net/path/to/bookmark.ttl";
 
         const expected = [
             {
@@ -56,7 +56,7 @@ describe("Bookmark", () => {
             }
         ]
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
         jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
@@ -66,8 +66,8 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it("should get one bookmark", async () => {
-        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+    it("the get function should get one bookmark", async () => {
+        const defaultBookmarksDocUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
         const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = {
@@ -76,7 +76,7 @@ describe("Bookmark", () => {
             link: 'http://goo.com'
         }
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
         jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
@@ -86,8 +86,8 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it("should delete bookmark", async () => {
-        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+    it("the delete function should delete bookmark", async () => {
+        const defaultBookmarksDocUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
         const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = [{
@@ -96,7 +96,7 @@ describe("Bookmark", () => {
             link: 'http://goo.com'
         }]
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
         jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
         // TODO: this should return updated ds
@@ -109,13 +109,13 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it("should create bookmark", async () => {
+    it("the create function should create bookmark", async () => {
 
         const title = "updated";
         const link = "http://goo.com";
 
 
-        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        const defaultBookmarksDocUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
         // const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = [{
@@ -124,7 +124,7 @@ describe("Bookmark", () => {
             link: 'http://goo.com'
         }]
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
         jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
         jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
@@ -134,13 +134,13 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it("should update bookmark", async () => {
+    it("the update function should update bookmark", async () => {
 
         const title = "updated";
         const link = "http://goo.com";
 
 
-        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        const defaultBookmarksDocUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
         const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = [{
@@ -149,7 +149,7 @@ describe("Bookmark", () => {
             link: 'http://goo.com'
         }]
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
         jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
         jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
