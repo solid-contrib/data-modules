@@ -34,7 +34,7 @@ describe("Bookmark", () => {
     
     it("should return index url", async () => {
         const podUrls = ["https://fake-pod.net/"];
-        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
 
         jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
@@ -46,11 +46,11 @@ describe("Bookmark", () => {
     });
 
     it("should get all bookmarks", async () => {
-        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
 
         const expected = [
             {
-                url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+                url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
                 title: 'updated',
                 link: 'http://goo.com'
             }
@@ -67,11 +67,11 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
     });
     it("should get one bookmark", async () => {
-        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
             title: 'updated',
             link: 'http://goo.com'
         }
@@ -87,11 +87,11 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
     });
     it("should delete bookmark", async () => {
-        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = [{
-            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
             title: 'updated',
             link: 'http://goo.com'
         }]
@@ -115,11 +115,11 @@ describe("Bookmark", () => {
         const link = "http://goo.com";
 
 
-        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-        // const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        // const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = [{
-            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
             title: 'updated',
             link: 'http://goo.com'
         }]
@@ -140,11 +140,11 @@ describe("Bookmark", () => {
         const link = "http://goo.com";
 
 
-        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        const typeIndexUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
+        const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
         const expected = [{
-            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
             title: 'updated',
             link: 'http://goo.com'
         }]
@@ -160,12 +160,10 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
     });
     it("should parse bookmarks in format one", async () => {
-        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#one';
+        const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#one';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/index.ttl#one',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#one',
             title: 'one',
             link: 'http://example.com',
             created: '2023-10-21T14:16:16Z',
@@ -184,25 +182,19 @@ describe("Bookmark", () => {
             }
         };
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
-
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
         // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
 
         const res = await Bookmark.get(url, session);
 
-        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
-
         expect(res).toEqual(expected);
 
     });
     it("should parse bookmarks in format two", async () => {
-        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#two';
+        const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#two';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/index.ttl#two',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#two',
             title: 'two',
             link: 'http://example.com',
             creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
@@ -219,25 +211,19 @@ describe("Bookmark", () => {
             }
         };
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
-
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
         // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
 
         const res = await Bookmark.get(url, session);
 
-        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
-
         expect(res).toEqual(expected);
     });
     // FIXME: https://github.com/solid-contrib/data-modules/issues/24
     it.only("should parse bookmarks in format three", async () => {
-        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-
-        const url = 'https://fake-pod.net/bookmarks/index.ttl#three';
+        const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#three';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/index.ttl#three',
+            url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#three',
             title: 'three',
             link: 'http://example.com',
             topic: 'http://wikipedia.org/sdfg'
@@ -254,14 +240,10 @@ describe("Bookmark", () => {
             }
         };
 
-        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
-
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
         // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
 
         const res = await Bookmark.get(url, session);
-
-        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
         expect(res).toEqual(expected);
     });

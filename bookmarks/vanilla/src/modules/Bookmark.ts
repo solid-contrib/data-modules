@@ -81,10 +81,8 @@ export class Bookmark {
      * @returns IBookmark
      */
     public static async get(url: string, session: Session) {
-        const indexUrl = await this.getIndexUrl(session);
-
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
-        console.log(getThingAll(ds))
+        const ds = await getSolidDataset(url, { fetch: session.fetch });
+        console.log(`things in data set for ${url}`, getThingAll(ds))
         const thing = getThing(ds, url)
 
         return thing ? this.mapBookmark(thing) : undefined
