@@ -29,6 +29,7 @@ export interface IBookmark {
     created?: string
     updated?: string
     creator?: string
+    topic?: string
 }
 
 export class Bookmark {
@@ -202,6 +203,9 @@ export class Bookmark {
         if (this.mapCreator(thing)) {
             obj.creator = this.mapCreator(thing);
         }
+        if (this.mapTopic(thing)) {
+            obj.topic = this.mapTopic(thing);
+        }
         return obj;
     }
     private static mapTitle(thing: ThingPersisted): string {
@@ -231,6 +235,12 @@ export class Bookmark {
         return (
             getNamedNode(thing, DCTERMS.creator)?.value ??
             getNamedNode(thing, FOAF.maker)?.value ??
+            ""
+        );
+    }
+    private static mapTopic(thing: ThingPersisted): string {
+        return (
+            getNamedNode(thing, BOOKMARK.hasTopic)?.value ??
             ""
         );
     }

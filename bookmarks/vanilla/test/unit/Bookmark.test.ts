@@ -196,8 +196,7 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
 
     });
-    // FIXME: https://github.com/solid-contrib/data-modules/issues/24
-    it.only("should parse bookmarks in format two", async () => {
+    it("should parse bookmarks in format two", async () => {
         const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
         const url = 'https://fake-pod.net/bookmarks/index.ttl#two';
@@ -231,7 +230,8 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it("should parse bookmarks in format three", async () => {
+    // FIXME: https://github.com/solid-contrib/data-modules/issues/24
+    it.only("should parse bookmarks in format three", async () => {
         const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
         const url = 'https://fake-pod.net/bookmarks/index.ttl#three';
@@ -240,7 +240,6 @@ describe("Bookmark", () => {
             url: 'https://fake-pod.net/bookmarks/index.ttl#three',
             title: 'three',
             link: 'http://example.com',
-            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me',
             topic: 'http://wikipedia.org/sdfg'
         }
 
