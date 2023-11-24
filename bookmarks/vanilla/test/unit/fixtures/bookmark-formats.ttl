@@ -1,4 +1,4 @@
-@prefix : <#>.
+@prefix : <https://fake-pod.net/bookmarks/index.ttl#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix bookm: <./>.
 @prefix boo: <http://www.w3.org/2002/01/bookmark#>.

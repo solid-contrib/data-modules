@@ -162,10 +162,10 @@ describe("Bookmark", () => {
     it("should parse bookmarks in format one", async () => {
         const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
-        const url = 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#one';
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#one';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#one',
+            url: 'https://fake-pod.net/bookmarks/index.ttl#one',
             title: 'one',
             link: 'http://example.com',
             created: '2023-10-21T14:16:16Z',
@@ -196,13 +196,14 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
 
     });
-    it.skip("should parse bookmarks in format two", async () => {
+    // FIXME: https://github.com/solid-contrib/data-modules/issues/24
+    it.only("should parse bookmarks in format two", async () => {
         const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
-        const url = 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#two';
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#two';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#two',
+            url: 'https://fake-pod.net/bookmarks/index.ttl#two',
             title: 'two',
             link: 'http://example.com',
             created: '2023-10-21T14:16:16Z',
@@ -232,13 +233,13 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
-    it.skip("should parse bookmarks in format three", async () => {
+    it("should parse bookmarks in format three", async () => {
         const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
-        const url = 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#three';
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#three';
 
         const expected = {
-            url: 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#three',
+            url: 'https://fake-pod.net/bookmarks/index.ttl#three',
             title: 'three',
             link: 'http://example.com',
             created: '2023-10-21T14:16:16Z',
