@@ -1,9 +1,9 @@
 {
   "graphs": {
     "default": {
-      "https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d": {
+      "https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d": {
         "type": "Subject",
-        "url": "https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d",
+        "url": "https://fake-pod.net/path/to/bookmark-formats.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d",
         "predicates": {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
             "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
@@ -24,17 +24,17 @@
   },
   "type": "Dataset",
   "internal_resourceInfo": {
-    "sourceIri": "https://fake-pod.net/bookmarks/index.ttl",
+    "sourceIri": "https://fake-pod.net/path/to/bookmark-formats.ttl",
     "isRawData": false,
     "contentType": "text/turtle",
     "linkedResources": {
-      "acl": ["https://fake-pod.net/bookmarks/index.ttl.acl"],
+      "acl": ["https://fake-pod.net/path/to/bookmark-formats.ttl.acl"],
       "describedBy": [
-        "https://fake-pod.net/bookmarks/index.ttl.meta"
+        "https://fake-pod.net/path/to/bookmark-formats.ttl.meta"
       ],
       "type": ["http://www.w3.org/ns/ldp#Resource"]
     },
-    "aclUrl": "https://fake-pod.net/bookmarks/index.ttl.acl",
+    "aclUrl": "https://fake-pod.net/path/to/bookmark-formats.ttl.acl",
     "permissions": {
       "user": {
         "read": true,

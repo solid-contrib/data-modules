@@ -81,9 +81,7 @@ export class Bookmark {
      * @returns IBookmark
      */
     public static async get(url: string, session: Session) {
-        const indexUrl = await this.getIndexUrl(session);
-
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url)
 
