@@ -82,7 +82,7 @@ export class Bookmark {
      */
     public static async get(url: string, session: Session) {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
-        console.log(`things in data set for ${url}`, getThingAll(ds))
+
         const thing = getThing(ds, url)
 
         return thing ? this.mapBookmark(thing) : undefined
