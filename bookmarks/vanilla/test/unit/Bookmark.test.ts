@@ -29,6 +29,9 @@ describe("Bookmark", () => {
         } as unknown as jest.Mocked<Session>;
     });
 
+    // TODO: Improve existing tests to mock fetch and not getSolidDataset etc
+    // See https://github.com/solid-contrib/data-modules/issues/23
+    
     it("should return index url", async () => {
         const podUrls = ["https://fake-pod.net/"];
         const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
@@ -151,6 +154,112 @@ describe("Bookmark", () => {
         jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
         const res = await Bookmark.update(url, title, link, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
+    });
+    it("should parse bookmarks in format one", async () => {
+        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#one';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/index.ttl#one',
+            title: 'one',
+            link: 'http://example.com',
+            created: '2023-10-21T14:16:16Z',
+            updated: '2023-11-21T14:16:16Z',
+            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
+
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+
+        const res = await Bookmark.get(url, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
+
+    });
+    it("should parse bookmarks in format two", async () => {
+        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#two';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/index.ttl#two',
+            title: 'two',
+            link: 'http://example.com',
+            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
+
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+
+        const res = await Bookmark.get(url, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
+    });
+    // FIXME: https://github.com/solid-contrib/data-modules/issues/24
+    it.only("should parse bookmarks in format three", async () => {
+        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#three';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/index.ttl#three',
+            title: 'three',
+            link: 'http://example.com',
+            topic: 'http://wikipedia.org/sdfg'
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
+
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+
+        const res = await Bookmark.get(url, session);
 
         expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 

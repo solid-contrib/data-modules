@@ -1,7 +1,9 @@
 import {
+    ThingPersisted,
     buildThing,
     createThing,
     getLiteral,
+    getNamedNode,
     getPodUrlAll,
     getSolidDataset,
     getThing,
@@ -14,7 +16,9 @@ import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
     DCTERMS,
-    RDF
+    FOAF,
+    RDF,
+    RDFS
 } from "@inrupt/vocab-common-rdf";
 
 
@@ -22,6 +26,10 @@ export interface IBookmark {
     url: string
     title: string
     link: string
+    created?: string
+    updated?: string
+    creator?: string
+    topic?: string
 }
 
 export class Bookmark {
@@ -79,15 +87,7 @@ export class Bookmark {
 
         const thing = getThing(ds, url)
 
-        if (thing) {
-            return {
-                url: thing.url,
-                title: getLiteral(thing, DCTERMS.title)?.value,
-                link: getLiteral(thing, BOOKMARK.recalls)?.value
-            } as IBookmark
-        }
-
-        return undefined
+        return thing ? this.mapBookmark(thing) : undefined
     }
 
     /**
@@ -186,5 +186,63 @@ export class Bookmark {
         }
 
     };
+
+
+    private static mapBookmark(thing: ThingPersisted): Bookmark {
+        const obj: IBookmark = {
+            url: thing.url,
+            title: this.mapTitle(thing),
+            link: this.mapLink(thing)
+        };
+        if (this.mapCreated(thing)) {
+            obj.created = this.mapCreated(thing);
+        }
+        if (this.mapUpdated(thing)) {
+            obj.updated = this.mapUpdated(thing);
+        }
+        if (this.mapCreator(thing)) {
+            obj.creator = this.mapCreator(thing);
+        }
+        if (this.mapTopic(thing)) {
+            obj.topic = this.mapTopic(thing);
+        }
+        return obj;
+    }
+    private static mapTitle(thing: ThingPersisted): string {
+        return (
+            getLiteral(thing, DCTERMS.title)?.value ??
+            getLiteral(thing, RDFS.label)?.value ??
+            ""
+        );
+    }
+    private static mapLink(thing: ThingPersisted): string {
+        return (
+            getLiteral(thing, BOOKMARK.recalls)?.value ??
+            getNamedNode(thing, BOOKMARK.recalls)?.value ??
+            ""
+        );
+    }
+    private static mapCreated(thing: ThingPersisted): string {
+        return getLiteral(thing, DCTERMS.created)?.value ?? ""
+    }
+    private static mapUpdated(thing: ThingPersisted): string {
+        return (
+            getLiteral(thing, "http://purl.org/dc/terms/updated")?.value ??
+            ""
+        );
+    }
+    private static mapCreator(thing: ThingPersisted): string {
+        return (
+            getNamedNode(thing, DCTERMS.creator)?.value ??
+            getNamedNode(thing, FOAF.maker)?.value ??
+            ""
+        );
+    }
+    private static mapTopic(thing: ThingPersisted): string {
+        return (
+            getNamedNode(thing, BOOKMARK.hasTopic)?.value ??
+            ""
+        );
+    }
 
 }

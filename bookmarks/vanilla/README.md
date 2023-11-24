@@ -1,5 +1,9 @@
 # Bookmarks Data Module using vanilla JavaScript
 
+# How to use this module
+
+[Please add docs about how this data module uses the type index etc.]
+
 ## Development
 ```bash
 git clone https://github.com/solid-contrib/data-modules
