@@ -206,8 +206,6 @@ describe("Bookmark", () => {
             url: 'https://fake-pod.net/bookmarks/index.ttl#two',
             title: 'two',
             link: 'http://example.com',
-            created: '2023-10-21T14:16:16Z',
-            updated: '2023-11-21T14:16:16Z',
             creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
         }
 
@@ -242,9 +240,8 @@ describe("Bookmark", () => {
             url: 'https://fake-pod.net/bookmarks/index.ttl#three',
             title: 'three',
             link: 'http://example.com',
-            created: '2023-10-21T14:16:16Z',
-            updated: '2023-11-21T14:16:16Z',
-            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
+            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me',
+            topic: 'http://wikipedia.org/sdfg'
         }
 
         const responseObject: any = {

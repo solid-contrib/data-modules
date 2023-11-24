@@ -3,7 +3,7 @@
 @prefix bookm: <./>.
 @prefix boo: <http://www.w3.org/2002/01/bookmark#>.
 @prefix dc: <http://purl.org/dc/terms/>.
-@prefix foaf: <http://xmlns.com/foaf/0.1>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix crdt: <http://soukai-solid.com/crdt>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
