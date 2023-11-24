@@ -26,6 +26,9 @@ export interface IBookmark {
     url: string
     title: string
     link: string
+    created?: string
+    updated?: string
+    creator?: string
 }
 
 export class Bookmark {
@@ -185,14 +188,21 @@ export class Bookmark {
 
 
     private static mapBookmark(thing: ThingPersisted): Bookmark {
-        return {
+        const obj: IBookmark = {
             url: thing.url,
             title: this.mapTitle(thing),
-            link: this.mapLink(thing),
-            created: this.mapCreated(thing),
-            updated: this.mapUpdated(thing),
-            creator: this.mapCreator(thing),
+            link: this.mapLink(thing)
+        };
+        if (this.mapCreated(thing)) {
+            obj.created = this.mapCreated(thing);
         }
+        if (this.mapUpdated(thing)) {
+            obj.updated = this.mapUpdated(thing);
+        }
+        if (this.mapCreator(thing)) {
+            obj.creator = this.mapCreator(thing);
+        }
+        return obj;
     }
     private static mapTitle(thing: ThingPersisted): string {
         return (

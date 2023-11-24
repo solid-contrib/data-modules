@@ -29,134 +29,136 @@ describe("Bookmark", () => {
         } as unknown as jest.Mocked<Session>;
     });
 
-    // TODO: old tests need refactor since i have changed modules/Bookmarks.ts
-    // it("should return index url", async () => {
-    //     const podUrls = ["https://fake-pod.net/"];
-    //     const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+    // TODO: Improve existing tests to mock fetch and not getSolidDataset etc
+    // See https://github.com/solid-contrib/data-modules/issues/23
+    
+    it("should return index url", async () => {
+        const podUrls = ["https://fake-pod.net/"];
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
-    //     jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
+        jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
-    //     const res = await Bookmark.getIndexUrl(session);
+        const res = await Bookmark.getIndexUrl(session);
 
-    //     expect(inruptClient.getPodUrlAll).toHaveBeenCalled();
+        expect(inruptClient.getPodUrlAll).toHaveBeenCalled();
 
-    //     expect(res).toBe(typeIndexUrl);
-    // });
+        expect(res).toBe(typeIndexUrl);
+    });
 
-    // it("should get all bookmarks", async () => {
-    //     const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+    it("should get all bookmarks", async () => {
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
-    //     const expected = [
-    //         {
-    //             url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
-    //             title: 'updated',
-    //             link: 'http://goo.com'
-    //         }
-    //     ]
+        const expected = [
+            {
+                url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+                title: 'updated',
+                link: 'http://goo.com'
+            }
+        ]
 
-    //     jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
 
-    //     jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
-    //     const res = await Bookmark.getAll(session);
+        const res = await Bookmark.getAll(session);
 
-    //     expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
-    //     expect(res).toEqual(expected);
-    // });
-    // it("should get one bookmark", async () => {
-    //     const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-    //     const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        expect(res).toEqual(expected);
+    });
+    it("should get one bookmark", async () => {
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
-    //     const expected = {
-    //         url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
-    //         title: 'updated',
-    //         link: 'http://goo.com'
-    //     }
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            title: 'updated',
+            link: 'http://goo.com'
+        }
 
-    //     jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
 
-    //     jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
-    //     const res = await Bookmark.get(url, session);
+        const res = await Bookmark.get(url, session);
 
-    //     expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
-    //     expect(res).toEqual(expected);
-    // });
-    // it("should delete bookmark", async () => {
-    //     const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-    //     const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        expect(res).toEqual(expected);
+    });
+    it("should delete bookmark", async () => {
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
-    //     const expected = [{
-    //         url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
-    //         title: 'updated',
-    //         link: 'http://goo.com'
-    //     }]
+        const expected = [{
+            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            title: 'updated',
+            link: 'http://goo.com'
+        }]
 
-    //     jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
 
-    //     jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
-    //     // TODO: this should return updated ds
-    //     // We are not testing saveSolidDatasetAt but its good to have nice mocks
-    //     jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        // TODO: this should return updated ds
+        // We are not testing saveSolidDatasetAt but its good to have nice mocks
+        jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
-    //     const res = await Bookmark.delete(url, session);
+        const res = await Bookmark.delete(url, session);
 
-    //     expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
-    //     expect(res).toEqual(expected);
-    // });
-    // it("should create bookmark", async () => {
+        expect(res).toEqual(expected);
+    });
+    it("should create bookmark", async () => {
 
-    //     const title = "updated";
-    //     const link = "http://goo.com";
-
-
-    //     const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-    //     // const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
-
-    //     const expected = [{
-    //         url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
-    //         title: 'updated',
-    //         link: 'http://goo.com'
-    //     }]
-
-    //     jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
-    //     jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
-    //     jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
-
-    //     const res = await Bookmark.create(title, link, session);
-
-    //     expect(Bookmark.getIndexUrl).toHaveBeenCalled();
-
-    //     expect(res).toEqual(expected);
-    // });
-    // it("should update bookmark", async () => {
-
-    //     const title = "updated";
-    //     const link = "http://goo.com";
+        const title = "updated";
+        const link = "http://goo.com";
 
 
-    //     const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
-    //     const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        // const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
 
-    //     const expected = [{
-    //         url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
-    //         title: 'updated',
-    //         link: 'http://goo.com'
-    //     }]
+        const expected = [{
+            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            title: 'updated',
+            link: 'http://goo.com'
+        }]
 
-    //     jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
-    //     jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
-    //     jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
 
-    //     const res = await Bookmark.update(url, title, link, session);
+        const res = await Bookmark.create(title, link, session);
 
-    //     expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
-    //     expect(res).toEqual(expected);
-    // });
+        expect(res).toEqual(expected);
+    });
+    it("should update bookmark", async () => {
+
+        const title = "updated";
+        const link = "http://goo.com";
+
+
+        const typeIndexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+        const url = 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d';
+
+        const expected = [{
+            url: 'https://fake-pod.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d',
+            title: 'updated',
+            link: 'http://goo.com'
+        }]
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(typeIndexUrl));
+        jest.spyOn(inruptClient, "getSolidDataset").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+        jest.spyOn(inruptClient, "saveSolidDatasetAt").mockReturnValue(Promise.resolve(JSON.parse(loadFixture("ds.json"))));
+
+        const res = await Bookmark.update(url, title, link, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
+    });
     it("should parse bookmarks in format one", async () => {
         const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
 
