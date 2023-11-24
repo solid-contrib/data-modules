@@ -187,7 +187,7 @@ describe("Bookmark", () => {
         jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
-        jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+        // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
 
         const res = await Bookmark.get(url, session);
 
@@ -196,7 +196,76 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
 
     });
-    it("should parse bookmarks in format two", async () => {
-        // etc
+    it.skip("should parse bookmarks in format two", async () => {
+        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+
+        const url = 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#two';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#two',
+            title: 'two',
+            link: 'http://example.com',
+            created: '2023-10-21T14:16:16Z',
+            updated: '2023-11-21T14:16:16Z',
+            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
+
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+
+        const res = await Bookmark.get(url, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
+    });
+    it.skip("should parse bookmarks in format three", async () => {
+        const indexUrl = "https://fake-pod.net/bookmarks/index.ttl";
+
+        const url = 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#three';
+
+        const expected = {
+            url: 'https://fake-pod.net/bookmarks/bookmark-formats.ttl#three',
+            title: 'three',
+            link: 'http://example.com',
+            created: '2023-10-21T14:16:16Z',
+            updated: '2023-11-21T14:16:16Z',
+            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        jest.spyOn(Bookmark, "getIndexUrl").mockReturnValue(Promise.resolve(indexUrl));
+
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+
+        const res = await Bookmark.get(url, session);
+
+        expect(Bookmark.getIndexUrl).toHaveBeenCalled();
+
+        expect(res).toEqual(expected);
     });
 });
