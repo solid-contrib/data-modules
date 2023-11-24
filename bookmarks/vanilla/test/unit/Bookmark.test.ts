@@ -219,7 +219,7 @@ describe("Bookmark", () => {
         expect(res).toEqual(expected);
     });
     // FIXME: https://github.com/solid-contrib/data-modules/issues/24
-    it.only("should parse bookmarks in format three", async () => {
+    it("should parse bookmarks in format three", async () => {
         const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#three';
 
         const expected = {
