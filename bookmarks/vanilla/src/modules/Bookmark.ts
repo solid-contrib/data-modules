@@ -84,7 +84,7 @@ export class Bookmark {
         const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
-        console.log(getThingAll(ds))
+
         const thing = getThing(ds, url)
 
         return thing ? this.mapBookmark(thing) : undefined
