@@ -18,7 +18,7 @@ import {
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
 // TODO: install @rdfjs its not good to expect our dependencies to have it installed
-import { namedNode } from "@rdfjs/data-model";
+import { namedNode } from '@rdfjs/data-model'
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
@@ -31,19 +31,23 @@ import {
 
 export type ICreateBookmark = {
     title: string
+    topic?: string
     link: string
-    created?: string,
-    updated?: string,
     creator?: string,
 }
 
 export type IUpdateBookmark = {
     title: string
+    topic?: string
     link: string
     creator?: string,
 }
 
-export type IBookmark = ICreateBookmark & { url: string }
+export type IBookmark = ICreateBookmark & {
+    url: string
+    created?: string
+    updated?: string
+}
 
 export class Bookmark {
 
@@ -110,7 +114,11 @@ export class Bookmark {
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
             const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch: session.fetch });
-            return true
+            if (updatedDataset) {
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }
@@ -126,7 +134,7 @@ export class Bookmark {
      */
     public static async create(payload: ICreateBookmark, session: Session) {
 
-        const { title, link, created, creator, updated } = payload
+        const { title, link, creator, topic } = payload
 
         const indexUrl = await this.getIndexUrl(session);
 
@@ -137,8 +145,9 @@ export class Bookmark {
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.title, title)
         newBookmarkThing = addStringNoLocale(newBookmarkThing, BOOKMARK.recalls, link)
         if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
-        if (created) newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, created)
-        if (updated) newBookmarkThing = addStringNoLocale(newBookmarkThing, "http://purl.org/dc/terms/updated", updated)
+        if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, "http://purl.org/dc/terms/updated", new Date().toISOString())
 
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
@@ -163,11 +172,12 @@ export class Bookmark {
         let thing = getThing(ds, url)
 
         if (thing) {
-            const { title, link, created, creator, updated } = payload
+            const { title, link, creator, topic } = payload
 
             thing = setStringNoLocale(thing, DCTERMS.title, title)
             thing = setStringNoLocale(thing, BOOKMARK.recalls, link)
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
+            if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
             thing = setStringNoLocale(thing, "http://purl.org/dc/terms/updated", new Date().toISOString())
 
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
@@ -187,6 +197,7 @@ export class Bookmark {
             url: thing.url,
             title: this.mapTitle(thing),
             link: this.mapLink(thing),
+            topic: this.mapTopic(thing),
             created: this.mapCreated(thing),
             updated: this.mapUpdated(thing),
             creator: this.mapCreator(thing),
@@ -216,6 +227,11 @@ export class Bookmark {
         return (
             getNamedNode(thing, DCTERMS.creator)?.value ??
             getNamedNode(thing, FOAF.maker)?.value
+        );
+    }
+    private static mapTopic(thing: ThingPersisted): string | undefined {
+        return (
+            getNamedNode(thing, BOOKMARK.hasTopic)?.value
         );
     }
 

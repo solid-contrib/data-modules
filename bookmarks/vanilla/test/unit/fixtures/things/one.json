@@ -1,0 +1,30 @@
+{
+    "type": "Subject",
+    "url": "https://fake-pod.net/bookmarks/bookmark-formats.ttl#two",
+    "predicates": {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+            "namedNodes": [
+                "http://www.w3.org/2002/01/bookmark#Bookmark"
+            ]
+        },
+        "http://purl.org/dc/terms/title": {
+            "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": [
+                    "two"
+                ]
+            }
+        },
+        "http://xmlns.com/foaf/0.1/maker": {
+            "namedNodes": [
+                "https://michielbdejong.solidcommunity.net/profile/card#me"
+            ]
+        },
+        "http://www.w3.org/2002/01/bookmark#recalls": {
+            "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": [
+                    "http://example.com"
+                ]
+            }
+        }
+    }
+}
