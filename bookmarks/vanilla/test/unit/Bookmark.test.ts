@@ -68,8 +68,6 @@ describe("Bookmark", () => {
                 url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#two',
                 title: 'two',
                 link: 'http://example.com',
-                created: undefined,
-                updated: undefined,
                 creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
             },
             {
@@ -77,25 +75,16 @@ describe("Bookmark", () => {
                 title: 'three',
                 topic: "http://wikipedia.org/sdfg",
                 link: 'http://example.com',
-                created: undefined,
-                updated: undefined,
-                creator: undefined
             },
             {
                 url: '/b93d9944-d54d-42f6-a39b-6ea3f9217763',
                 title: 'sdf',
                 link: 'http://example.com',
-                created: undefined,
-                updated: undefined,
-                creator: undefined
             },
             {
                 url: '/b93d9944-d54d-42f6-a39b-6ea3f9217763-metadata',
                 title: '',
                 link: '',
-                created: undefined,
-                updated: undefined,
-                creator: undefined
             }
         ]
 
