@@ -103,7 +103,7 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns IBookmark[]
+     * @returns boolean
      */
     public static async delete(url: string, session: Session) {
         const indexUrl = await this.getIndexUrl(session);
@@ -130,7 +130,7 @@ export class Bookmark {
      * @param title string
      * @param link string
      * @param session Session
-     * @returns IBookmark[]
+     * @returns IBookmark
      */
     public static async create(payload: ICreateBookmark, session: Session) {
 
@@ -164,7 +164,7 @@ export class Bookmark {
      * @param title string
      * @param link string
      * @param session Session
-     * @returns IBookmark[]
+     * @returns IBookmark
      */
     public static async update(url: string, payload: IUpdateBookmark, session: Session) {
         const indexUrl = await this.getIndexUrl(session);

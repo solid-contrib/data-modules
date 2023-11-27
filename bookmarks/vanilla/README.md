@@ -39,11 +39,11 @@ They will return a promise containing the JSON representation of the bookmark
 
 import { Session } from "@inrupt/solid-client-authn-browser";
 
-const bookmarks = await Bookmarks.getAll(session: Session);
-const bookmark  = await Bookmarks.get("<pk>", session: Session);
-const bookmark  = await Bookmarks.remove("<pk>", session: Session);
-const bookmark  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
-const bookmark  = await Bookmarks.update("<pk>", payload: IUpdateBookmark, session: Session);
+const result: IBookmark[] = await Bookmarks.getAll(session: Session);
+const result: IBookmark  = await Bookmarks.get("<pk>", session: Session);
+const result: boolean  = await Bookmarks.remove("<pk>", session: Session);
+const result: IBookmark  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
+const result: IBookmark  = await Bookmarks.update("<pk>", payload: IUpdateBookmark, session: Session);
 ```
 
 - pk indicates the primary key of the bookmark, in this case its the url of the bookmark
