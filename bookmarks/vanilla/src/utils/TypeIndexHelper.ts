@@ -51,7 +51,8 @@ export class TypeIndexHelper {
 
         const all = getThingAll(ds);
 
-        const bookmarkRegisteries: any[] = []
+        const instances: string[] = []
+        const instanceContainers: string[] = []
 
         all.forEach(x => {
             const forClass = getNamedNode(x, FOR_CLASS)
@@ -61,12 +62,15 @@ export class TypeIndexHelper {
                 const instance = getNamedNode(x, SOLID.INSTANCE)?.value
                 const instanceContainer = getNamedNode(x, SOLID.INSTANCE_CONTAINER)?.value
 
-                bookmarkRegisteries.push({
-                    ...(instance && { instance }),
-                    ...(instanceContainer && { instanceContainer }),
-                })
+                instance && instances?.push(instance)
+                instanceContainer && instanceContainers?.push(instanceContainer)
             }
         })
+
+        const bookmarkRegisteries = {
+            instances,
+            instanceContainers
+        }
         return bookmarkRegisteries
     }
 }
