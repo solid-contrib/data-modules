@@ -3,7 +3,6 @@ import {
     addNamedNode,
     addStringNoLocale,
     addUrl,
-    buildThing,
     createThing,
     getLiteral,
     getNamedNode,
@@ -18,7 +17,6 @@ import {
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
 // TODO: install @rdfjs its not good to expect our dependencies to have it installed
-import { namedNode } from '@rdfjs/data-model'
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
@@ -27,6 +25,7 @@ import {
     RDF,
     RDFS
 } from "@inrupt/vocab-common-rdf";
+import { namedNode } from '@rdfjs/data-model';
 
 
 export type ICreateBookmark = {
