@@ -166,7 +166,7 @@ export class Bookmark {
      * @param session Session
      * @returns IBookmark[]
      */
-    public static async update(url: string, payload: ICreateBookmark, session: Session) {
+    public static async update(url: string, payload: IUpdateBookmark, session: Session) {
         const indexUrl = await this.getIndexUrl(session);
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
         let thing = getThing(ds, url)
