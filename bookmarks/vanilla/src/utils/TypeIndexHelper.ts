@@ -9,7 +9,6 @@ import {
     BOOKMARK
 } from "@inrupt/vocab-common-rdf";
 import { __FOR_CLASS, __PRIVATE_TYPEINDEX, __PUBLIC_TYPEINDEX, __SOLID_INSTANCE, __SOLID_INSTANCE_CONTAINER } from "../constants";
-// import { FOR_CLASS, SOLID } from "../constants";
 
 export class TypeIndexHelper {
     constructor() { }
@@ -43,6 +42,7 @@ export class TypeIndexHelper {
 
     public static async getFromTypeIndex(session: Session) {
         const typeIndex = await this.getTypeIndex({ session, isPrivate: true })
+        
         if (!typeIndex) return // TODO validate
 
         const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch })
@@ -69,7 +69,7 @@ export class TypeIndexHelper {
             instances,
             instanceContainers
         }
-        console.log("🚀 ~ file: TypeIndexHelper.ts:75 ~ TypeIndexHelper ~ getFromTypeIndex ~ bookmarkRegisteries:", bookmarkRegisteries)
+
         return bookmarkRegisteries
     }
 }

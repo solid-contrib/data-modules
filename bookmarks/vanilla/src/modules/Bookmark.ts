@@ -26,6 +26,7 @@ import {
     RDFS
 } from "@inrupt/vocab-common-rdf";
 import { namedNode } from '@rdfjs/data-model';
+import { TypeIndexHelper } from "../utils/TypeIndexHelper";
 
 
 export type ICreateBookmark = {
@@ -56,11 +57,24 @@ export class Bookmark {
      * @returns string
      */
     public static async getIndexUrl(session: Session) {
+        const bookmarkRegisteries = await TypeIndexHelper.getFromTypeIndex(session)
+        if (bookmarkRegisteries) {
+            // inrupt getSolidDataset takes a full url to turtle file like https://example.com/bookmarks/index.ttl
+            const { instanceContainers, instances } = bookmarkRegisteries
+
+            if (!!instances) {
+                return instances[0]
+            }
+
+            // TODO: return all instances
+        } else {
+            // TODO: create registeries
+        }
         const pods = await getPodUrlAll(session.info.webId!, {
             fetch: session.fetch,
         });
         const bookmarksContainerUri = `${pods[0]}bookmarks/`;
-        return `${bookmarksContainerUri}index.ttl`;
+        return `${bookmarksContainerUri}index.ttl`; // defaultIndexUrl
     }
 
     /**
@@ -132,6 +146,7 @@ export class Bookmark {
      * @returns IBookmark
      */
     public static async create(payload: ICreateBookmark, session: Session) {
+        // TODO: check typeIndex
 
         const { title, link, creator, topic } = payload
 
@@ -166,6 +181,8 @@ export class Bookmark {
      * @returns IBookmark
      */
     public static async update(url: string, payload: IUpdateBookmark, session: Session) {
+        // TODO: check typeIndex
+
         const indexUrl = await this.getIndexUrl(session);
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
         let thing = getThing(ds, url)
