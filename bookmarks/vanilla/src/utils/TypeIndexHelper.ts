@@ -8,7 +8,8 @@ import { getThingAll } from "@inrupt/solid-client";
 import {
     BOOKMARK
 } from "@inrupt/vocab-common-rdf";
-import { FOR_CLASS, SOLID } from "../constants";
+import { __FOR_CLASS, __PRIVATE_TYPEINDEX, __PUBLIC_TYPEINDEX, __SOLID_INSTANCE, __SOLID_INSTANCE_CONTAINER } from "../constants";
+// import { FOR_CLASS, SOLID } from "../constants";
 
 export class TypeIndexHelper {
     constructor() { }
@@ -23,15 +24,12 @@ export class TypeIndexHelper {
     }
 
     public static async getTypeIndex({ session, isPrivate }: { session: Session, isPrivate: boolean }) {
-        if (!session.info.webId) return
-        const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch })
 
-        const me = getThing(profileDS, session.info.webId);
+        const me = await this.getProfile(session)
 
         if (me) {
-            const predicate = isPrivate ? "privateTypeIndex" : "publicTypeIndex"
-
-            const typeIndex = getNamedNode(me, `http://www.w3.org/ns/solid/terms#${predicate}`)
+            // TODO: me doc exists
+            const typeIndex = getNamedNode(me, isPrivate ? __PRIVATE_TYPEINDEX : __PUBLIC_TYPEINDEX)
 
             return typeIndex
         } else {
@@ -55,12 +53,12 @@ export class TypeIndexHelper {
         const instanceContainers: string[] = []
 
         all.forEach(x => {
-            const forClass = getNamedNode(x, FOR_CLASS)
+            const forClass = getNamedNode(x, __FOR_CLASS)
 
             if (forClass?.value === BOOKMARK.Bookmark) {
 
-                const instance = getNamedNode(x, SOLID.INSTANCE)?.value
-                const instanceContainer = getNamedNode(x, SOLID.INSTANCE_CONTAINER)?.value
+                const instance = getNamedNode(x, __SOLID_INSTANCE)?.value
+                const instanceContainer = getNamedNode(x, __SOLID_INSTANCE_CONTAINER)?.value
 
                 instance && instances?.push(instance)
                 instanceContainer && instanceContainers?.push(instanceContainer)
@@ -71,6 +69,7 @@ export class TypeIndexHelper {
             instances,
             instanceContainers
         }
+        console.log("🚀 ~ file: TypeIndexHelper.ts:75 ~ TypeIndexHelper ~ getFromTypeIndex ~ bookmarkRegisteries:", bookmarkRegisteries)
         return bookmarkRegisteries
     }
 }
