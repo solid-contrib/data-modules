@@ -192,15 +192,22 @@ export class Bookmark {
 
 
     private static mapBookmark(thing: ThingPersisted): IBookmark {
+        const url = thing.url
+        const title = this.mapTitle(thing)
+        const link = this.mapLink(thing)
+        const topic = this.mapTopic(thing)
+        const created = this.mapCreated(thing)
+        const updated = this.mapUpdated(thing)
+        const creator = this.mapCreator(thing)
 
         return {
-            url: thing.url,
-            title: this.mapTitle(thing),
-            link: this.mapLink(thing),
-            topic: this.mapTopic(thing),
-            created: this.mapCreated(thing),
-            updated: this.mapUpdated(thing),
-            creator: this.mapCreator(thing),
+            url,
+            title,
+            link,
+            ...(topic && { topic }),
+            ...(created && { created }),
+            ...(updated && { updated }),
+            ...(creator && { creator }),
         }
     }
     private static mapTitle(thing: ThingPersisted): string {
