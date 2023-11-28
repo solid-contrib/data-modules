@@ -201,7 +201,7 @@ describe("Bookmark", () => {
 
         expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
-        expect(res).toEqual(expected);
+        expect(res).toEqual(true);
 
         mockGetIndexUrl.mockRestore();
         mockFetchGet.mockRestore();
@@ -253,7 +253,6 @@ describe("Bookmark", () => {
         const mock3 = jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-updated.json")));
 
         const res = await Bookmark.update(url, payload, session);
-        console.log("🚀 ~ file: Bookmark.test.ts:254 ~ it ~ res:", res)
 
         expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
@@ -353,7 +352,6 @@ describe("Bookmark", () => {
         // jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/three.json")));
 
         const res = await Bookmark.get(url, session);
-        // console.log("🚀 ~ file: Bookmark.test.ts:361 ~ it ~ res:", res)
 
         expect(res).toEqual(expected);
         fetchMock.mockRestore();

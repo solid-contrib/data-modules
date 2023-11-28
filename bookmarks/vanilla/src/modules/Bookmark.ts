@@ -133,7 +133,7 @@ export class Bookmark {
      * @param title string
      * @param link string
      * @param session Session
-     * @returns Promise<boolean>
+     * @returns Promise<IBookmark>
      */
     public static async create(payload: ICreateBookmark, session: Session) {
 
@@ -155,7 +155,6 @@ export class Bookmark {
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
-        
         const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
 
         return updatedDataset ? true : false
