@@ -63,7 +63,7 @@ export class Bookmark {
             const { instanceContainers, instances } = bookmarkRegisteries
 
             if (!!instances) {
-                return instances[0]
+                return instances
             }
             if (!!instanceContainers) {
                 // return instanceContainers[0]
@@ -77,7 +77,7 @@ export class Bookmark {
             fetch: session.fetch,
         });
         const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
-        return defaultIndexUrl;
+        return [defaultIndexUrl];
     }
 
     /**
@@ -86,19 +86,23 @@ export class Bookmark {
      * @returns IBookmark[]
      */
     public static async getAll(session: Session) {
-        const indexUrl = await this.getIndexUrl(session);
-        try {
-            const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const indexUrls = await this.getIndexUrl(session);
+        const all = indexUrls.map(async (indexUrl) => {
+            try {
+                const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
-            const things = getThingAll(ds)
+                const things = getThingAll(ds)
 
-            const bookmarks = things.map(thing => this.mapBookmark(thing))
+                const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
-            return bookmarks
-
-        } catch (error) {
-            return []
-        }
+                return bookmarks
+            } catch (error) {
+                return []
+            }
+        })
+        const allPromise = Promise.all([...all]);
+        const values = (await allPromise).flat();
+        return values;
     }
 
     /**
@@ -122,14 +126,18 @@ export class Bookmark {
      * @returns boolean
      */
     public static async delete(url: string, session: Session) {
-        const indexUrl = await this.getIndexUrl(session);
+        // const [indexUrl] = await this.getIndexUrl(session);
 
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url);
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
-            const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch: session.fetch });
+            // TODO: we can also split url with # to path exact datasetURL
+            // but compatibility with other frameworks need more considiration
+            // e.g. inrub url: https://solid-dm.solidcommunity.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d
+            // e.g. soukai url: https://solid-dm.solidcommunity.net/bookmarks/d2d50f70-8eb0-40b6-9996-88c4a430a16d
+            const updatedDataset = await saveSolidDatasetAt(url, updatedBookmarks, { fetch: session.fetch });
             if (updatedDataset) {
                 return true
             } else {
@@ -153,7 +161,8 @@ export class Bookmark {
 
         const { title, link, creator, topic } = payload
 
-        const indexUrl = await this.getIndexUrl(session);
+        // default to create in first registery, so its fine to use 0th index
+        const [indexUrl] = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
@@ -186,8 +195,7 @@ export class Bookmark {
     public static async update(url: string, payload: IUpdateBookmark, session: Session) {
         // TODO: check typeIndex
 
-        const indexUrl = await this.getIndexUrl(session);
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const ds = await getSolidDataset(url, { fetch: session.fetch });
         let thing = getThing(ds, url)
 
         if (thing) {
@@ -202,7 +210,7 @@ export class Bookmark {
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
-            await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+            await saveSolidDatasetAt(url, updatedBookmarkList, { fetch: session.fetch });
 
             return { url, ...payload }
         }
