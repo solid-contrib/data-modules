@@ -30,7 +30,7 @@ import {
 
 // TODO: will put it to constants file created in https://github.com/solid-contrib/data-modules/blob/fix/issue%2321/bookmarks/vanilla/src/constants.ts
 // or maybe use DCTERMS.modified
-const DC_UPDATED =  "http://purl.org/dc/terms/updated"
+const DC_UPDATED = "http://purl.org/dc/terms/updated"
 
 export type ICreateBookmark = {
     title: string
@@ -156,7 +156,7 @@ export class Bookmark {
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
         await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-        
+
         // TODO: also need return url of created bookmark
         return payload
     };
@@ -187,9 +187,10 @@ export class Bookmark {
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
+            
             await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
 
-            return { url, ...payload }
+            return thing ? this.mapBookmark(thing) : undefined
         }
 
     };
