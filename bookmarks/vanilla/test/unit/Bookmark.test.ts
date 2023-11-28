@@ -113,7 +113,7 @@ describe("Bookmark", () => {
         mockFetch.mockRestore();
     });
 
-    it("the delete function should delete bookmark", async () => {
+    it("the delete method should delete bookmark", async () => {
         const defaultBookmarksDocUrl = "https://fake-pod.net/path/to/bookmark-formats.ttl";
         const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#:one';
 
@@ -152,7 +152,7 @@ describe("Bookmark", () => {
         mockFetchDelete.mockRestore();
     });
 
-    it("the create function should create bookmark", async () => {
+    it("the create method should create bookmark", async () => {
         const payload: ICreateBookmark = {
             title: "new",
             link: "http://new.com",
@@ -208,7 +208,7 @@ describe("Bookmark", () => {
         mocksetThing.mockRestore();
         mockFetchCreate.mockRestore();
     });
-    it("the update function should update bookmark", async () => {
+    it("the update method should update bookmark", async () => {
 
         const payload: IUpdateBookmark = {
             title: "updated",
