@@ -65,6 +65,9 @@ export class Bookmark {
             if (!!instances) {
                 return instances[0]
             }
+            if (!!instanceContainers) {
+                // return instanceContainers[0]
+            }
 
             // TODO: return all instances
         } else {
@@ -73,8 +76,8 @@ export class Bookmark {
         const pods = await getPodUrlAll(session.info.webId!, {
             fetch: session.fetch,
         });
-        const bookmarksContainerUri = `${pods[0]}bookmarks/`;
-        return `${bookmarksContainerUri}index.ttl`; // defaultIndexUrl
+        const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
+        return defaultIndexUrl;
     }
 
     /**
