@@ -70,7 +70,7 @@ export class Bookmark {
     /**
      * 
      * @param session Session
-     * @returns IBookmark[]
+     * @returns Promise<IBookmark[]>
      */
     public static async getAll(session: Session) {
         const indexUrl = await this.getIndexUrl(session);
@@ -92,9 +92,9 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<IBookmark | undefined>
      */
-    public static async get(url: string, session: Session) {
+    public static async get(url: string, session: Session): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url)
@@ -106,7 +106,7 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns boolean
+     * @returns Promise<boolean>
      */
     public static async delete(url: string, session: Session) {
         const indexUrl = await this.getIndexUrl(session);
@@ -133,7 +133,7 @@ export class Bookmark {
      * @param title string
      * @param link string
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<boolean>
      */
     public static async create(payload: ICreateBookmark, session: Session) {
 
@@ -155,10 +155,10 @@ export class Bookmark {
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
-        await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+        
+        const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
 
-        // TODO: also need return url of created bookmark
-        return payload
+        return updatedDataset ? true : false
     };
 
 
@@ -168,9 +168,9 @@ export class Bookmark {
      * @param title string
      * @param link string
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<IBookmark | undefined>
      */
-    public static async update(url: string, payload: IUpdateBookmark, session: Session) {
+    public static async update(url: string, payload: IUpdateBookmark, session: Session): Promise<IBookmark | undefined> {
         const indexUrl = await this.getIndexUrl(session);
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
         let thing = getThing(ds, url)
@@ -187,7 +187,7 @@ export class Bookmark {
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
-            
+
             await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
 
             return thing ? this.mapBookmark(thing) : undefined
