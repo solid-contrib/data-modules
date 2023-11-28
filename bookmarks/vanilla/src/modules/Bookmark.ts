@@ -101,6 +101,7 @@ export class Bookmark {
             const values = (await allPromise).flat();
             return values;
         } catch (error) {
+            console.log("🚀 ~ file: Bookmark.ts:104 ~ Bookmark ~ getAll ~ error:", error)
             return []
         }
 
