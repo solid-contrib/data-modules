@@ -28,6 +28,9 @@ import {
     RDFS
 } from "@inrupt/vocab-common-rdf";
 
+// TODO: will put it to constants file created in https://github.com/solid-contrib/data-modules/blob/fix/issue%2321/bookmarks/vanilla/src/constants.ts
+// or maybe use DCTERMS.modified
+const DC_UPDATED =  "http://purl.org/dc/terms/updated"
 
 export type ICreateBookmark = {
     title: string
@@ -147,12 +150,13 @@ export class Bookmark {
         if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
         if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, "http://purl.org/dc/terms/updated", new Date().toISOString())
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, DC_UPDATED, new Date().toISOString())
 
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
         await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+        
         // TODO: also need return url of created bookmark
         return payload
     };

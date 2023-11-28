@@ -77,17 +77,17 @@ type IBookmark = ICreateBookmark & {
 
 
 ## valid payload
-the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes a authenticated session to fetch with an authenticated fetch
+the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes an authenticated session to use for fetching the data.
 
-the [`Bookmark.get`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L94) and [`Bookmark.delete`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L108) methods take the `url` of the bookmarks as primary key, alongside with a authenticated session
+the [`Bookmark.get`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L94) and [`Bookmark.delete`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L108) methods take the url of the bookmark as the primary key and an authenticated session.
 
-the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L135) takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` alongside with a authenticated session
+the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L135) takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` as the payload with an authenticated
 
-the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L169) takes the `url` of the bookmarks as primary key, then as a payload, it takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` alongside with a authenticated session
+the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L169) takes the `url` of the bookmark as primary key, then as a payload, it takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` with an authenticated session.
 
 schema:
 label: any string value should be fine (required)
-link: link should be valid URLs e.g. starts with http or https (required)
+link: link should be a valid URLs e.g. starts with http or https (required)
 topic: topics can be both strings or links to a topic e.g. "tipoc title" | "http://example.com/topic" (optional)
 creator: a URL to the creator e.g. WebID (optional)
 created: DateTime string e.g. "2023-10-21T14:16:16Z" (optional)
