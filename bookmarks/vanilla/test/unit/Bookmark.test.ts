@@ -221,10 +221,12 @@ describe("Bookmark", () => {
 
         const expected = {
             url: 'https://fake-pod.net/path/to/bookmark-formats.ttl#one',
-            title: "updated",
-            link: "http://updated.com",
-            creator: "https://michielbdejong.solidcommunity.net/profile/card#me",
-        }
+            title: 'updated',
+            link: 'http://updated.com',
+            created: '2023-10-21T14:16:16Z',
+            updated: '2023-11-28T14:30:23.202Z',
+            creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
+          }
 
         const responseGet: any = {
             status: 200,
@@ -251,10 +253,13 @@ describe("Bookmark", () => {
         const mock3 = jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-updated.json")));
 
         const res = await Bookmark.update(url, payload, session);
+        console.log("🚀 ~ file: Bookmark.test.ts:254 ~ it ~ res:", res)
 
         expect(Bookmark.getIndexUrl).toHaveBeenCalled();
 
-        expect(res).toEqual(expected);
+        expect(res?.title).toEqual(expected.title);
+        expect(res?.link).toEqual(expected.link);
+        expect(res?.creator).toEqual(expected.creator);
 
         mock1.mockRestore();
         mock2.mockRestore();

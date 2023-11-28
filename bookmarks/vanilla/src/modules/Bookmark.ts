@@ -187,7 +187,7 @@ export class Bookmark {
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
-
+            
             await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
 
             return thing ? this.mapBookmark(thing) : undefined
@@ -222,12 +222,12 @@ export class Bookmark {
         );
     }
     private static mapLink(thing: ThingPersisted): string {
-        const link = getLiteral(thing, BOOKMARK.recalls)?.value ?? getNamedNode(thing, BOOKMARK.recalls)?.value
-        if (link) {
-            return link
-        } else {
-            throw new Error("Bookmark link not found")
-        }
+        // TODO: validate url
+        // issue: https://github.com/solid-contrib/data-modules/issues/32
+        return (
+            getLiteral(thing, BOOKMARK.recalls)?.value ??
+            getNamedNode(thing, BOOKMARK.recalls)?.value ?? ""
+        );
     }
     private static mapCreated(thing: ThingPersisted): string | undefined {
         return getLiteral(thing, DCTERMS.created)?.value
