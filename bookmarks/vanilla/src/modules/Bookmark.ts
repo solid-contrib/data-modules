@@ -87,8 +87,8 @@ export class Bookmark {
      */
     public static async getAll(session: Session) {
         const indexUrls = await this.getIndexUrl(session);
-        const all = indexUrls.map(async (indexUrl) => {
-            try {
+        try {
+            const all = indexUrls.map(async (indexUrl) => {
                 const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
                 const things = getThingAll(ds)
@@ -96,13 +96,14 @@ export class Bookmark {
                 const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
                 return bookmarks
-            } catch (error) {
-                return []
-            }
-        })
-        const allPromise = Promise.all([...all]);
-        const values = (await allPromise).flat();
-        return values;
+            })
+            const allPromise = Promise.all([...all]);
+            const values = (await allPromise).flat();
+            return values;
+        } catch (error) {
+            return []
+        }
+
     }
 
     /**
