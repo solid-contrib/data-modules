@@ -16,7 +16,6 @@ import {
     setUrl
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
-// TODO: install @rdfjs its not good to expect our dependencies to have it installed
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
@@ -57,26 +56,28 @@ export class Bookmark {
      * @returns string
      */
     public static async getIndexUrl(session: Session) {
-        const bookmarkRegisteries = await TypeIndexHelper.getFromTypeIndex(session)
+        const pods = await getPodUrlAll(session.info.webId!, { fetch: session.fetch });
+        const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
+
+        const bookmarkRegisteries = await TypeIndexHelper.getFromTypeIndex(session, defaultIndexUrl, true)
         if (bookmarkRegisteries) {
             // inrupt getSolidDataset takes a full url to turtle file like https://example.com/bookmarks/index.ttl
             const { instanceContainers, instances } = bookmarkRegisteries
 
-            if (!!instances) {
+            if (!!instances.length) {
                 return instances
             }
-            if (!!instanceContainers) {
+            if (!!instanceContainers.length) {
                 // return instanceContainers[0]
             }
+
+            // TODO: create registeries
+            // TypeIndexHelper
 
             // TODO: return all instances
         } else {
             // TODO: create registeries
         }
-        const pods = await getPodUrlAll(session.info.webId!, {
-            fetch: session.fetch,
-        });
-        const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
         return [defaultIndexUrl];
     }
 

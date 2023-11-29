@@ -1,14 +1,21 @@
 import {
+    ThingPersisted,
+    buildThing,
+    createThing,
     getNamedNode,
     getSolidDataset,
-    getThing
+    getThing,
+    saveSolidDatasetAt,
+    setThing
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
 import { getThingAll } from "@inrupt/solid-client";
 import {
-    BOOKMARK
+    BOOKMARK, RDF
 } from "@inrupt/vocab-common-rdf";
-import { __FOR_CLASS, __PRIVATE_TYPEINDEX, __PUBLIC_TYPEINDEX, __SOLID_INSTANCE, __SOLID_INSTANCE_CONTAINER } from "../constants";
+import { __Bookmark, __forClass, __privateTypeIndex, __publicTypeIndex, __solid_instance, __solid_instance_container, __solidTypeRegistration } from "../constants";
+import { solid } from "@inrupt/solid-client/dist/constants";
+import { namedNode } from '@rdfjs/data-model';
 
 export class TypeIndexHelper {
     constructor() { }
@@ -27,23 +34,22 @@ export class TypeIndexHelper {
         const me = await this.getProfile(session)
 
         if (me) {
-            // TODO: me doc exists
-            const typeIndex = getNamedNode(me, isPrivate ? __PRIVATE_TYPEINDEX : __PUBLIC_TYPEINDEX)
+            const typeIndex = getNamedNode(me, isPrivate ? __privateTypeIndex : __publicTypeIndex)
 
             return typeIndex
         } else {
             // TODO: me doc does not exists
-            // consider adding one
+            // maybe adding one
             // - create me thing
             // - add typeindex into it if it exists
             // - add instance to typeindex
         }
     }
 
-    public static async getFromTypeIndex(session: Session) {
-        const typeIndex = await this.getTypeIndex({ session, isPrivate: true })
-        
-        if (!typeIndex) return // TODO validate
+    public static async getFromTypeIndex(session: Session, defaultIndexUrl: string, isPrivate: true) {
+        const typeIndex = await this.getTypeIndex({ session, isPrivate })
+
+        if (!typeIndex) return;
 
         const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch })
 
@@ -53,17 +59,21 @@ export class TypeIndexHelper {
         const instanceContainers: string[] = []
 
         all.forEach(x => {
-            const forClass = getNamedNode(x, __FOR_CLASS)
+            const forClass = getNamedNode(x, __forClass)
 
             if (forClass?.value === BOOKMARK.Bookmark) {
 
-                const instance = getNamedNode(x, __SOLID_INSTANCE)?.value
-                const instanceContainer = getNamedNode(x, __SOLID_INSTANCE_CONTAINER)?.value
+                const instance = getNamedNode(x, __solid_instance)?.value
+                const instanceContainer = getNamedNode(x, __solid_instance_container)?.value
 
                 instance && instances?.push(instance)
                 instanceContainer && instanceContainers?.push(instanceContainer)
             }
         })
+
+        if (!instances.length && !instanceContainers.length) {
+            await this.registerInTypeIndex(session, defaultIndexUrl, true)
+        }
 
         const bookmarkRegisteries = {
             instances,
@@ -71,5 +81,23 @@ export class TypeIndexHelper {
         }
 
         return bookmarkRegisteries
+    }
+
+    private static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean) {
+        const typeIndex = await this.getTypeIndex({ session, isPrivate })
+
+        if (!typeIndex) return // TODO validate
+
+        const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch })
+
+        const bookmarkThing = buildThing(createThing({ name: "bookmarks_registery" }))
+            .addNamedNode(__forClass, namedNode(__Bookmark))
+            .addNamedNode(__solid_instance, namedNode(indexUrl))
+            .addUrl(RDF.type, __solidTypeRegistration)
+            .build();
+
+        const updatedBookmarkList = setThing(ds, bookmarkThing);
+
+        await saveSolidDatasetAt(typeIndex?.value, updatedBookmarkList, { fetch: session.fetch });
     }
 }
