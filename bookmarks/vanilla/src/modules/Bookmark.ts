@@ -187,7 +187,7 @@ export class Bookmark {
 
             await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
 
-            return thing ? this.mapBookmark(thing) : undefined
+            return this.mapBookmark(thing)
         }
 
     };
