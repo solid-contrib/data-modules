@@ -14,7 +14,6 @@ import {
     BOOKMARK, RDF
 } from "@inrupt/vocab-common-rdf";
 import { __Bookmark, __forClass, __privateTypeIndex, __publicTypeIndex, __solid_instance, __solid_instance_container, __solidTypeRegistration } from "../constants";
-import { solid } from "@inrupt/solid-client/dist/constants";
 import { namedNode } from '@rdfjs/data-model';
 
 export class TypeIndexHelper {
