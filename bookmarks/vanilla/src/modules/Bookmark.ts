@@ -182,7 +182,7 @@ export class Bookmark {
             thing = setStringNoLocale(thing, BOOKMARK.recalls, link)
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
             if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
-            thing = setStringNoLocale(thing, "http://purl.org/dc/terms/updated", new Date().toISOString())
+            thing = setStringNoLocale(thing, DC_UPDATED, new Date().toISOString())
 
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
