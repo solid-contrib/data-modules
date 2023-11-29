@@ -88,7 +88,7 @@ the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422ca
 schema:
 label: any string value should be fine (required)
 link: link should be a valid URL e.g. starts with http or https (required)
-topic: topics can be both strings or links to a topic e.g. "tipoc title" | "http://example.com/topic" (optional)
+topic: topic can be both a string or a link to a topic e.g. "tipoc title" | "http://example.com/topic" (optional)
 creator: a URL to the creator e.g. WebID (optional)
 created: DateTime string e.g. "2023-10-21T14:16:16Z" (optional)
 updated: DateTime string e.g. "2023-10-21T14:16:16Z" (optional)
