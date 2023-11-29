@@ -5,6 +5,7 @@ import {
     getNamedNode,
     getSolidDataset,
     getThing,
+    getUrl,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
@@ -19,7 +20,7 @@ import { namedNode } from '@rdfjs/data-model';
 export class TypeIndexHelper {
     constructor() { }
 
-    public static async getProfile(session: Session) {
+    private static async getProfile(session: Session) {
         if (!session.info.webId) return
         const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch })
 
@@ -28,7 +29,7 @@ export class TypeIndexHelper {
         return me
     }
 
-    public static async getTypeIndex({ session, isPrivate }: { session: Session, isPrivate: boolean }) {
+    private static async getTypeIndex({ session, isPrivate }: { session: Session, isPrivate: boolean }) {
 
         const me = await this.getProfile(session)
 
@@ -45,10 +46,10 @@ export class TypeIndexHelper {
         }
     }
 
-    public static async getFromTypeIndex(session: Session, defaultIndexUrl: string, isPrivate: true) {
+    public static async getFromTypeIndex(session: Session, isPrivate: true) {
         const typeIndex = await this.getTypeIndex({ session, isPrivate })
 
-        if (!typeIndex) return;
+        if (!typeIndex) return [];
 
         const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch })
 
@@ -56,6 +57,7 @@ export class TypeIndexHelper {
 
         const instances: string[] = []
         const instanceContainers: string[] = []
+
 
         all.forEach(x => {
             const forClass = getNamedNode(x, __forClass)
@@ -70,19 +72,32 @@ export class TypeIndexHelper {
             }
         })
 
-        if (!instances.length && !instanceContainers.length) {
-            await this.registerInTypeIndex(session, defaultIndexUrl, true)
-        }
+        const instanceContainersPromises = instanceContainers.map(async (instanceContainer) => {
+            const ds = await getSolidDataset(instanceContainer, { fetch: session.fetch })
+            const all = getThingAll(ds);
 
-        const bookmarkRegisteries = {
-            instances,
-            instanceContainers
-        }
+            const urls = all.map(x => x.url)
+            const index = urls.findIndex(x => x === instanceContainer)
 
-        return bookmarkRegisteries
+            return urls.splice(index, 1)
+        })
+
+        const innerInstances = (await Promise.all([...instanceContainersPromises])).flat();
+
+
+        const responce: string[] = [...new Set([...instances, ...innerInstances])]
+
+
+        // if (!responce.length) {
+        //     await this.registerInTypeIndex(session, defaultIndexUrl, true)
+
+        //     return [defaultIndexUrl]
+        // }
+
+        return responce
     }
 
-    private static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean) {
+    public static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean) {
         const typeIndex = await this.getTypeIndex({ session, isPrivate })
 
         if (!typeIndex) return // TODO validate

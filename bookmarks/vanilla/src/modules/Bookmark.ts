@@ -56,29 +56,18 @@ export class Bookmark {
      * @returns string
      */
     public static async getIndexUrl(session: Session) {
-        const pods = await getPodUrlAll(session.info.webId!, { fetch: session.fetch });
-        const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
 
-        const bookmarkRegisteries = await TypeIndexHelper.getFromTypeIndex(session, defaultIndexUrl, true)
-        if (bookmarkRegisteries) {
-            // inrupt getSolidDataset takes a full url to turtle file like https://example.com/bookmarks/index.ttl
-            const { instanceContainers, instances } = bookmarkRegisteries
+        const registeries = await TypeIndexHelper.getFromTypeIndex(session, true)
 
-            if (!!instances.length) {
-                return instances
-            }
-            if (!!instanceContainers.length) {
-                // return instanceContainers[0]
-            }
-
-            // TODO: create registeries
-            // TypeIndexHelper
-
-            // TODO: return all instances
+        if (!!registeries.length) {
+            return registeries
         } else {
-            // TODO: create registeries
+            const pods = await getPodUrlAll(session.info.webId!, { fetch: session.fetch });
+            const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
+            await TypeIndexHelper.registerInTypeIndex(session, defaultIndexUrl, true)
+
+            return [defaultIndexUrl];
         }
-        return [defaultIndexUrl];
     }
 
     /**
