@@ -57,7 +57,6 @@ const Bookmarks: FC<IProps> = ({ }) => {
       },
       session
     );
-    // setBookmarks(updatedDataset);
     setbookmarkTitle("");
     setbookmarkLink("");
   };
