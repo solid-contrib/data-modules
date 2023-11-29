@@ -1,17 +1,7 @@
-import { lit, st, Statement, sym } from "rdflib";
+import { lit, st, sym } from "rdflib";
 import { v4 as uuid } from "uuid";
 import { dc, vcard } from "./namespaces";
-
-export interface UpdateOperation {
-  uri: string;
-  insertions: Statement[];
-  deletions: Statement[];
-  filesToCreate: FileToCreate[];
-}
-
-export interface FileToCreate {
-  uri: string;
-}
+import { UpdateOperation } from "./web-operations/executeUpdate";
 
 export function createAddressBook(
   container: string,

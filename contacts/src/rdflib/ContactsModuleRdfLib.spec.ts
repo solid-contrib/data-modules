@@ -1,11 +1,12 @@
 import { when } from "jest-when";
 import { createAddressBook } from "./createAddressBook";
 import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { executeUpdate } from "./executeUpdate";
+import { executeUpdate } from "./web-operations/executeUpdate";
 import { Fetcher, graph, UpdateManager } from "rdflib";
+4;
 
 jest.mock("./createAddressBook");
-jest.mock("./executeUpdate");
+jest.mock("./web-operations/executeUpdate");
 
 describe("ContactsModuleRdfLib", () => {
   describe("createAddressBook", () => {

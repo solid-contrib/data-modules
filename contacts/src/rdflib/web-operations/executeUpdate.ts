@@ -1,5 +1,15 @@
-import { Fetcher, UpdateManager } from "rdflib";
-import { UpdateOperation } from "./createAddressBook";
+import { Fetcher, Statement, UpdateManager } from "rdflib";
+
+export interface UpdateOperation {
+  uri: string;
+  insertions: Statement[];
+  deletions: Statement[];
+  filesToCreate: FileToCreate[];
+}
+
+export interface FileToCreate {
+  uri: string;
+}
 
 export async function executeUpdate(
   fetcher: Fetcher,

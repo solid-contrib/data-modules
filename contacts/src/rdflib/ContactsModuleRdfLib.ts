@@ -2,7 +2,7 @@ import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
 import { AddressBook, ContactsModule } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { createAddressBook } from "./createAddressBook";
-import { executeUpdate } from "./executeUpdate";
+import { executeUpdate } from "./web-operations/executeUpdate";
 
 interface CreateAddressBookCommand {
   container: string;
