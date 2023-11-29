@@ -19,8 +19,6 @@ We also loop over all solid:instanceContainers to get all solid:instances inside
 at the end it returns a unique array of urls of all `solid:instance` and `solid:instanceContainer` items.
 [**See](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L88C45-L88C45)
 
-<!-- otherwise it creates a default instance and register it inside typeIndex [TypeIndexHelper.registerInTypeIndex](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/modules/Bookmark.ts#L67) and returns the url of the instance -->
-
 ## Development
 
 ```bash
