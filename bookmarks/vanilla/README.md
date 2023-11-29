@@ -41,8 +41,8 @@ import { Session } from "@inrupt/solid-client-authn-browser";
 
 const result: IBookmark[] = await Bookmarks.getAll(session: Session);
 const result: IBookmark  = await Bookmarks.get("<pk>", session: Session);
-const result: boolean  = await Bookmarks.remove("<pk>", session: Session);
-const result: IBookmark  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
+const result: boolean  = await Bookmarks.delete("<pk>", session: Session);
+const result: boolean  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
 const result: IBookmark  = await Bookmarks.update("<pk>", payload: IUpdateBookmark, session: Session);
 ```
 

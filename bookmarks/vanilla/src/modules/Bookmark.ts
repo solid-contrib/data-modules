@@ -59,7 +59,7 @@ export class Bookmark {
      * @param session Session
      * @returns string
      */
-    public static async getIndexUrl(session: Session) {
+    public static async getIndexUrl(session: Session): Promise<string> {
         const pods = await getPodUrlAll(session.info.webId!, {
             fetch: session.fetch,
         });
@@ -72,7 +72,7 @@ export class Bookmark {
      * @param session Session
      * @returns Promise<IBookmark[]>
      */
-    public static async getAll(session: Session) {
+    public static async getAll(session: Session): Promise<IBookmark[]> {
         const indexUrl = await this.getIndexUrl(session);
         try {
             const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
@@ -108,7 +108,7 @@ export class Bookmark {
      * @param session Session
      * @returns Promise<boolean>
      */
-    public static async delete(url: string, session: Session) {
+    public static async delete(url: string, session: Session): Promise<boolean> {
         const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
@@ -133,9 +133,9 @@ export class Bookmark {
      * @param title string
      * @param link string
      * @param session Session
-     * @returns Promise<IBookmark>
+     * @returns Promise<boolean>
      */
-    public static async create(payload: ICreateBookmark, session: Session) {
+    public static async create(payload: ICreateBookmark, session: Session): Promise<boolean> {
 
         const { title, link, creator, topic } = payload
 
