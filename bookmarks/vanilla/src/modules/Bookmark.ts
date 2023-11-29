@@ -131,8 +131,7 @@ export class Bookmark {
 
     /**
      * 
-     * @param title string
-     * @param link string
+     * @param payload ICreateBookmark
      * @param session Session
      * @returns Promise<boolean>
      */
@@ -164,9 +163,7 @@ export class Bookmark {
 
     /**
      * 
-     * @param url string
-     * @param title string
-     * @param link string
+     * @param payload IUpdateBookmark
      * @param session Session
      * @returns Promise<IBookmark | undefined>
      */
