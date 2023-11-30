@@ -1,0 +1,242 @@
+{
+    "graphs": {
+      "default": {
+        "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#one": {
+          "type": "Subject",
+          "url": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#one",
+          "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+              "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
+            },
+            "http://www.w3.org/2000/01/rdf-schema#label": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["one"]
+              }
+            },
+            "http://purl.org/dc/terms/created": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#dateTime": [
+                  "2023-10-21T14:16:16Z"
+                ]
+              }
+            },
+            "http://purl.org/dc/terms/updated": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#dateTime": [
+                  "2023-11-21T14:16:16Z"
+                ]
+              }
+            },
+            "http://purl.org/dc/terms/creator": {
+              "namedNodes": [
+                "https://michielbdejong.solidcommunity.net/profile/card#me"
+              ]
+            },
+            "http://www.w3.org/2002/01/bookmark#recalls": {
+              "namedNodes": ["http://example.com"]
+            }
+          }
+        },
+        "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#two": {
+          "type": "Subject",
+          "url": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#two",
+          "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+              "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
+            },
+            "http://purl.org/dc/terms/title": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["two"]
+              }
+            },
+            "http://xmlns.com/foaf/0.1/maker": {
+              "namedNodes": [
+                "https://michielbdejong.solidcommunity.net/profile/card#me"
+              ]
+            },
+            "http://www.w3.org/2002/01/bookmark#recalls": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["http://example.com"]
+              }
+            }
+          }
+        },
+        "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#three": {
+          "type": "Subject",
+          "url": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#three",
+          "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+              "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
+            },
+            "http://www.w3.org/2000/01/rdf-schema#label": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["three"]
+              }
+            },
+            "http://www.w3.org/2002/01/bookmark#hasTopic": {
+              "namedNodes": ["http://wikipedia.org/sdfg"]
+            },
+            "http://www.w3.org/2002/01/bookmark#recalls": {
+              "namedNodes": ["http://example.com"]
+            }
+          }
+        },
+        "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763": {
+          "type": "Subject",
+          "url": "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763",
+          "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+              "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
+            },
+            "http://www.w3.org/2000/01/rdf-schema#label": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["sdf"]
+              }
+            },
+            "http://www.w3.org/2002/01/bookmark#hasTopic": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["sdfg"]
+              }
+            },
+            "http://www.w3.org/2002/01/bookmark#id": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": [
+                  "b93d9944-d54d-42f6-a39b-6ea3f9217763"
+                ]
+              }
+            },
+            "http://www.w3.org/2002/01/bookmark#recalls": {
+              "namedNodes": ["http://example.com"]
+            }
+          }
+        },
+        "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763-metadata": {
+          "type": "Subject",
+          "url": "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763-metadata",
+          "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+              "namedNodes": ["http://soukai-solid.com/crdtMetadata"]
+            },
+            "http://soukai-solid.com/crdtcreatedAt": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#dateTime": [
+                  "2023-11-21T12:50:32.051Z"
+                ]
+              }
+            },
+            "http://soukai-solid.com/crdtresource": {
+              "namedNodes": [
+                "https://solid-dm.solidcommunity.net/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763"
+              ]
+            },
+            "http://soukai-solid.com/crdtupdatedAt": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#dateTime": [
+                  "2023-11-21T12:50:32.051Z"
+                ]
+              }
+            }
+          }
+        },
+        "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#5ac53917-0fc3-45c7-9ec9-708cf3b05193": {
+          "type": "Subject",
+          "predicates": {
+            "http://purl.org/dc/terms/title": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["updated"]
+              }
+            },
+            "http://www.w3.org/2002/01/bookmark#recalls": {
+              "literals": {
+                "http://www.w3.org/2001/XMLSchema#string": ["http://updated.com"]
+              }
+            },
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+              "namedNodes": ["http://www.w3.org/2002/01/bookmark#Bookmark"]
+            }
+          },
+          "url": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#5ac53917-0fc3-45c7-9ec9-708cf3b05193"
+        }
+      }
+    },
+    "type": "Dataset",
+    "internal_resourceInfo": {
+      "sourceIri": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl",
+      "isRawData": false,
+      "contentType": "text/turtle",
+      "linkedResources": {
+        "acl": [
+          "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl.acl"
+        ],
+        "describedBy": [
+          "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl.meta"
+        ],
+        "type": ["http://www.w3.org/ns/ldp#Resource"]
+      },
+      "aclUrl": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl.acl",
+      "permissions": {
+        "user": {
+          "read": true,
+          "append": true,
+          "write": true,
+          "control": false
+        },
+        "public": {
+          "read": false,
+          "append": false,
+          "write": false,
+          "control": false
+        }
+      }
+    },
+    "internal_changeLog": {
+      "additions": [
+        {
+          "subject": {
+            "value": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#5ac53917-0fc3-45c7-9ec9-708cf3b05193"
+          },
+          "predicate": {
+            "value": "http://purl.org/dc/terms/title"
+          },
+          "object": {
+            "value": "new",
+            "datatype": {
+              "value": "http://www.w3.org/2001/XMLSchema#string"
+            },
+            "language": ""
+          },
+          "graph": {}
+        },
+        {
+          "subject": {
+            "value": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#5ac53917-0fc3-45c7-9ec9-708cf3b05193"
+          },
+          "predicate": {
+            "value": "http://www.w3.org/2002/01/bookmark#recalls"
+          },
+          "object": {
+            "value": "http://new.com",
+            "datatype": {
+              "value": "http://www.w3.org/2001/XMLSchema#string"
+            },
+            "language": ""
+          },
+          "graph": {}
+        },
+        {
+          "subject": {
+            "value": "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl#5ac53917-0fc3-45c7-9ec9-708cf3b05193"
+          },
+          "predicate": {
+            "value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
+          "object": {
+            "value": "http://www.w3.org/2002/01/bookmark#Bookmark"
+          },
+          "graph": {}
+        }
+      ],
+      "deletions": []
+    }
+  }
+  

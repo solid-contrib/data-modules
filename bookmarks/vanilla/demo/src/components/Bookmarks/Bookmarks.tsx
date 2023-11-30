@@ -23,7 +23,7 @@ import { FC, useEffect, useState } from "react";
 import {
   Bookmark,
   IBookmark,
-} from "../../../../dist";
+} from "../../../../src";
 
 type IProps = {};
 
@@ -51,11 +51,12 @@ const Bookmarks: FC<IProps> = ({ }) => {
 
   const handleSubmit = async () => {
     const updatedDataset = await Bookmark.create(
-      bookmarkTitle,
-      bookmarkLink,
+      {
+        title: bookmarkTitle,
+        link: bookmarkLink,
+      },
       session
     );
-    setBookmarks(updatedDataset);
     setbookmarkTitle("");
     setbookmarkLink("");
   };
@@ -127,7 +128,10 @@ const Bookmarks: FC<IProps> = ({ }) => {
                         DEL
                       </IconButton>
                       <IconButton
-                        onClick={async () => console.log(await Bookmark.update("sdvsdv", "sdvs", row.url, session))}
+                        onClick={async () => console.log(row.url , await Bookmark.update(row.url, {
+                          title: "sss__",
+                          link: "http://sss__.com",
+                        }, session))}
                       >
                         UPD
                       </IconButton>
@@ -139,7 +143,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
           </TableContainer>
         </CardContent>
       </Card>
-    </Box>
+    </Box >
   );
 };
 

@@ -1,5 +1,8 @@
 import {
     ThingPersisted,
+    addNamedNode,
+    addStringNoLocale,
+    addUrl,
     buildThing,
     createThing,
     getLiteral,
@@ -8,10 +11,13 @@ import {
     getSolidDataset,
     getThing,
     saveSolidDatasetAt,
-    setThing
+    setNamedNode,
+    setStringNoLocale,
+    setThing,
+    setUrl
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
-
+import { namedNode } from '@rdfjs/data-model'
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
@@ -21,15 +27,28 @@ import {
     RDFS
 } from "@inrupt/vocab-common-rdf";
 
+// TODO: will put it to constants file created in https://github.com/solid-contrib/data-modules/blob/fix/issue%2321/bookmarks/vanilla/src/constants.ts
+// or maybe use DCTERMS.modified
+const DC_UPDATED = "http://purl.org/dc/terms/updated"
 
-export interface IBookmark {
-    url: string
+export type ICreateBookmark = {
     title: string
+    topic?: string
     link: string
+    creator?: string,
+}
+
+export type IUpdateBookmark = {
+    title: string
+    topic?: string
+    link: string
+    creator?: string,
+}
+
+export type IBookmark = ICreateBookmark & {
+    url: string
     created?: string
     updated?: string
-    creator?: string
-    topic?: string
 }
 
 export class Bookmark {
@@ -39,7 +58,7 @@ export class Bookmark {
      * @param session Session
      * @returns string
      */
-    public static async getIndexUrl(session: Session) {
+    public static async getIndexUrl(session: Session): Promise<string> {
         const pods = await getPodUrlAll(session.info.webId!, {
             fetch: session.fetch,
         });
@@ -50,22 +69,16 @@ export class Bookmark {
     /**
      * 
      * @param session Session
-     * @returns IBookmark[]
+     * @returns Promise<IBookmark[]>
      */
-    public static async getAll(session: Session) {
+    public static async getAll(session: Session): Promise<IBookmark[]> {
         const indexUrl = await this.getIndexUrl(session);
         try {
             const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
             const things = getThingAll(ds)
 
-            const bookmarks = things.map(thing => {
-                return {
-                    url: thing.url,
-                    title: getLiteral(thing, DCTERMS.title)?.value,
-                    link: getLiteral(thing, BOOKMARK.recalls)?.value
-                }
-            }) as IBookmark[]
+            const bookmarks = things.map(thing => this.mapBookmark(thing))
 
             return bookmarks
 
@@ -78,9 +91,9 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<IBookmark | undefined>
      */
-    public static async get(url: string, session: Session) {
+    public static async get(url: string, session: Session): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url)
@@ -92,9 +105,9 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns IBookmark[]
+     * @returns Promise<boolean>
      */
-    public static async delete(url: string, session: Session) {
+    public static async delete(url: string, session: Session): Promise<boolean> {
         const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
@@ -103,143 +116,131 @@ export class Bookmark {
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
             const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch: session.fetch });
-
-            const things = getThingAll(updatedDataset)
-
-            return things.map(thing => {
-                return {
-                    url: thing.url,
-                    title: getLiteral(thing, DCTERMS.title)?.value,
-                    link: getLiteral(thing, BOOKMARK.recalls)?.value
-                }
-            }) as IBookmark[]
+            if (updatedDataset) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
         }
     };
 
 
     /**
      * 
-     * @param title string
-     * @param link string
+     * @param payload ICreateBookmark
      * @param session Session
-     * @returns IBookmark[]
+     * @returns Promise<boolean>
      */
-    public static async create(title: string, link: string, session: Session) {
+    public static async create(payload: ICreateBookmark, session: Session): Promise<boolean> {
+
+        const { title, link, creator, topic } = payload
 
         const indexUrl = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
-        const newBookmarkThing = buildThing(createThing())
-            .addStringNoLocale(DCTERMS.title, title)
-            .addStringNoLocale(BOOKMARK.recalls, link)
-            .addUrl(RDF.type, BOOKMARK.Bookmark)
-            .build();
+        let newBookmarkThing = createThing()
+
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.title, title)
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, BOOKMARK.recalls, link)
+        if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
+        if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, DC_UPDATED, new Date().toISOString())
+
+        newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
         const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-        const things = getThingAll(updatedDataset)
 
-        return things.map(thing => {
-            return {
-                url: thing.url,
-                title: getLiteral(thing, DCTERMS.title)?.value,
-                link: getLiteral(thing, BOOKMARK.recalls)?.value
-            }
-        }) as IBookmark[]
+        return updatedDataset ? true : false
     };
 
 
     /**
      * 
-     * @param url string
-     * @param title string
-     * @param link string
+     * @param payload IUpdateBookmark
      * @param session Session
-     * @returns IBookmark[]
+     * @returns Promise<IBookmark | undefined>
      */
-    public static async update(url: string, title: string, link: string, session: Session) {
+    public static async update(url: string, payload: IUpdateBookmark, session: Session): Promise<IBookmark | undefined> {
         const indexUrl = await this.getIndexUrl(session);
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
-        const thing = getThing(ds, url)
+        let thing = getThing(ds, url)
 
         if (thing) {
-            let updatedBookmarkThing = buildThing(thing)
-                .setStringNoLocale(DCTERMS.title, title)
-                .setStringNoLocale(BOOKMARK.recalls, link)
-                .setUrl(RDF.type, BOOKMARK.Bookmark)
-                .build();
+            const { title, link, creator, topic } = payload
 
-            const updatedBookmarkList = setThing(ds, updatedBookmarkThing);
-            const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-            const things = getThingAll(updatedDataset)
+            thing = setStringNoLocale(thing, DCTERMS.title, title)
+            thing = setStringNoLocale(thing, BOOKMARK.recalls, link)
+            if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
+            if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
+            thing = setStringNoLocale(thing, DC_UPDATED, new Date().toISOString())
 
-            return things.map(thing => {
-                return {
-                    url: thing.url,
-                    title: getLiteral(thing, DCTERMS.title)?.value,
-                    link: getLiteral(thing, BOOKMARK.recalls)?.value
-                }
-            }) as IBookmark[]
+            thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
+
+            const updatedBookmarkList = setThing(ds, thing);
+
+            await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+
+            return this.mapBookmark(thing)
         }
 
     };
 
 
-    private static mapBookmark(thing: ThingPersisted): Bookmark {
-        const obj: IBookmark = {
-            url: thing.url,
-            title: this.mapTitle(thing),
-            link: this.mapLink(thing)
-        };
-        if (this.mapCreated(thing)) {
-            obj.created = this.mapCreated(thing);
+    private static mapBookmark(thing: ThingPersisted): IBookmark {
+        const url = thing.url
+        const title = this.mapTitle(thing)
+        const link = this.mapLink(thing)
+        const topic = this.mapTopic(thing)
+        const created = this.mapCreated(thing)
+        const updated = this.mapUpdated(thing)
+        const creator = this.mapCreator(thing)
+
+        return {
+            url,
+            title,
+            link,
+            ...(topic && { topic }),
+            ...(created && { created }),
+            ...(updated && { updated }),
+            ...(creator && { creator }),
         }
-        if (this.mapUpdated(thing)) {
-            obj.updated = this.mapUpdated(thing);
-        }
-        if (this.mapCreator(thing)) {
-            obj.creator = this.mapCreator(thing);
-        }
-        if (this.mapTopic(thing)) {
-            obj.topic = this.mapTopic(thing);
-        }
-        return obj;
     }
     private static mapTitle(thing: ThingPersisted): string {
         return (
             getLiteral(thing, DCTERMS.title)?.value ??
-            getLiteral(thing, RDFS.label)?.value ??
-            ""
+            getLiteral(thing, RDFS.label)?.value ?? ""
         );
     }
     private static mapLink(thing: ThingPersisted): string {
+        // TODO: validate url
+        // issue: https://github.com/solid-contrib/data-modules/issues/32
         return (
             getLiteral(thing, BOOKMARK.recalls)?.value ??
-            getNamedNode(thing, BOOKMARK.recalls)?.value ??
-            ""
+            getNamedNode(thing, BOOKMARK.recalls)?.value ?? ""
         );
     }
-    private static mapCreated(thing: ThingPersisted): string {
-        return getLiteral(thing, DCTERMS.created)?.value ?? ""
+    private static mapCreated(thing: ThingPersisted): string | undefined {
+        return getLiteral(thing, DCTERMS.created)?.value
     }
-    private static mapUpdated(thing: ThingPersisted): string {
+    private static mapUpdated(thing: ThingPersisted): string | undefined {
         return (
-            getLiteral(thing, "http://purl.org/dc/terms/updated")?.value ??
-            ""
+            getLiteral(thing, "http://purl.org/dc/terms/updated")?.value
         );
     }
-    private static mapCreator(thing: ThingPersisted): string {
+    private static mapCreator(thing: ThingPersisted): string | undefined {
         return (
             getNamedNode(thing, DCTERMS.creator)?.value ??
-            getNamedNode(thing, FOAF.maker)?.value ??
-            ""
+            getNamedNode(thing, FOAF.maker)?.value
         );
     }
-    private static mapTopic(thing: ThingPersisted): string {
+    private static mapTopic(thing: ThingPersisted): string | undefined {
         return (
-            getNamedNode(thing, BOOKMARK.hasTopic)?.value ??
-            ""
+            getNamedNode(thing, BOOKMARK.hasTopic)?.value
         );
     }
 

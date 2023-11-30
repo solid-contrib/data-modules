@@ -1,0 +1,47 @@
+@prefix : <#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix bookm: <./>.
+@prefix boo: <http://www.w3.org/2002/01/bookmark#>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix crdt: <http://soukai-solid.com/crdt>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:new
+  a boo:Bookmark;
+  rdfs:label "new";
+  dc:created "2023-10-21T14:16:16Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  dc:updated "2023-11-21T14:16:16Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  dc:creator <https://michielbdejong.solidcommunity.net/profile/card#me>;
+  boo:recalls <http://new.com>.
+:one
+  a boo:Bookmark;
+  rdfs:label "one";
+  dc:created "2023-10-21T14:16:16Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  dc:updated "2023-11-21T14:16:16Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+  dc:creator <https://michielbdejong.solidcommunity.net/profile/card#me>;
+  boo:recalls <http://example.com>.
+
+:two
+  a boo:Bookmark;
+  dc:title "two";
+  foaf:maker <https://michielbdejong.solidcommunity.net/profile/card#me>;
+  boo:recalls "http://example.com".
+
+:three
+    a boo:Bookmark;
+    rdfs:label "three";
+    boo:hasTopic <http://wikipedia.org/sdfg>;
+    boo:recalls <http://example.com>.
+
+bookm:b93d9944-d54d-42f6-a39b-6ea3f9217763
+    a boo:Bookmark;
+    rdfs:label "sdf";
+    boo:hasTopic "sdfg";
+    boo:id "b93d9944-d54d-42f6-a39b-6ea3f9217763";
+    boo:recalls <http://example.com>.
+bookm:b93d9944-d54d-42f6-a39b-6ea3f9217763-metadata
+    a crdt:Metadata;
+    crdt:createdAt "2023-11-21T12:50:32.051Z"^^xsd:dateTime;
+    crdt:resource bookm:b93d9944-d54d-42f6-a39b-6ea3f9217763;
+    crdt:updatedAt "2023-11-21T12:50:32.051Z"^^xsd:dateTime.
