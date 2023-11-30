@@ -17,8 +17,6 @@ import {
     setUrl
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
-// TODO: install @rdfjs its not good to expect our dependencies to have it installed
-// FIX: https://github.com/solid-contrib/data-modules/issues/35
 import { namedNode } from '@rdfjs/data-model'
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
