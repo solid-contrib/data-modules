@@ -35,20 +35,6 @@ Once its completed the auth proccess it will redirect to the redirect url, and f
 These are the methods implemented to deal with bookmarks
 They will return a promise containing the JSON representation of the bookmark
 
-```typescript
-
-import { Session } from "@inrupt/solid-client-authn-browser";
-
-const result: IBookmark[] = await Bookmarks.getAll(session: Session);
-const result: IBookmark | undefined  = await Bookmarks.get("<pk>", session: Session);
-const result: boolean  = await Bookmarks.delete("<pk>", session: Session);
-const result: boolean  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
-const result: IBookmark | undefined = await Bookmarks.update("<pk>", payload: IUpdateBookmark, session: Session);
-```
-
-- pk indicates the primary key of the bookmark, in this case its the url of the bookmark
-- payload is an object containing the fields of the bookmark
-- you need to pass the authenticated session to the methods, this session is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts)
 
 
 ## Types
@@ -75,6 +61,37 @@ type IBookmark = ICreateBookmark & {
 }
 ```
 
+```typescript
+import { Session } from "@inrupt/solid-client-authn-browser";
+```
+this is the Session type to pass as an required parameter to all the methods
+
+```typescript
+const result: IBookmark[] = await Bookmarks.getAll(session: Session);
+```
+the `getAll` method will return an array of IBookmark, in case there are no bookmarks it will return an empty array.
+```typescript
+const result: IBookmark | undefined  = await Bookmarks.get("<pk>", session: Session);
+```
+the `get` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
+```typescript
+const result: boolean  = await Bookmarks.delete("<pk>", session: Session);
+```
+the `delete` method will return a boolean indicating if the bookmark was deleted.
+```typescript
+const result: boolean  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
+```
+the `create` method will return a boolean indicating if the bookmark was created.
+```typescript
+const result: IBookmark | undefined = await Bookmarks.update("<pk>", payload: IUpdateBookmark, session: Session);
+```
+the `update` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
+
+- pk indicates the primary key of the bookmark, in this case its the url of the bookmark
+- payload is an object containing the fields of the bookmark
+- you need to pass the authenticated session to the methods, this session is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts)
+
+
 
 ## methods
 the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes an authenticated session to use for fetching the data.
@@ -85,7 +102,7 @@ the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422ca
 
 the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L169) takes the `url` of the bookmark as primary key, then as a payload, it takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` with an authenticated session.
 
-schema:
+Schema:
 label: any string value should be fine (required)
 link: link should be a valid URL e.g. starts with http or https (required)
 topic: topic can be both a string or a link to a topic e.g. "tipoc title" | "http://example.com/topic" (optional)
