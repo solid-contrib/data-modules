@@ -2,62 +2,76 @@ import {
     ThingPersisted,
     addNamedNode,
     buildThing,
-    createSolidDataset,
     createThing,
     getNamedNode,
     getSolidDataset,
     getThing,
-    getUrl,
+    getThingAll,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
-import { getThingAll } from "@inrupt/solid-client";
 import {
     BOOKMARK, RDF,
 } from "@inrupt/vocab-common-rdf";
-import { __Bookmark, __foafPerson, __forClass, __privateTypeIndex, __publicTypeIndex, __schemaPerson, __solid_instance, __solid_instance_container, __solidTypeIndex, __solidTypeRegistration, __solidUnlistedDocument } from "../constants";
 import { namedNode } from '@rdfjs/data-model';
+import { __Bookmark, __foafPerson, __forClass, __privateTypeIndex, __publicTypeIndex, __schemaPerson, __solidTypeRegistration, __solid_instance, __solid_instance_container } from "../constants";
 
 export class TypeIndexHelper {
-    constructor() { }
 
-    private static async getProfile(session: Session) {
+    private static async getMeProfile(session: Session) {
         if (!session.info.webId) return
+
         const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch })
 
         const me = getThing(profileDS, session.info.webId);
 
-        return me
+        if (!me) {
+
+            const meThing = buildThing(createThing({ name: "me" }))
+                .addUrl(RDF.type, __foafPerson)
+                .addUrl(RDF.type, __schemaPerson)
+                .build();
+
+            const updatedProfile = setThing(profileDS, meThing);
+
+            const updatedProfileDS = await saveSolidDatasetAt(session.info.webId!, updatedProfile, { fetch: session.fetch });
+
+            const me = getThing(updatedProfileDS, session.info.webId);
+
+            return me
+
+        } else {
+
+            return me
+
+        }
     }
 
     private static async getTypeIndex({ session, isPrivate }: { session: Session, isPrivate: boolean }) {
-        const me = await this.getProfile(session)
+        const me = await this.getMeProfile(session)
+
+        const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
+        const typeIndexFileName = TypeIndexHelper.getTypeIndexFileName(isPrivate);
+        const typeIndexUrl = TypeIndexHelper.getTypeIndexURL(session, typeIndexFileName);
 
         if (me) {
-            const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
 
-            const typeIndex = getNamedNode(me, typeIndexPredicate)
+            let typeIndex = getNamedNode(me, typeIndexPredicate)
 
-            if (typeIndex) {
-                return typeIndex
-            } else {
-                await TypeIndexHelper.addTypeIndexToProfile(session, me, isPrivate);
+            if (typeIndex) return typeIndex;
 
-                const _me = await this.getProfile(session) // maybe this is not needed, me already updated, need to check
+            await TypeIndexHelper.addTypeIndexToProfile(session, me, isPrivate);
 
-                const typeIndex = getNamedNode(_me!, typeIndexPredicate)
+            const _me = await this.getMeProfile(session) // maybe this is not needed, me already updated, need to check
 
-                return typeIndex
-            }
+            typeIndex = getNamedNode(_me!, typeIndexPredicate)
+
+            return typeIndex
 
         } else {
 
             const profileDS = await getSolidDataset(session.info.webId!, { fetch: session.fetch })
-
-            const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
-            const typeIndexFileName = TypeIndexHelper.getTypeIndexFileName(isPrivate);
-            const typeIndexUrl = TypeIndexHelper.getTypeIndexURL(session, typeIndexFileName);
 
             await this.createTypeIndex(session, typeIndexUrl);
 
@@ -71,17 +85,13 @@ export class TypeIndexHelper {
 
             await saveSolidDatasetAt(session.info.webId!, updated, { fetch: session.fetch });
 
-            // const _me = await this.getProfile(session) // maybe this is not needed, me already updated, need to check
-
             const typeIndex = getNamedNode(meThing, typeIndexPredicate)
 
             return typeIndex
         }
     }
 
-    private static getTypeIndexPredicate(isPrivate: boolean) {
-        return isPrivate ? __privateTypeIndex : __publicTypeIndex;
-    }
+
 
     private static async addTypeIndexToProfile(session: Session, me: ThingPersisted, isPrivate: boolean) {
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
@@ -101,13 +111,9 @@ export class TypeIndexHelper {
         await saveSolidDatasetAt(typeIndexUrl, updated, { fetch: session.fetch });
     }
 
-    private static getTypeIndexFileName(isPrivate: boolean) {
-        return isPrivate ? "privateTypeIndex" : "publicTypeIndex";
-    }
 
-    private static getTypeIndexURL(session: Session, typeIndexFileName: string) {
-        return `${session.info.webId?.split("/profile")[0]}/settings/${typeIndexFileName}.ttl`;
-    }
+
+
 
     public static async getFromTypeIndex(session: Session, isPrivate: true) {
         const typeIndex = await this.getTypeIndex({ session, isPrivate })
@@ -203,5 +209,17 @@ export class TypeIndexHelper {
         // const updatedDS = setThing(ds, thing);
 
         // await saveSolidDatasetAt(typeIndexUrl, updatedDS, { fetch: session.fetch });
+    }
+
+    private static getTypeIndexFileName(isPrivate: boolean) {
+        return isPrivate ? "privateTypeIndex" : "publicTypeIndex";
+    }
+
+    private static getTypeIndexPredicate(isPrivate: boolean) {
+        return isPrivate ? __privateTypeIndex : __publicTypeIndex;
+    }
+
+    private static getTypeIndexURL(session: Session, typeIndexFileName: string) {
+        return `${session.info.webId?.split("/profile")[0]}/settings/${typeIndexFileName}.ttl`;
     }
 }
