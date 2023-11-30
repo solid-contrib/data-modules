@@ -3,7 +3,7 @@ import {
     addNamedNode,
     addStringNoLocale,
     addUrl,
-    buildThing,
+    createSolidDataset,
     createThing,
     getLiteral,
     getNamedNode,
@@ -17,7 +17,6 @@ import {
     setUrl
 } from "@inrupt/solid-client";
 import { Session } from "@inrupt/solid-client-authn-browser";
-import { namedNode } from '@rdfjs/data-model'
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
@@ -26,10 +25,9 @@ import {
     RDF,
     RDFS
 } from "@inrupt/vocab-common-rdf";
-
-// TODO: will put it to constants file created in https://github.com/solid-contrib/data-modules/blob/fix/issue%2321/bookmarks/vanilla/src/constants.ts
-// or maybe use DCTERMS.modified
-const DC_UPDATED = "http://purl.org/dc/terms/updated"
+import { namedNode } from '@rdfjs/data-model';
+import { TypeIndexHelper } from "../utils/TypeIndexHelper";
+import { __DC_UPDATED } from "../constants";
 
 export type ICreateBookmark = {
     title: string
@@ -58,12 +56,20 @@ export class Bookmark {
      * @param session Session
      * @returns string
      */
-    public static async getIndexUrl(session: Session): Promise<string> {
-        const pods = await getPodUrlAll(session.info.webId!, {
-            fetch: session.fetch,
-        });
-        const bookmarksContainerUri = `${pods[0]}bookmarks/`;
-        return `${bookmarksContainerUri}index.ttl`;
+    public static async getIndexUrl(session: Session) {
+
+        const registeries = await TypeIndexHelper.getFromTypeIndex(session, true)
+
+        if (!!registeries.length) {
+            return registeries
+        } else {
+            const pods = await getPodUrlAll(session.info.webId!, { fetch: session.fetch });
+            const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
+            await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
+            await TypeIndexHelper.registerInTypeIndex(session, defaultIndexUrl, true)
+
+            return [defaultIndexUrl];
+        }
     }
 
     /**
@@ -72,19 +78,24 @@ export class Bookmark {
      * @returns Promise<IBookmark[]>
      */
     public static async getAll(session: Session): Promise<IBookmark[]> {
-        const indexUrl = await this.getIndexUrl(session);
+        const indexUrls = await this.getIndexUrl(session);
         try {
-            const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+            const all = indexUrls.map(async (indexUrl) => {
+                const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
-            const things = getThingAll(ds)
+                const things = getThingAll(ds)
 
-            const bookmarks = things.map(thing => this.mapBookmark(thing))
+                const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
-            return bookmarks
-
+                return bookmarks
+            })
+            const allPromise = Promise.all([...all]);
+            const values = (await allPromise).flat();
+            return values;
         } catch (error) {
             return []
         }
+
     }
 
     /**
@@ -108,14 +119,12 @@ export class Bookmark {
      * @returns Promise<boolean>
      */
     public static async delete(url: string, session: Session): Promise<boolean> {
-        const indexUrl = await this.getIndexUrl(session);
-
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url);
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
-            const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarks, { fetch: session.fetch });
+            const updatedDataset = await saveSolidDatasetAt(url, updatedBookmarks, { fetch: session.fetch });
             if (updatedDataset) {
                 return true
             } else {
@@ -137,7 +146,8 @@ export class Bookmark {
 
         const { title, link, creator, topic } = payload
 
-        const indexUrl = await this.getIndexUrl(session);
+        // default to create in first registery, so its fine to use 0th index
+        const [indexUrl] = await this.getIndexUrl(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
@@ -148,7 +158,7 @@ export class Bookmark {
         if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
         if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, DC_UPDATED, new Date().toISOString())
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, __DC_UPDATED, new Date().toISOString())
 
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
@@ -166,8 +176,7 @@ export class Bookmark {
      * @returns Promise<IBookmark | undefined>
      */
     public static async update(url: string, payload: IUpdateBookmark, session: Session): Promise<IBookmark | undefined> {
-        const indexUrl = await this.getIndexUrl(session);
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const ds = await getSolidDataset(url, { fetch: session.fetch });
         let thing = getThing(ds, url)
 
         if (thing) {
@@ -177,13 +186,12 @@ export class Bookmark {
             thing = setStringNoLocale(thing, BOOKMARK.recalls, link)
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
             if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
-            thing = setStringNoLocale(thing, DC_UPDATED, new Date().toISOString())
+            thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString())
 
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
-
-            await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+            await saveSolidDatasetAt(url, updatedBookmarkList, { fetch: session.fetch });
 
             return this.mapBookmark(thing)
         }
@@ -229,7 +237,7 @@ export class Bookmark {
     }
     private static mapUpdated(thing: ThingPersisted): string | undefined {
         return (
-            getLiteral(thing, "http://purl.org/dc/terms/updated")?.value
+            getLiteral(thing, __DC_UPDATED)?.value
         );
     }
     private static mapCreator(thing: ThingPersisted): string | undefined {
