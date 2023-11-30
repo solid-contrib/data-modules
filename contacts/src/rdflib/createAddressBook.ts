@@ -3,8 +3,6 @@ import { v4 as uuid } from "uuid";
 import { dc, vcard } from "./namespaces";
 import { UpdateOperation } from "./web-operations/executeUpdate";
 
-export { UpdateOperation } from "./web-operations/executeUpdate";
-
 export function createAddressBook(
   container: string,
   name: string,

@@ -1,7 +1,8 @@
-import { createAddressBook, UpdateOperation } from "./createAddressBook";
+import { createAddressBook } from "./createAddressBook";
 import { v4 as uuid } from "uuid";
 import { lit, st, sym } from "rdflib";
 import { dc, vcard } from "./namespaces";
+import { UpdateOperation } from "./web-operations/executeUpdate";
 
 jest.mock("uuid");
 
