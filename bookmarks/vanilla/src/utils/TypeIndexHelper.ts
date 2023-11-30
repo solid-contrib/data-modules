@@ -104,8 +104,6 @@ export class TypeIndexHelper {
         }
     }
 
-
-
     /**
      * Adds a type index to the profile.
      *
@@ -131,10 +129,6 @@ export class TypeIndexHelper {
 
         await saveSolidDatasetAt(typeIndexUrl, updated, { fetch: session.fetch });
     }
-
-
-
-
 
     /**
      * Retrieves a list of instances from the type index.
@@ -184,12 +178,6 @@ export class TypeIndexHelper {
 
         const responce: string[] = [...new Set([...instances, ...innerInstances])]
 
-
-        // if (!responce.length) {
-        //     await this.registerInTypeIndex(session, defaultIndexUrl, true)
-
-        //     return [defaultIndexUrl]
-        // }
 
         return responce
     }
