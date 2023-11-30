@@ -51,7 +51,7 @@ describe("Bookmark", () => {
 
         const res = await Bookmark.getIndexUrl(session);
 
-        expect(inruptClient.getPodUrlAll).toHaveBeenCalledTimes(1);
+        expect(inruptClient.getPodUrlAll).toHaveBeenCalledTimes(0);
 
         expect(res).toStrictEqual(expectedIndexUrl);
         mockBookmarkRegisteries.mockRestore();
