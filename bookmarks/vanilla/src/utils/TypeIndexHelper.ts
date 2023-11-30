@@ -26,14 +26,13 @@ export class TypeIndexHelper {
      * @return {Promise<Thing | undefined>} The user's profile or undefined if the profile does not exist.
      */
     private static async getMeProfile(session: Session) {
-        if (!session.info.webId) return
+        if (!session.info.webId) return;
 
-        const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch })
+        const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch });
 
-        const me = getThing(profileDS, session.info.webId);
+        let me = getThing(profileDS, session.info.webId);
 
         if (!me) {
-
             const meThing = buildThing(createThing({ name: "me" }))
                 .addUrl(RDF.type, __foafPerson)
                 .addUrl(RDF.type, __schemaPerson)
@@ -43,15 +42,10 @@ export class TypeIndexHelper {
 
             const updatedProfileDS = await saveSolidDatasetAt(session.info.webId!, updatedProfile, { fetch: session.fetch });
 
-            const me = getThing(updatedProfileDS, session.info.webId);
-
-            return me
-
-        } else {
-
-            return me
-
+            me = getThing(updatedProfileDS, session.info.webId);
         }
+
+        return me;
     }
 
     /**
@@ -84,9 +78,9 @@ export class TypeIndexHelper {
 
         } else {
 
-            const profileDS = await getSolidDataset(session.info.webId!, { fetch: session.fetch })
-
             await this.createTypeIndex(session, typeIndexUrl);
+
+            const profileDS = await getSolidDataset(session.info.webId!, { fetch: session.fetch });
 
             const meThing = buildThing(createThing({ name: "me" }))
                 .addNamedNode(typeIndexPredicate, namedNode(typeIndexUrl))
@@ -98,36 +92,37 @@ export class TypeIndexHelper {
 
             await saveSolidDatasetAt(session.info.webId!, updated, { fetch: session.fetch });
 
-            const typeIndex = getNamedNode(meThing, typeIndexPredicate)
+            const typeIndex = getNamedNode(meThing, typeIndexPredicate);
 
-            return typeIndex
+            return typeIndex;
         }
     }
 
     /**
      * Adds a type index to the profile.
      *
-     * @param {Session} session - The session object.
-     * @param {ThingPersisted} me - The persisted thing.
-     * @param {boolean} isPrivate - Indicates whether the type index should be private.
-     * @return {Promise<void>} A promise that resolves when the type index has been added.
+     * @param session - The session object.
+     * @param me - The persisted thing.
+     * @param isPrivate - Indicates whether the type index should be private.
+     * @returns A promise that resolves when the type index has been added.
      */
     private static async addTypeIndexToProfile(session: Session, me: ThingPersisted, isPrivate: boolean) {
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
-
         const typeIndexFileName = TypeIndexHelper.getTypeIndexFileName(isPrivate);
-
         const typeIndexUrl = TypeIndexHelper.getTypeIndexURL(session, typeIndexFileName);
 
         await this.createTypeIndex(session, typeIndexUrl);
 
         const updatedMe = addNamedNode(me, typeIndexPredicate, namedNode(typeIndexUrl));
 
-        const ds = await getSolidDataset(typeIndexUrl, { fetch: session.fetch });
-
-        const updated = setThing(ds, updatedMe);
-
-        await saveSolidDatasetAt(typeIndexUrl, updated, { fetch: session.fetch });
+        try {
+            const ds = await getSolidDataset(typeIndexUrl, { fetch: session.fetch });
+            const updated = setThing(ds, updatedMe);
+            await saveSolidDatasetAt(typeIndexUrl, updated, { fetch: session.fetch });
+        } catch (error) {
+            console.error(`Failed to add type index to profile: ${error}`);
+            throw error;
+        }
     }
 
     /**
@@ -138,11 +133,11 @@ export class TypeIndexHelper {
      * @return {Promise<string[]>} A promise that resolves to an array of instance URLs.
      */
     public static async getFromTypeIndex(session: Session, isPrivate: true) {
-        const typeIndex = await this.getTypeIndex(session, isPrivate)
+        const typeIndex = await this.getTypeIndex(session, isPrivate);
 
         if (!typeIndex) return [];
 
-        const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch })
+        const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch });
 
         const all = getThingAll(ds);
 
@@ -175,9 +170,7 @@ export class TypeIndexHelper {
 
         const innerInstances = (await Promise.all([...instanceContainersPromises])).flat();
 
-
         const responce: string[] = [...new Set([...instances, ...innerInstances])]
-
 
         return responce
     }
