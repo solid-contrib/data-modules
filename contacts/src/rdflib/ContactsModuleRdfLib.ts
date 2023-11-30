@@ -1,32 +1,29 @@
-import {
-  Fetcher,
-  graph,
-  IndexedFormula,
-  lit,
-  Node,
-  st,
-  sym,
-  UpdateManager,
-} from "rdflib";
-import { AddressBook, ContactsModule, ModuleConfig } from "..";
+import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
+import { AddressBook, ContactsModule } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
-import { dc, vcard } from "./namespaces";
-import { v4 as uuid } from "uuid";
+import { createAddressBook } from "./createAddressBook";
+import { executeUpdate } from "./web-operations/executeUpdate";
 
 interface CreateAddressBookCommand {
   container: string;
   name: string;
 }
 
+interface ModuleConfig {
+  store: IndexedFormula;
+  fetcher: Fetcher;
+  updater: UpdateManager;
+}
+
 export class ContactsModuleRdfLib implements ContactsModule {
-  private fetcher: Fetcher;
-  private store: IndexedFormula;
-  private updater: UpdateManager;
+  private readonly fetcher: Fetcher;
+  private readonly store: IndexedFormula;
+  private readonly updater: UpdateManager;
 
   constructor(config: ModuleConfig) {
-    this.store = graph();
-    this.fetcher = new Fetcher(this.store, { fetch: config.fetch });
-    this.updater = new UpdateManager(this.store);
+    this.store = config.store;
+    this.fetcher = config.fetcher;
+    this.updater = config.updater;
   }
 
   async readAddressBook(uri: string): Promise<AddressBook> {
@@ -60,35 +57,8 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async createAddressBook({ container, name }: CreateAddressBookCommand) {
-    const id = uuid();
-    const uri = `${container}${id}/index.ttl#this`;
-    const nameEmailIndexUri = `${container}${id}/people.ttl`;
-    const groupIndexUri = `${container}${id}/groups.ttl`;
-    await this.updater.update(
-      [],
-      [
-        st(
-          sym(uri),
-          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          vcard("AddressBook"),
-          sym(uri).doc(),
-        ),
-        st(sym(uri), dc("title"), lit(name), sym(uri).doc()),
-        st(
-          sym(uri),
-          vcard("nameEmailIndex"),
-          sym(nameEmailIndexUri),
-          sym(uri).doc(),
-        ),
-        st(sym(uri), vcard("groupIndex"), sym(groupIndexUri), sym(uri).doc()),
-      ],
-    );
-    await this.fetcher.webOperation("PUT", nameEmailIndexUri, {
-      contentType: "text/turtle",
-    });
-    await this.fetcher.webOperation("PUT", groupIndexUri, {
-      contentType: "text/turtle",
-    });
-    return uri;
+    const operation = createAddressBook(container, name);
+    await executeUpdate(this.fetcher, this.updater, operation);
+    return operation.uri;
   }
 }

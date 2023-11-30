@@ -6,6 +6,7 @@ import {
   expectPatchRequest,
   expectPutEmptyTurtleFile,
 } from "../test-support/expectRequests";
+import { Fetcher, graph, UpdateManager } from "rdflib";
 
 jest.mock("uuid");
 
@@ -17,8 +18,15 @@ describe("create address book", () => {
       "c1eabcdb-fd69-4889-9ab2-f06be49d27d3",
     );
 
-    const contacts = new ContactsModuleRdfLib({
+    const store = graph();
+    const fetcher = new Fetcher(store, {
       fetch: authenticatedFetch,
+    });
+    const updater = new UpdateManager(store);
+    const contacts = new ContactsModuleRdfLib({
+      store,
+      fetcher,
+      updater,
     });
 
     mockNotFound(

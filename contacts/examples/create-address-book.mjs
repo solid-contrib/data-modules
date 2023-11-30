@@ -1,6 +1,10 @@
 import {ContactsModule} from '../dist/rdflib/index.js';
+import {Fetcher, graph, UpdateManager} from "rdflib";
 
-const contacts = new ContactsModule({})
+const store = graph()
+const fetcher = new Fetcher(store)
+const updater = new UpdateManager(store)
+const contacts = new ContactsModule({store, fetcher, updater})
 
 const uri = await contacts.createAddressBook({
     container: "http://localhost:3000/alice/public-write/",
