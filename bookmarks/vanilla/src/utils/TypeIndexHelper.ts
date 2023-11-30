@@ -19,6 +19,12 @@ import { __Bookmark, __foafPerson, __forClass, __privateTypeIndex, __publicTypeI
 
 export class TypeIndexHelper {
 
+    /**
+     * Retrieves the profile of the user associated with the given session.
+     *
+     * @param {Session} session - The session object containing the user's information.
+     * @return {Promise<Thing | undefined>} The user's profile or undefined if the profile does not exist.
+     */
     private static async getMeProfile(session: Session) {
         if (!session.info.webId) return
 
@@ -48,7 +54,14 @@ export class TypeIndexHelper {
         }
     }
 
-    private static async getTypeIndex({ session, isPrivate }: { session: Session, isPrivate: boolean }) {
+    /**
+     * Retrieves the type index from the session for the given isPrivate flag.
+     *
+     * @param {Session} session - the session object
+     * @param {boolean} isPrivate - flag indicating if the type index is private
+     * @return {Promise<Node>} - the type index node
+     */
+    private static async getTypeIndex(session: Session, isPrivate: boolean) {
         const me = await this.getMeProfile(session)
 
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
@@ -93,6 +106,14 @@ export class TypeIndexHelper {
 
 
 
+    /**
+     * Adds a type index to the profile.
+     *
+     * @param {Session} session - The session object.
+     * @param {ThingPersisted} me - The persisted thing.
+     * @param {boolean} isPrivate - Indicates whether the type index should be private.
+     * @return {Promise<void>} A promise that resolves when the type index has been added.
+     */
     private static async addTypeIndexToProfile(session: Session, me: ThingPersisted, isPrivate: boolean) {
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
 
@@ -115,8 +136,15 @@ export class TypeIndexHelper {
 
 
 
+    /**
+     * Retrieves a list of instances from the type index.
+     *
+     * @param {Session} session - The session object.
+     * @param {boolean} isPrivate - A boolean indicating whether the instances are private.
+     * @return {Promise<string[]>} A promise that resolves to an array of instance URLs.
+     */
     public static async getFromTypeIndex(session: Session, isPrivate: true) {
-        const typeIndex = await this.getTypeIndex({ session, isPrivate })
+        const typeIndex = await this.getTypeIndex(session, isPrivate)
 
         if (!typeIndex) return [];
 
@@ -166,8 +194,16 @@ export class TypeIndexHelper {
         return responce
     }
 
+    /**
+     * Registers the session in the type index.
+     *
+     * @param {Session} session - The session object.
+     * @param {string} indexUrl - The URL of the type index.
+     * @param {boolean} isPrivate - Indicates whether the type index is private.
+     * @return {Promise<void>} - A promise that resolves when the registration is complete.
+     */
     public static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean) {
-        const typeIndex = await this.getTypeIndex({ session, isPrivate })
+        const typeIndex = await this.getTypeIndex(session, isPrivate)
 
         if (!typeIndex) return // TODO validate
 
@@ -185,6 +221,13 @@ export class TypeIndexHelper {
     }
 
 
+    /**
+     * Create a type index using the given session and type index URL.
+     *
+     * @param {Session} session - The session object.
+     * @param {string} typeIndexUrl - The URL of the type index.
+     * @return {Promise<void>} - A promise that resolves when the type index is created successfully.
+     */
     private static async createTypeIndex(session: Session, typeIndexUrl: string) {
 
         try {
@@ -211,14 +254,33 @@ export class TypeIndexHelper {
         // await saveSolidDatasetAt(typeIndexUrl, updatedDS, { fetch: session.fetch });
     }
 
+    /**
+     * Returns the file name of the type index based on the privacy of the type.
+     *
+     * @param {boolean} isPrivate - Indicates whether the type is private or not.
+     * @return {string} The file name of the type index.
+     */
     private static getTypeIndexFileName(isPrivate: boolean) {
         return isPrivate ? "privateTypeIndex" : "publicTypeIndex";
     }
 
+    /**
+     * Returns the type index predicate based on the value of isPrivate.
+     *
+     * @param {boolean} isPrivate - Specifies whether the type index predicate should be private or public.
+     * @return {Function} - The type index predicate function.
+     */
     private static getTypeIndexPredicate(isPrivate: boolean) {
         return isPrivate ? __privateTypeIndex : __publicTypeIndex;
     }
 
+    /**
+     * Retrieves the URL of the type index file for a given session and type index filename.
+     *
+     * @param {Session} session - The session object.
+     * @param {string} typeIndexFileName - The name of the type index file.
+     * @return {string} The URL of the type index file.
+     */
     private static getTypeIndexURL(session: Session, typeIndexFileName: string) {
         return `${session.info.webId?.split("/profile")[0]}/settings/${typeIndexFileName}.ttl`;
     }
