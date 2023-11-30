@@ -3,6 +3,7 @@ import {
     addNamedNode,
     addStringNoLocale,
     addUrl,
+    createSolidDataset,
     createThing,
     getLiteral,
     getNamedNode,
@@ -64,6 +65,7 @@ export class Bookmark {
         } else {
             const pods = await getPodUrlAll(session.info.webId!, { fetch: session.fetch });
             const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
+            await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
             await TypeIndexHelper.registerInTypeIndex(session, defaultIndexUrl, true)
 
             return [defaultIndexUrl];
