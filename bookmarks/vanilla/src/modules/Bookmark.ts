@@ -26,7 +26,7 @@ import {
 } from "@inrupt/vocab-common-rdf";
 import { namedNode } from '@rdfjs/data-model';
 import { TypeIndexHelper } from "../utils/TypeIndexHelper";
-
+import { __DC_UPDATED } from "../constants";
 
 export type ICreateBookmark = {
     title: string
@@ -73,9 +73,9 @@ export class Bookmark {
     /**
      * 
      * @param session Session
-     * @returns IBookmark[]
+     * @returns Promise<IBookmark[]>
      */
-    public static async getAll(session: Session) {
+    public static async getAll(session: Session): Promise<IBookmark[]> {
         const indexUrls = await this.getIndexUrl(session);
         try {
             const all = indexUrls.map(async (indexUrl) => {
@@ -91,7 +91,6 @@ export class Bookmark {
             const values = (await allPromise).flat();
             return values;
         } catch (error) {
-            console.log("🚀 ~ file: Bookmark.ts:104 ~ Bookmark ~ getAll ~ error:", error)
             return []
         }
 
@@ -101,9 +100,9 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<IBookmark | undefined>
      */
-    public static async get(url: string, session: Session) {
+    public static async get(url: string, session: Session): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url)
@@ -115,20 +114,14 @@ export class Bookmark {
      * 
      * @param url string
      * @param session Session
-     * @returns boolean
+     * @returns Promise<boolean>
      */
-    public static async delete(url: string, session: Session) {
-        // const [indexUrl] = await this.getIndexUrl(session);
-
+    public static async delete(url: string, session: Session): Promise<boolean> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
 
         const thing = getThing(ds, url);
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
-            // TODO: we can also split url with # to path exact datasetURL
-            // but compatibility with other frameworks need more considiration
-            // e.g. inrub url: https://solid-dm.solidcommunity.net/bookmarks/index.ttl#d2d50f70-8eb0-40b6-9996-88c4a430a16d
-            // e.g. soukai url: https://solid-dm.solidcommunity.net/bookmarks/d2d50f70-8eb0-40b6-9996-88c4a430a16d
             const updatedDataset = await saveSolidDatasetAt(url, updatedBookmarks, { fetch: session.fetch });
             if (updatedDataset) {
                 return true
@@ -143,13 +136,11 @@ export class Bookmark {
 
     /**
      * 
-     * @param title string
-     * @param link string
+     * @param payload ICreateBookmark
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<boolean>
      */
-    public static async create(payload: ICreateBookmark, session: Session) {
-        // TODO: check typeIndex
+    public static async create(payload: ICreateBookmark, session: Session): Promise<boolean> {
 
         const { title, link, creator, topic } = payload
 
@@ -165,28 +156,24 @@ export class Bookmark {
         if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
         if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, "http://purl.org/dc/terms/updated", new Date().toISOString())
+        newBookmarkThing = addStringNoLocale(newBookmarkThing, __DC_UPDATED, new Date().toISOString())
 
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
-        await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
-        // TODO: also need return url of created bookmark
-        return payload
+        const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+
+        return updatedDataset ? true : false
     };
 
 
     /**
      * 
-     * @param url string
-     * @param title string
-     * @param link string
+     * @param payload IUpdateBookmark
      * @param session Session
-     * @returns IBookmark
+     * @returns Promise<IBookmark | undefined>
      */
-    public static async update(url: string, payload: IUpdateBookmark, session: Session) {
-        // TODO: check typeIndex
-
+    public static async update(url: string, payload: IUpdateBookmark, session: Session): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
         let thing = getThing(ds, url)
 
@@ -197,14 +184,14 @@ export class Bookmark {
             thing = setStringNoLocale(thing, BOOKMARK.recalls, link)
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
             if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
-            thing = setStringNoLocale(thing, "http://purl.org/dc/terms/updated", new Date().toISOString())
+            thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString())
 
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
             await saveSolidDatasetAt(url, updatedBookmarkList, { fetch: session.fetch });
 
-            return { url, ...payload }
+            return this.mapBookmark(thing)
         }
 
     };
@@ -236,6 +223,8 @@ export class Bookmark {
         );
     }
     private static mapLink(thing: ThingPersisted): string {
+        // TODO: validate url
+        // issue: https://github.com/solid-contrib/data-modules/issues/32
         return (
             getLiteral(thing, BOOKMARK.recalls)?.value ??
             getNamedNode(thing, BOOKMARK.recalls)?.value ?? ""
@@ -246,7 +235,7 @@ export class Bookmark {
     }
     private static mapUpdated(thing: ThingPersisted): string | undefined {
         return (
-            getLiteral(thing, "http://purl.org/dc/terms/updated")?.value
+            getLiteral(thing, __DC_UPDATED)?.value
         );
     }
     private static mapCreator(thing: ThingPersisted): string | undefined {

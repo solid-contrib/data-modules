@@ -57,7 +57,6 @@ const Bookmarks: FC<IProps> = ({ }) => {
       },
       session
     );
-    // setBookmarks(updatedDataset);
     setbookmarkTitle("");
     setbookmarkLink("");
   };
@@ -130,8 +129,8 @@ const Bookmarks: FC<IProps> = ({ }) => {
                       </IconButton>
                       <IconButton
                         onClick={async () => console.log(row.url , await Bookmark.update(row.url, {
-                          title: "bookmarkTitle",
-                          link: "bookmarkLink",
+                          title: "sss__",
+                          link: "http://sss__.com",
                         }, session))}
                       >
                         UPD
