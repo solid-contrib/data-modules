@@ -1,5 +1,5 @@
 import { AddressBookQuery } from "./AddressBookQuery";
-import { graph, sym } from "rdflib";
+import { graph, lit, sym } from "rdflib";
 import { dc, vcard } from "./namespaces";
 
 import { v4 as uuid } from "uuid";
@@ -67,6 +67,25 @@ describe("AddressBookQuery", () => {
     it("returns null if nothing found in store", () => {
       const query = new AddressBookQuery(
         graph(),
+        sym("http://pod.test/alice/contacts/index.ttl#this"),
+      );
+      const result = query.queryNameEmailIndex();
+      expect(result).toBe(null);
+    });
+
+    it("returns null if index is not a named node", () => {
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      store.add(
+        addressBookNode,
+        vcard("nameEmailIndex"),
+        lit("invalid index"),
+        addressBookNode.doc(),
+      );
+      const query = new AddressBookQuery(
+        store,
         sym("http://pod.test/alice/contacts/index.ttl#this"),
       );
       const result = query.queryNameEmailIndex();

@@ -31,13 +31,18 @@ export class AddressBookQuery {
     );
   }
 
-  queryNameEmailIndex() {
-    return this.store.any(
+  queryNameEmailIndex(): NamedNode | null {
+    const index = this.store.any(
       this.addressBookNode,
       vcard("nameEmailIndex"),
       undefined,
       this.addressBookDoc,
     );
+    if (isNamedNode(index)) {
+      return index as NamedNode;
+    } else {
+      return null;
+    }
   }
 
   queryContacts(): Contact[] {
