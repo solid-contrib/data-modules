@@ -2,6 +2,10 @@ import { AddressBookQuery } from "./AddressBookQuery";
 import { graph, sym } from "rdflib";
 import { dc, vcard } from "./namespaces";
 
+import { v4 as uuid } from "uuid";
+
+jest.mock("uuid");
+
 describe("AddressBookQuery", () => {
   describe("query title", () => {
     it("returns an empty string if nothing found in store", () => {
@@ -604,6 +608,25 @@ describe("AddressBookQuery", () => {
       );
       const result = query.queryGroups();
       expect(result).toEqual([]);
+    });
+  });
+
+  describe("propose new contact node", () => {
+    it("mints a new URI based on the address book container", () => {
+      (uuid as jest.Mock).mockReturnValueOnce(
+        "44a5fc88-fc3c-4f69-83ab-78d49764881c",
+      );
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      const query = new AddressBookQuery(store, addressBookNode);
+      const contactNode = query.proposeNewContactNode();
+      expect(contactNode).toEqual(
+        sym(
+          "http://pod.test/alice/contacts/Person/44a5fc88-fc3c-4f69-83ab-78d49764881c/index.ttl#this",
+        ),
+      );
     });
   });
 });
