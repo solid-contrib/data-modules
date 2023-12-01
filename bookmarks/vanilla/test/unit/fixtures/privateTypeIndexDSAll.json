@@ -1,0 +1,98 @@
+[
+    {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl",
+        "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+                "namedNodes": [
+                    "http://www.w3.org/ns/solid/terms#TypeIndex",
+                    "http://www.w3.org/ns/solid/terms#UnlistedDocument"
+                ]
+            }
+        }
+    },
+    {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl#2bdc3da9-e0f0-48b5-b1aa-8123bb468a92",
+        "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+                "namedNodes": [
+                    "http://www.w3.org/ns/solid/terms#TypeRegistration"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#forClass": {
+                "namedNodes": [
+                    "https://schema.org/WatchAction"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#instanceContainer": {
+                "namedNodes": [
+                    "https://solid-dm.solidcommunity.net/movies/"
+                ]
+            }
+        }
+    },
+    {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl#5677e892-fad5-4039-8108-4f4ed2640b98",
+        "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+                "namedNodes": [
+                    "http://www.w3.org/ns/solid/terms#TypeRegistration"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#forClass": {
+                "namedNodes": [
+                    "https://schema.org/Movie"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#instanceContainer": {
+                "namedNodes": [
+                    "https://solid-dm.solidcommunity.net/movies/"
+                ]
+            }
+        }
+    },
+    {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl#bookmarks_registery",
+        "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+                "namedNodes": [
+                    "http://www.w3.org/ns/solid/terms#TypeRegistration"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#forClass": {
+                "namedNodes": [
+                    "http://www.w3.org/2002/01/bookmark#Bookmark"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#instance": {
+                "namedNodes": [
+                    "https://solid-dm.solidcommunity.net/bookmarks/index.ttl"
+                ]
+            }
+        }
+    },
+    {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl#5677e892-fad5-4039-8108-4f4ed2640b99",
+        "predicates": {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+                "namedNodes": [
+                    "http://www.w3.org/ns/solid/terms#TypeRegistration"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#forClass": {
+                "namedNodes": [
+                    "http://www.w3.org/2002/01/bookmark#Bookmark"
+                ]
+            },
+            "http://www.w3.org/ns/solid/terms#instanceContainer": {
+                "namedNodes": [
+                    "https://solid-dm.solidcommunity.net/bookmarks/"
+                ]
+            }
+        }
+    }
+]

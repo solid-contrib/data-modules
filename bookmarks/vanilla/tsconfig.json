@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "strict": true,
     "rootDir": "src",
+    "stripInternal": true,
     // "baseUrl": "src",
     // "paths": {
     //   "@/*": ["./*"]
