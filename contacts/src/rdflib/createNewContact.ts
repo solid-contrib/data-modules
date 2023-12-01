@@ -3,15 +3,11 @@ import { AddressBookQuery } from "./AddressBookQuery";
 import { lit, st } from "rdflib";
 import { rdf, vcard } from "./namespaces";
 
-export interface Contact {
-  name: string;
-  email?: string;
-  phoneNumber?: string;
-}
+import { NewContact } from "../index";
 
 export function createNewContact(
   addressBook: AddressBookQuery,
-  newContact: Contact,
+  newContact: NewContact,
 ): UpdateOperation {
   const contactNode = addressBook.proposeNewContactNode();
   const nameEmailIndex = addressBook.queryNameEmailIndex();

@@ -15,3 +15,9 @@ export interface Contact {
 }
 
 export interface Group {}
+
+export interface NewContact {
+  name: string;
+  email?: string;
+  phoneNumber?: string;
+}
