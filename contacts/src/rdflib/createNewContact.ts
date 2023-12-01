@@ -1,7 +1,7 @@
 import { UpdateOperation } from "./web-operations/executeUpdate";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { lit, st } from "rdflib";
-import { vcard } from "./namespaces";
+import { rdf, vcard } from "./namespaces";
 
 export interface Contact {
   name: string;
@@ -23,6 +23,8 @@ export function createNewContact(
     deletions: [],
     insertions: [
       st(contactNode, vcard("fn"), lit(newContact.name), nameEmailIndex),
+      st(contactNode, vcard("fn"), lit(newContact.name), contactNode.doc()),
+      st(contactNode, rdf("type"), vcard("Individual"), contactNode.doc()),
     ],
     filesToCreate: [],
   };
