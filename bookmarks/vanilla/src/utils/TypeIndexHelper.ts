@@ -1,4 +1,5 @@
 import {
+    SolidDataset,
     ThingPersisted,
     addNamedNode,
     buildThing,
@@ -16,16 +17,17 @@ import {
 } from "@inrupt/vocab-common-rdf";
 import { namedNode } from '@rdfjs/data-model';
 import { __Bookmark, __foafPerson, __forClass, __privateTypeIndex, __publicTypeIndex, __schemaPerson, __solidTypeRegistration, __solid_instance, __solid_instance_container } from "../constants";
+import { NamedNode } from '@rdfjs/types'
 
 export class TypeIndexHelper {
-
     /**
      * Retrieves the profile of the user associated with the given session.
      *
      * @param {Session} session - The session object containing the user's information.
      * @return {Promise<Thing | undefined>} The user's profile or undefined if the profile does not exist.
+     * @internal
      */
-    private static async getMeProfile(session: Session) {
+    public static async getMeProfile(session: Session): Promise<ThingPersisted | null | undefined> {
         if (!session.info.webId) return;
 
         const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch });
@@ -52,10 +54,11 @@ export class TypeIndexHelper {
      * Retrieves the type index from the session for the given isPrivate flag.
      *
      * @param {Session} session - the session object
-     * @param {boolean} isPrivate - flag indicating if the type index is private
+     * @param {boolean} isPrivate - flag indicating if the type index is public
      * @return {Promise<Node>} - the type index node
+     * @internal
      */
-    private static async getTypeIndex(session: Session, isPrivate: boolean) {
+    public static async getTypeIndex(session: Session, isPrivate: boolean): Promise<NamedNode<string> | null> {
         const me = await this.getMeProfile(session)
 
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
@@ -103,10 +106,11 @@ export class TypeIndexHelper {
      *
      * @param session - The session object.
      * @param me - The persisted thing.
-     * @param isPrivate - Indicates whether the type index should be private.
+     * @param isPrivate - Indicates whether the type index should be public.
      * @returns A promise that resolves when the type index has been added.
+     * @internal
      */
-    private static async addTypeIndexToProfile(session: Session, me: ThingPersisted, isPrivate: boolean) {
+    public static async addTypeIndexToProfile(session: Session, me: ThingPersisted, isPrivate: boolean): Promise<boolean> {
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
         const typeIndexFileName = TypeIndexHelper.getTypeIndexFileName(isPrivate);
         const typeIndexUrl = TypeIndexHelper.getTypeIndexURL(session, typeIndexFileName);
@@ -119,8 +123,8 @@ export class TypeIndexHelper {
             const ds = await getSolidDataset(typeIndexUrl, { fetch: session.fetch });
             const updated = setThing(ds, updatedMe);
             await saveSolidDatasetAt(typeIndexUrl, updated, { fetch: session.fetch });
+            return true
         } catch (error) {
-            console.error(`Failed to add type index to profile: ${error}`);
             throw error;
         }
     }
@@ -129,10 +133,11 @@ export class TypeIndexHelper {
      * Retrieves a list of instances from the type index.
      *
      * @param {Session} session - The session object.
-     * @param {boolean} isPrivate - A boolean indicating whether the instances are private.
+     * @param {boolean} isPrivate - A boolean indicating whether the instances are public.
      * @return {Promise<string[]>} A promise that resolves to an array of instance URLs.
+     * @internal
      */
-    public static async getFromTypeIndex(session: Session, isPrivate: true) {
+    public static async getFromTypeIndex(session: Session, isPrivate: true): Promise<string[]> {
         const typeIndex = await this.getTypeIndex(session, isPrivate);
 
         if (!typeIndex) return [];
@@ -180,8 +185,9 @@ export class TypeIndexHelper {
      *
      * @param {Session} session - The session object.
      * @param {string} indexUrl - The URL of the type index.
-     * @param {boolean} isPrivate - Indicates whether the type index is private.
+     * @param {boolean} isPrivate - Indicates whether the type index is public.
      * @return {Promise<void>} - A promise that resolves when the registration is complete.
+     * @internal
      */
     public static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean) {
         const typeIndex = await this.getTypeIndex(session, isPrivate)
@@ -199,6 +205,8 @@ export class TypeIndexHelper {
         const updatedBookmarkList = setThing(ds, bookmarkThing);
 
         await saveSolidDatasetAt(typeIndex?.value, updatedBookmarkList, { fetch: session.fetch });
+        
+        return true
     }
 
 
@@ -207,9 +215,10 @@ export class TypeIndexHelper {
      *
      * @param {Session} session - The session object.
      * @param {string} typeIndexUrl - The URL of the type index.
-     * @return {Promise<void>} - A promise that resolves when the type index is created successfully.
+     * @return {Promise<true | undefined>} - A promise that resolves when the type index is created successfully.
+     * @internal
      */
-    private static async createTypeIndex(session: Session, typeIndexUrl: string) {
+    public static async createTypeIndex(session: Session, typeIndexUrl: string) {
 
         try {
             await session.fetch(typeIndexUrl, {
@@ -219,39 +228,31 @@ export class TypeIndexHelper {
                 },
                 body: `@prefix solid: <http://www.w3.org/ns/solid/terms#>.\n\n<> a solid:TypeIndex, solid:UnlistedDocument.`
             })
+            return true
         } catch (error) {
-            console.error(error)
+
         }
-
-        // const ds = createSolidDataset();
-
-        // const thing = buildThing(createThing())
-        //     .addUrl(RDF.type, namedNode(__solidUnlistedDocument))
-        //     .addUrl(RDF.type, namedNode(__solidTypeIndex))
-        //     .build();
-
-        // const updatedDS = setThing(ds, thing);
-
-        // await saveSolidDatasetAt(typeIndexUrl, updatedDS, { fetch: session.fetch });
     }
 
     /**
      * Returns the file name of the type index based on the privacy of the type.
      *
-     * @param {boolean} isPrivate - Indicates whether the type is private or not.
+     * @param {boolean} isPrivate - Indicates whether the type is public or not.
      * @return {string} The file name of the type index.
+     * @internal
      */
-    private static getTypeIndexFileName(isPrivate: boolean) {
+    public static getTypeIndexFileName(isPrivate: boolean) {
         return isPrivate ? "privateTypeIndex" : "publicTypeIndex";
     }
 
     /**
      * Returns the type index predicate based on the value of isPrivate.
      *
-     * @param {boolean} isPrivate - Specifies whether the type index predicate should be private or public.
+     * @param {boolean} isPrivate - Specifies whether the type index predicate should be public or public.
      * @return {Function} - The type index predicate function.
+     * @internal
      */
-    private static getTypeIndexPredicate(isPrivate: boolean) {
+    public static getTypeIndexPredicate(isPrivate: boolean) {
         return isPrivate ? __privateTypeIndex : __publicTypeIndex;
     }
 
@@ -261,8 +262,9 @@ export class TypeIndexHelper {
      * @param {Session} session - The session object.
      * @param {string} typeIndexFileName - The name of the type index file.
      * @return {string} The URL of the type index file.
+     * @internal
      */
-    private static getTypeIndexURL(session: Session, typeIndexFileName: string) {
+    public static getTypeIndexURL(session: Session, typeIndexFileName: string) {
         return `${session.info.webId?.split("/profile")[0]}/settings/${typeIndexFileName}.ttl`;
     }
 }
