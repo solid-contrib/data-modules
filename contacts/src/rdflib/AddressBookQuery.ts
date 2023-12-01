@@ -8,7 +8,7 @@ export class AddressBookQuery {
 
   constructor(
     private store: IndexedFormula,
-    private addressBookNode: NamedNode,
+    public addressBookNode: NamedNode,
   ) {
     this.addressBookDoc = addressBookNode.doc();
   }

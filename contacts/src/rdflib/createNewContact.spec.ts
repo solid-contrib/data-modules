@@ -70,6 +70,7 @@ describe("createNewContact", () => {
     );
     beforeEach(() => {
       addressBookQuery = {
+        addressBookNode: sym("https://pod.test/contacts/index.ttl#this"),
         proposeNewContactNode: () => newContactNode,
         queryNameEmailIndex: () => sym("https://pod.test/contacts/people.ttl"),
       } as unknown as AddressBookQuery;
@@ -113,6 +114,20 @@ describe("createNewContact", () => {
           rdf("type"),
           vcard("Individual"),
           newContactNode.doc(),
+        ),
+      );
+    });
+
+    it("adds the contact to the address book", () => {
+      const result = createNewContact(addressBookQuery, {
+        name: "anyone",
+      });
+      expect(result.insertions).toContainEqual(
+        st(
+          newContactNode,
+          vcard("inAddressBook"),
+          sym("https://pod.test/contacts/index.ttl#this"),
+          sym("https://pod.test/contacts/people.ttl"),
         ),
       );
     });

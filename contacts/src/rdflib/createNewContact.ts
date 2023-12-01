@@ -18,6 +18,12 @@ export function createNewContact(
     uri: contactNode.uri,
     deletions: [],
     insertions: [
+      st(
+        contactNode,
+        vcard("inAddressBook"),
+        addressBook.addressBookNode,
+        nameEmailIndex,
+      ),
       st(contactNode, vcard("fn"), lit(newContact.name), nameEmailIndex),
       st(contactNode, vcard("fn"), lit(newContact.name), contactNode.doc()),
       st(contactNode, rdf("type"), vcard("Individual"), contactNode.doc()),
