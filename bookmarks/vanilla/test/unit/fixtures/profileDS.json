@@ -1,0 +1,239 @@
+{
+  "graphs": {
+    "default": {
+      "https://solid-dm.solidcommunity.net/profile/card": {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/profile/card",
+        "predicates": {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+            "namedNodes": ["http://xmlns.com/foaf/0.1/PersonalProfileDocument"]
+          },
+          "http://xmlns.com/foaf/0.1/maker": {
+            "namedNodes": [
+              "https://solid-dm.solidcommunity.net/profile/card#me"
+            ]
+          },
+          "http://xmlns.com/foaf/0.1/primaryTopic": {
+            "namedNodes": [
+              "https://solid-dm.solidcommunity.net/profile/card#me"
+            ]
+          }
+        }
+      },
+      "https://solid-dm.solidcommunity.net/profile/card#me": {
+        "type": "Subject",
+        "url": "https://solid-dm.solidcommunity.net/profile/card#me",
+        "predicates": {
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+            "namedNodes": [
+              "http://schema.org/Person",
+              "http://xmlns.com/foaf/0.1/Person"
+            ]
+          },
+          "http://www.w3.org/ns/ldp#inbox": {
+            "namedNodes": ["https://solid-dm.solidcommunity.net/inbox/"]
+          },
+          "http://www.w3.org/ns/pim/space#preferencesFile": {
+            "namedNodes": [
+              "https://solid-dm.solidcommunity.net/settings/prefs.ttl"
+            ]
+          },
+          "http://www.w3.org/ns/pim/space#storage": {
+            "namedNodes": ["https://solid-dm.solidcommunity.net/"]
+          },
+          "http://www.w3.org/ns/solid/terms#account": {
+            "namedNodes": ["https://solid-dm.solidcommunity.net/"]
+          },
+          "http://www.w3.org/ns/solid/terms#oidcIssuer": {
+            "namedNodes": ["https://solidcommunity.net"]
+          },
+          "http://www.w3.org/ns/solid/terms#privateTypeIndex": {
+            "namedNodes": [
+              "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl"
+            ]
+          },
+          "http://www.w3.org/ns/solid/terms#publicTypeIndex": {
+            "namedNodes": [
+              "https://solid-dm.solidcommunity.net/settings/publicTypeIndex.ttl"
+            ]
+          },
+          "http://xmlns.com/foaf/0.1/name": {
+            "literals": {
+              "http://www.w3.org/2001/XMLSchema#string": ["solid-dm"]
+            }
+          },
+          "http://www.w3.org/ns/auth/acl#trustedApp": {
+            "blankNodes": [
+              "_:n3-0",
+              "_:n3-1",
+              "_:n3-2",
+              "_:n3-3",
+              "_:n3-4",
+              "_:n3-5",
+              "_:n3-6",
+              "_:n3-7"
+            ]
+          }
+        }
+      },
+      "_:n3-0": {
+        "type": "Subject",
+        "url": "_:n3-0",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Control",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["https://noeldemartin.github.io"]
+          }
+        }
+      },
+      "_:n3-1": {
+        "type": "Subject",
+        "url": "_:n3-1",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Control",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["https://ohmypod.netlify.app"]
+          }
+        }
+      },
+      "_:n3-2": {
+        "type": "Subject",
+        "url": "_:n3-2",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Control",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["https://podpro.dev"]
+          }
+        }
+      },
+      "_:n3-3": {
+        "type": "Subject",
+        "url": "_:n3-3",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Control",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["https://solid-demo.generativeobjects.com"]
+          }
+        }
+      },
+      "_:n3-4": {
+        "type": "Subject",
+        "url": "_:n3-4",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["http://localhost:4300"]
+          }
+        }
+      },
+      "_:n3-5": {
+        "type": "Subject",
+        "url": "_:n3-5",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["http://localhost:5173"]
+          }
+        }
+      },
+      "_:n3-6": {
+        "type": "Subject",
+        "url": "_:n3-6",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["http://localhost:5174"]
+          }
+        }
+      },
+      "_:n3-7": {
+        "type": "Subject",
+        "url": "_:n3-7",
+        "predicates": {
+          "http://www.w3.org/ns/auth/acl#mode": {
+            "namedNodes": [
+              "http://www.w3.org/ns/auth/acl#Append",
+              "http://www.w3.org/ns/auth/acl#Read",
+              "http://www.w3.org/ns/auth/acl#Write"
+            ]
+          },
+          "http://www.w3.org/ns/auth/acl#origin": {
+            "namedNodes": ["https://bookmarks.pondersource.net"]
+          }
+        }
+      }
+    }
+  },
+  "type": "Dataset",
+  "internal_resourceInfo": {
+    "sourceIri": "https://solid-dm.solidcommunity.net/profile/card",
+    "isRawData": false,
+    "contentType": "text/turtle",
+    "linkedResources": {
+      "acl": ["https://solid-dm.solidcommunity.net/profile/card.acl"],
+      "describedBy": ["https://solid-dm.solidcommunity.net/profile/card.meta"],
+      "type": ["http://www.w3.org/ns/ldp#Resource"]
+    },
+    "aclUrl": "https://solid-dm.solidcommunity.net/profile/card.acl",
+    "permissions": {
+      "user": {
+        "read": true,
+        "append": true,
+        "write": true,
+        "control": false
+      },
+      "public": {
+        "read": true,
+        "append": false,
+        "write": false,
+        "control": false
+      }
+    }
+  }
+}

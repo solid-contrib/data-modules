@@ -1,0 +1,25 @@
+@prefix : <#>.
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix bookm: <http://www.w3.org/2002/01/bookmark#>.
+@prefix schem: <https://schema.org/>.
+@prefix mov: </movies/>.
+@prefix bookmark: </bookmarks/>.
+
+<> a solid:TypeIndex, solid:UnlistedDocument.
+
+:2bdc3da9-e0f0-48b5-b1aa-8123bb468a92
+    a solid:TypeRegistration;
+    solid:forClass schem:WatchAction;
+    solid:instanceContainer mov: .
+:5677e892-fad5-4039-8108-4f4ed2640b98
+    a solid:TypeRegistration;
+    solid:forClass schem:Movie;
+    solid:instanceContainer mov: .
+:bookmarks_registery
+    a solid:TypeRegistration;
+    solid:forClass bookm:Bookmark;
+    solid:instance </bookmarks/index.ttl>.
+:5677e892-fad5-4039-8108-4f4ed2640b99
+    a solid:TypeRegistration;
+    solid:forClass bookm:Bookmark;
+    solid:instanceContainer bookmark: .
