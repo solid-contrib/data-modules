@@ -73,6 +73,11 @@ To be specified
 
 ### E5. Solid Data Modules for Android (last part) 1k
 
-### E6. Outreach (first part) 2k
-### E7. Outreach (second part) 2k
-### E8. Outreach (last part) 2k
+### E6. Conventions archive 2k
+- Survey apps from the Solid ecosystem and beyond for what data is persisted to the personal data store; document schemas and sample data.
+
+### E7. Landscape summary 2k
+- Reach out to developers to discover roadblocks to interoperability, document findings in a public text.
+
+### E8. Case study 2k
+- Publish a working software demonstration of how interoperability could function between multiple schemas or personal data stores.
