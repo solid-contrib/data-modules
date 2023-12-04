@@ -162,7 +162,7 @@ export class Bookmark {
         let newBookmarkThing = createThing()
 
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.title, title)
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, BOOKMARK.recalls, link)
+        newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.recalls, namedNode(link))
         if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
         if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
@@ -191,7 +191,7 @@ export class Bookmark {
             const { title, link, creator, topic } = payload
 
             thing = setStringNoLocale(thing, DCTERMS.title, title)
-            thing = setStringNoLocale(thing, BOOKMARK.recalls, link)
+            thing = addNamedNode(thing, BOOKMARK.recalls, namedNode(link))
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
             if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
             thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString())
