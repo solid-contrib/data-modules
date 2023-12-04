@@ -24,9 +24,9 @@ Ecosystem: 1+3+(3 * 1)+(3 * 2)=13
 * E3 Android1 1k Erfan
 * E4 Android2 1k Erfan
 * E5 Android3 1k Erfan
-* E7 Outreach1 2k Rosano
-* E8 Outreach2 2k Rosano
-* E9 Outreach3 2k Rosano
+* E6 Outreach1 2k Rosano
+* E7 Outreach2 2k Rosano
+* E8 Outreach3 2k Rosano
 
 Sanity check: 18+9+10+13=50
 
@@ -100,11 +100,11 @@ Android app with a simple login and selecting the storage
 ### E5. Solid Data modules in Java 1k
 The app from E4 to expose APIs as a service to other Android apps on the same device.
 
-### E7. Conventions archive 2k
+### E6. Conventions archive 2k
 Survey apps from the Solid ecosystem and beyond for what data is persisted to the personal data store; document schemas and sample data.
 
-### E8. Landscape summary 2k
+### E7. Landscape summary 2k
 Reach out to developers to discover roadblocks to interoperability, document findings in a public text.
 
-### E9. Case study 2k
+### E8. Case study 2k
 Publish a working software demonstration of how interoperability could function between multiple schemas or personal data stores.

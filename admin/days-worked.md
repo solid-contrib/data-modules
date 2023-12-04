@@ -33,6 +33,6 @@ Budget: `3000-(20*80)=1400`
 
 * Erfan has worked 30 hours a week @ 500 eur / month, starting 1 November, so this milestone is due 31 December
 
-# E7 (Conventions Archive)
+# E6 (Conventions Archive)
 
 * Rosano works 1 day per week on this, for 4 weeks (24 Nov, 1 Dec, 8 Dec, 15 Dec)
