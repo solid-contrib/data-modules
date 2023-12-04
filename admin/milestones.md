@@ -1,48 +1,73 @@
 # Milestones for the Solid Data Modules project
-#### Overview by topic
-* modules: `3+4+4+2=12`
-* paradigms: `3+3+3+3=12`
-* foundational: `4+4+6=14`
-* ecosystem: `1+2+4*1+3*2=13`
+## Overview
+Modules: 3+2+2+2+4+2=15
+* M1 bookmarks 3k Reza
+* M2 contacts1 2k Angelo
+* M3 contacts2 2k Angelo
+* M4 contacts3 2k Angelo
+* M5 chat 4k Jackson
+* M6 maps 2k Reza
 
-Sanity check: 12+12+14+13=51
+Paradigms:3+3+3=9
+* P1 Soukai-Solid 3k Reza
+* P2 rdflib.js 3k Angelo
+* P3 LDO 3k Jackson
 
-#### Overview by team member
-* Jackson: M3, P4, F1, F3 = 14k
-* Angelo: M2, P2, P3 = 10k
-* Reza: M1, M4, P1 = 8k
-* Yashar: F2, E2 = 6k
-* Rosano: E6, E7, E8 = 6k
-* Erfan: E3, E4, E5, E6 = 4k
-* Mahdi: E1, E2 = 3k
+Foundational: 4+4+5=13
+* F1 code generation 4k Jackson
+* F2 rs.js Solid backend 4k Yashar
+* F3 LDO improvements 5k Jackson
 
-Sanity check: 14+10+8+6+6+4+3=51
+Ecosystem: 1+2+(4 * 1)+(3 * 2)=13
+* E1 solidcommunity.net 1k Mahdi
+* E2 add Slack bridge to chat 2k Yashar
+* E3 Android1 1k Erfan
+* E4 Android2 1k Erfan
+* E5 Android3 1k Erfan
+* E6 Android4 1k Erfan
+* E7 Outreach1 2k Rosano
+* E8 Outreach2 2k Rosano
+* E9 Outreach3 2k Rosano
+
+Sanity check: 15+9+13+13=50
+
+Per person: 16+9+8+6+6+4+1=50
+* Jackson: 4+3+4+5=16
+* Angelo: 2+2+2+3=9
+* Reza: 3+2+3=8
+* Yashar: 4+2=6
+* Rosano: 3*2=6
+* Erfan: 4*1=4
+* Mahdi: 1
   
 ### M1. Bookmarks module (3k)
 We will produce the vanilla version of the Solid data module for bookmarks.
 See https://github.com/solid-contrib/data-modules#paradigms-covered for an explanation of "vanilla version".
 See https://github.com/solid-contrib/data-modules/issues/6 for more details about this milestone.
 
-### M2. Addressbook module 4k
-A module for dealing with contacts and addressbooks.
+### M2. Addressbook module (first part) 2k
+First part (to be defined by @angelo-v) of the module for dealing with contacts and addressbooks.
 
-### M3. Chat module 4k
+### M3. Addressbook module (second part) 2k
+Second part (to be defined by @angelo-v) of the module for dealing with contacts and addressbooks.
+
+### M4. Addressbook module (first part) 2k
+Last part (to be defined by @angelo-v) of the module for dealing with contacts and addressbooks.
+
+### M5. Chat module 4k
 A module for reading and writing chat messages, compatible with both SolidOS LongChat and Liqid Chat.
 
-### M4. Maps module 2k
+### M6. Maps module 2k
 A module for dealing with maps, location, and other geographical information. This milestone includes only the vanilla version of this module.
 See https://github.com/solid-contrib/data-modules/issues/8.
 
 ### P1. Modules for Soukai-Solid 3k
 All modules also available for for the Soukai-Solid paradigm
 
-### P2. Modules for remoteStorage.js 3k
-All modules also available for for the remoteStorage.js paradigm
-
-### P3. Modules for rdflib.js 3k
+### P2. Modules for rdflib.js 4k
 All modules also available for for the rdflib.js paradigm
 
-### P4. Modules for LDO 3k
+### P3. Modules for LDO 3k
 All modules also available for for the LDO paradigm
 
 ### F1. Code generation 4k
@@ -54,7 +79,7 @@ and Google Drive accounts. We want to add Solid pods as a fourth backend to this
 triggering the authentication flow, and accessing the pod for create/read/update/delete of files.
 
 ### F3. LDO improvements 6k
-To be specified
+To be specified by @jaxoncreed
 
 ### E1. solidcommunity.net NSS->CSS migration and server admin 1k
 To help app developers make use of our modules, it is useful if our test server, solidcommunity.net, is updated to the latest code and we make sure
