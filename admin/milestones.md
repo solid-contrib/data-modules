@@ -3,9 +3,9 @@
 * modules: `3+4+4+2=12`
 * paradigms: `3+3+3+3=12`
 * foundational: `4+4+6=14`
-* ecosystem: `1+2+3*1+3*2=12`
+* ecosystem: `1+2+4*1+3*2=13`
 
-Sanity check: 12+12+14+12=50
+Sanity check: 12+12+14+13=51
 
 #### Overview by team member
 * Jackson: M3, P4, F1, F3 = 14k
@@ -13,10 +13,10 @@ Sanity check: 12+12+14+12=50
 * Reza: M1, M4, P1 = 8k
 * Yashar: F2, E2 = 6k
 * Rosano: E6, E7, E8 = 6k
-* Erfan: E3, E4, E5 = 3k
+* Erfan: E3, E4, E5, E6 = 4k
 * Mahdi: E1, E2 = 3k
 
-Sanity check: 14+10+8+6+6+3+3=50
+Sanity check: 14+10+8+6+6+4+3=51
   
 ### M1. Bookmarks module (3k)
 We will produce the vanilla version of the Solid data module for bookmarks.
@@ -71,9 +71,12 @@ The Inrupt Solid library for Java has some dependencies that are not available. 
 ### E4. Solid hello-world application for Android 1k
 Android app with a simple login and selecting the storage
 
-### E5. Solid Data Services SDK for Android 1k
+### E5. Solid Data modules in Java 1k
 The app from E4 to expose APIs as a service to other Android apps on the same device.
 
-### E6. Outreach (first part) 2k
-### E7. Outreach (second part) 2k
-### E8. Outreach (last part) 2k
+### E6. Solid Data Services SDK for Android 1k
+The app from E4 to expose APIs as a service to other Android apps on the same device.
+
+### E7. Outreach (first part) 2k
+### E8. Outreach (second part) 2k
+### E9. Outreach (last part) 2k
