@@ -40,13 +40,13 @@ const Bookmarks: FC<IProps> = ({ }) => {
 
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
-  async function initBookmarks() {
+  async function loadBookmarks() {
     const list = await Bookmark.getAll(session);
     setBookmarks(list);
   }
 
   useEffect(() => {
-    if (session && isLoggedIn) initBookmarks();
+    if (session && isLoggedIn) loadBookmarks();
   }, [session, isLoggedIn]);
 
   const handleSubmit = async () => {
@@ -128,10 +128,18 @@ const Bookmarks: FC<IProps> = ({ }) => {
                         DEL
                       </IconButton>
                       <IconButton
-                        onClick={async () => console.log(row.url , await Bookmark.update(row.url, {
-                          title: "sss__",
-                          link: "http://sss__.com",
-                        }, session))}
+
+                        onClick={async () => {
+                          const randStr = `${(Math.random() + 1).toString(36).substring(7)}`
+                          const payload = {
+                            title: `${randStr} - UPDATED`,
+                            link: `http://${randStr}.com`,
+                          }
+                          const res = await Bookmark.update(row.url, payload, session)
+                          console.log(res)
+
+                          loadBookmarks()
+                        }}
                       >
                         UPD
                       </IconButton>

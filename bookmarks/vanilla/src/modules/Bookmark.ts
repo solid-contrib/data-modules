@@ -203,7 +203,7 @@ export class Bookmark {
             const { title, link, creator, topic } = payload
 
             thing = setStringNoLocale(thing, DCTERMS.title, title)
-            thing = addNamedNode(thing, BOOKMARK.recalls, namedNode(link))
+            thing = setNamedNode(thing, BOOKMARK.recalls, namedNode(link))
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
             if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
             thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString())
