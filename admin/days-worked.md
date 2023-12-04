@@ -1,40 +1,46 @@
 Activities in the Solid Data Modules project
+## M1 (bookmarks)
+### Reza
+Week of 27 Nov: 5 days
 
-## Getting up to speed with Solid app development
-Days Reza: 20
+#### Getting up to speed with Solid app development
+Days: 20
 
-## Bookmarks app using Inrupt client
+#### Bookmarks app using Inrupt client
 Live: https://bookmarks.pondersource.net/
 Code: https://github.com/pondersource/solidBookmarker
-Days Reza: 10
+Days: 10
 
-## Profile Editor app using Inrupt client
+#### Profile Editor app using Inrupt client
 Live: https://profile.pondersource.net/
 Code: https://github.com/pondersource/solidProfileEditor
-Days Reza: 10
+Days: 10
 
-## Bookmarks app using remoteStorage
+#### Bookmarks app using remoteStorage
 Live: https://rs-bookmarks.pondersource.net
 Code: https://github.com/pondersource/rs_bookmarks
-Days Reza: 5
+Days: 5
 
-## Solid Slack Bridge
+### Yashar
+Week of 27 Nov: .5 days
+
+## E2 (Solid Slack Bridge)
 Presentation: https://www.youtube.com/watch?v=Pd5joZkr5S4
 Code: https://github.com/pondersource/solid-slack-bridge
 Days Reza: 12
 Days Yashar: 12
 
-## Soukai Data Modules
+## P2 (Soukai Data Modules)
 Code: https://github.com/pondersource/soukai-solid-data-modules
 Days Reza: full-time since 1 Oct
 
-## Solid backend for remoteStorage.js
-Days Yashar: 6 (was off last week!)
+## F2 (Solid backend for remoteStorage.js)
+Days Yashar in October: 6
 ### RemoteStorageJS
 Code: https://github.com/pondersource/remotestorage.js
 ### Widget
 Code: https://github.com/pondersource/remotestorage-widget/
 
-## Contacts Module for rdflib.js
+## M2 (Contacts Module for rdflib.js)
 Code: https://github.com/solid-contrib/data-modules/tree/contacts/contacts
 Days Angelo: 2

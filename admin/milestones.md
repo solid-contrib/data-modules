@@ -3,9 +3,9 @@
 * modules: `3+4+4+2=12`
 * paradigms: `3+3+3+3=12`
 * foundational: `4+4+6=14`
-* ecosystem: `1+2+3*1+3*2=12`
+* ecosystem: `1+2+4*1+3*2=13`
 
-Sanity check: 12+12+14+12=50
+Sanity check: 12+12+14+13=51
 
 #### Overview by team member
 * Jackson: M3, P4, F1, F3 = 14k
@@ -13,10 +13,10 @@ Sanity check: 12+12+14+12=50
 * Reza: M1, M4, P1 = 8k
 * Yashar: F2, E2 = 6k
 * Rosano: E6, E7, E8 = 6k
-* Erfan: E3, E4, E5 = 3k
+* Erfan: E3, E4, E5, E6 = 4k
 * Mahdi: E1, E2 = 3k
 
-Sanity check: 14+10+8+6+6+3+3=50
+Sanity check: 14+10+8+6+6+4+3=51
   
 ### M1. Bookmarks module (3k)
 We will produce the vanilla version of the Solid data module for bookmarks.
@@ -65,19 +65,23 @@ A bridge that adds Slack's API as a data format in the chat data module, and can
 and vice versa. This is an extension to the chat data module that shows how it can be used in practice to achieve real-time liquid data between
 different schemas for the same type of data.
 
-### E3. Solid Data Modules for Android (first part) 1k
-To be specified
+### E3. Solid library for Java-Android 1k
+The Inrupt Solid library for Java has some dependencies that are not available. In this milestone we will deliver a version of it that works with Android.
 
-### E4. Solid Data Modules for Android (second part) 1k
-To be specified
+### E4. Solid hello-world application for Android 1k
+Android app with a simple login and selecting the storage
 
-### E5. Solid Data Modules for Android (last part) 1k
+### E5. Solid Data modules in Java 1k
+The app from E4 to expose APIs as a service to other Android apps on the same device.
 
-### E6. Conventions archive 2k
+### E6. Solid Data Services SDK for Android 1k
+The app from E4 to expose APIs as a service to other Android apps on the same device.
+
+### E7. Conventions archive 2k
 - Survey apps from the Solid ecosystem and beyond for what data is persisted to the personal data store; document schemas and sample data.
 
-### E7. Landscape summary 2k
+### E8. Landscape summary 2k
 - Reach out to developers to discover roadblocks to interoperability, document findings in a public text.
 
-### E8. Case study 2k
+### E9. Case study 2k
 - Publish a working software demonstration of how interoperability could function between multiple schemas or personal data stores.
