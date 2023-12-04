@@ -13,31 +13,30 @@ Paradigms:3+3+3=9
 * P2 rdflib.js 3k Angelo
 * P3 LDO 3k Jackson
 
-Foundational: 4+4+5=13
-* F1 code generation 4k Jackson
+Foundational: 3+4+3=10
+* F1 code generation 3k Jackson
 * F2 rs.js Solid backend 4k Yashar
-* F3 LDO improvements 5k Jackson
+* F3 LDO improvements 3k Jackson
 
-Ecosystem: 1+3+(4 * 1)+(3 * 2)=14
+Ecosystem: 1+3+(3 * 1)+(3 * 2)=13
 * E1 solidcommunity.net 1k Mahdi
 * E2 add Slack bridge to chat 3k Yashar+Reza
 * E3 Android1 1k Erfan
 * E4 Android2 1k Erfan
 * E5 Android3 1k Erfan
-* E6 Android4 1k Erfan
 * E7 Outreach1 2k Rosano
 * E8 Outreach2 2k Rosano
 * E9 Outreach3 2k Rosano
 
-Sanity check: 18+9+13+14=54
+Sanity check: 18+9+10+13=50
 
-Per person: 16+9+11+7+6+4+1=54
-* Jackson: 4+3+4+5=16
+Per person: 13+9+11+7+6+3+1=50
+* Jackson: 4+3+3+3=13
 * Angelo: 2+2+2+3=9
 * Reza: 6+2+3=11
 * Yashar: 4+3=7
 * Rosano: 3*2=6
-* Erfan: 4*1=4
+* Erfan: 3*1=3
 * Mahdi: 1
   
 ### M1. Bookmarks module (6k)
@@ -99,9 +98,6 @@ The Inrupt Solid library for Java has some dependencies that are not available. 
 Android app with a simple login and selecting the storage
 
 ### E5. Solid Data modules in Java 1k
-The app from E4 to expose APIs as a service to other Android apps on the same device.
-
-### E6. Solid Data Services SDK for Android 1k
 The app from E4 to expose APIs as a service to other Android apps on the same device.
 
 ### E7. Conventions archive 2k

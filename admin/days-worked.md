@@ -27,7 +27,7 @@ Budget: `3000-(20*80)=1400`
 * Reza: 15
 * Yashar: 15
 
-Budget: `3000-(15*80+15*80)=600`
+ Budget: `3000-(15*80+15*80)=600`
 
 # E3 (Solid library for Java-Android)
 
