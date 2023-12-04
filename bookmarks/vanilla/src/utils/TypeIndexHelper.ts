@@ -1,4 +1,5 @@
 import {
+    SolidDataset,
     ThingPersisted,
     addNamedNode,
     buildThing,
@@ -21,145 +22,108 @@ import { NamedNode } from '@rdfjs/types'
 export class TypeIndexHelper {
 
     /**
-     * Retrieves the profile of the authenticated user.
+     * Retrieves the user's profile from a Solid dataset using the provided session information.
      *
-     * @param {Session} session - The user session object.
-     * @return {Promise<ThingPersisted | null | undefined>} The profile of the user if found, otherwise null or undefined.
-     * @internal
+     * @param {Session} session - The session object containing the necessary information to access the dataset.
+     * @throws {Error} Throws an error if the session does not contain a web ID.
+     * @return {Promise<ThingPersisted | null>} The user's profile as a Thing object, or null if the profile does not exist.
      */
-    public static async getMeProfile(session: Session): Promise<ThingPersisted | null | undefined> {
-        if (!session.info.webId) return;
+    public static async getMeProfile(session: Session): Promise<ThingPersisted | null> {
+        if (!session.info.webId) throw new Error("Missing WebID");
 
         const profileDS = await getSolidDataset(session.info.webId, { fetch: session.fetch });
 
-        let me = getThing(profileDS, session.info.webId);
+        let profileMe = getThing(profileDS, session.info.webId);
 
-        if (!me) {
-            const meThing = buildThing(createThing({ name: "me" }))
+        if (!profileMe) {
+            const profileMeThing = buildThing(createThing({ name: "me" }))
                 .addUrl(RDF.type, __foafPerson)
                 .addUrl(RDF.type, __schemaPerson)
                 .build();
 
-            const updatedProfile = setThing(profileDS, meThing);
+            const updatedProfile = setThing(profileDS, profileMeThing);
 
             const updatedProfileDS = await saveSolidDatasetAt(session.info.webId!, updatedProfile, { fetch: session.fetch });
 
-            me = getThing(updatedProfileDS, session.info.webId);
+            profileMe = getThing(updatedProfileDS, session.info.webId);
+
         }
 
-        return me;
+        return profileMe;
     }
 
-
     /**
-     * Retrieves the type index for a given session and private flag.
+     * Retrieves the typeIndex for a given session and isPrivate flag.
      *
      * @param {Session} session - The session object.
-     * @param {boolean} isPrivate - Flag indicating whether the type index is private.
-     * @return {Promise<NamedNode<string> | null>} The type index or null if not found.
-     * @internal
+     * @param {boolean} isPrivate - A flag indicating whether the typeIndex is private.
+     * @return {Promise<NamedNode<string>>} A promise that resolves to the named node representing the typeIndex.
      */
-    public static async getTypeIndex(session: Session, isPrivate: boolean): Promise<NamedNode<string> | null> {
-        const me = await this.getMeProfile(session)
+    public static async getTypeIndex(session: Session, isPrivate: boolean): Promise<NamedNode<string>> {
+        const profileMe = await this.getMeProfile(session)
 
         const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
         const typeIndexFileName = TypeIndexHelper.getTypeIndexFileName(isPrivate);
         const typeIndexUrl = TypeIndexHelper.getTypeIndexURL(session, typeIndexFileName);
 
-        if (me) {
-
-            let typeIndex = getNamedNode(me, typeIndexPredicate)
+        if (profileMe) {
+            let typeIndex = getNamedNode(profileMe, typeIndexPredicate)
 
             if (typeIndex) return typeIndex;
 
-            await TypeIndexHelper.addTypeIndexToProfile(session, me, isPrivate);
+            const typeIndexDS = await this.createTypeIndex(session, typeIndexUrl);
 
-            const _me = await this.getMeProfile(session) // maybe this is not needed, me already updated, need to check
+            const updatedProfileMe = addNamedNode(profileMe, typeIndexPredicate, namedNode(typeIndexUrl));
 
-            typeIndex = getNamedNode(_me!, typeIndexPredicate)
+            const updatedTypeIndexDS = setThing(typeIndexDS!, updatedProfileMe);
 
-            return typeIndex
+            await saveSolidDatasetAt(typeIndexUrl, updatedTypeIndexDS, { fetch: session.fetch });
 
+            return namedNode(typeIndexUrl)
         } else {
-
-            await this.createTypeIndex(session, typeIndexUrl);
-
+            const typeIndexDS = await this.createTypeIndex(session, typeIndexUrl);
             const profileDS = await getSolidDataset(session.info.webId!, { fetch: session.fetch });
 
-            const meThing = buildThing(createThing({ name: "me" }))
+            const profileMeThing = buildThing(createThing({ name: "me" }))
                 .addNamedNode(typeIndexPredicate, namedNode(typeIndexUrl))
                 .addUrl(RDF.type, __foafPerson)
                 .addUrl(RDF.type, __schemaPerson)
                 .build();
 
-            const updated = setThing(profileDS, meThing);
+            const updatedProfileDS = setThing(profileDS, profileMeThing);
 
-            await saveSolidDatasetAt(session.info.webId!, updated, { fetch: session.fetch });
+            await saveSolidDatasetAt(session.info.webId!, updatedProfileDS, { fetch: session.fetch });
 
-            const typeIndex = getNamedNode(meThing, typeIndexPredicate);
-
-            return typeIndex;
+            return namedNode(typeIndexUrl)
         }
     }
 
 
     /**
-     * Adds a type index to the profile.
+     * Retrieves an array of strings representing instances from the typeIndex.
      *
      * @param {Session} session - The session object.
-     * @param {ThingPersisted} me - The persisted thing object.
-     * @param {boolean} isPrivate - A flag indicating whether the type index is private.
-     * @return {Promise<boolean>} A promise that resolves to true if the type index is added successfully.
-     * @internal
-     */
-    public static async addTypeIndexToProfile(session: Session, me: ThingPersisted, isPrivate: boolean): Promise<boolean> {
-        const typeIndexPredicate = TypeIndexHelper.getTypeIndexPredicate(isPrivate);
-        const typeIndexFileName = TypeIndexHelper.getTypeIndexFileName(isPrivate);
-        const typeIndexUrl = TypeIndexHelper.getTypeIndexURL(session, typeIndexFileName);
-
-        await this.createTypeIndex(session, typeIndexUrl);
-
-        const updatedMe = addNamedNode(me, typeIndexPredicate, namedNode(typeIndexUrl));
-
-        try {
-            const ds = await getSolidDataset(typeIndexUrl, { fetch: session.fetch });
-            const updated = setThing(ds, updatedMe);
-            await saveSolidDatasetAt(typeIndexUrl, updated, { fetch: session.fetch });
-            return true
-        } catch (error) {
-            throw error;
-        }
-    }
-
-
-    /**
-     * Retrieves an array of strings from the type index.
-     *
-     * @param {Session} session - The session object.
-     * @param {boolean} isPrivate - Indicates if the type index is private.
-     * @return {Promise<string[]>} An array of strings retrieved from the type index.
-     * @internal
+     * @param {boolean} isPrivate - A boolean indicating if the instances are private.
+     * @return {Promise<string[]>} A promise that resolves to an array of strings representing instances.
      */
     public static async getFromTypeIndex(session: Session, isPrivate: true): Promise<string[]> {
         const typeIndex = await this.getTypeIndex(session, isPrivate);
 
-        if (!typeIndex) return [];
+        const typeIndexDS = await getSolidDataset(typeIndex?.value, { fetch: session.fetch });
 
-        const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch });
-
-        const all = getThingAll(ds);
+        const allRegisteries = getThingAll(typeIndexDS);
 
         const instances: string[] = []
         const instanceContainers: string[] = []
 
 
-        all.forEach(x => {
-            const forClass = getNamedNode(x, __forClass)
+        allRegisteries.forEach(registery => {
+            const forClass = getNamedNode(registery, __forClass)
 
             if (forClass?.value === BOOKMARK.Bookmark) {
 
-                const instance = getNamedNode(x, __solid_instance)?.value
-                const instanceContainer = getNamedNode(x, __solid_instance_container)?.value
+                const instance = getNamedNode(registery, __solid_instance)?.value
+                const instanceContainer = getNamedNode(registery, __solid_instance_container)?.value
 
                 instance && instances?.push(instance)
                 instanceContainer && instanceContainers?.push(instanceContainer)
@@ -167,66 +131,53 @@ export class TypeIndexHelper {
         })
 
         const instanceContainersPromises = instanceContainers.map(async (instanceContainer) => {
-            const ds = await getSolidDataset(instanceContainer, { fetch: session.fetch })
-            const all = getThingAll(ds);
 
-            const urls = all.map(x => x.url)
-            const index = urls.findIndex(x => x === instanceContainer)
+            const instanceContainerDS = await getSolidDataset(instanceContainer, { fetch: session.fetch })
 
-            return urls.splice(index, 1)
+            const all = getThingAll(instanceContainerDS); // all files under the instanceContainer
+
+            const urls = all.map(x => x.url) // all file urls
+
+            return urls.filter(url => url !== instanceContainer) // remove the instanceContainer itself, only file urls needed;
         })
 
         const innerInstances = (await Promise.all([...instanceContainersPromises])).flat();
 
-        const responce: string[] = [...new Set([...instances, ...innerInstances])]
-
-        return responce
+        return [...new Set([...instances, ...innerInstances])]
     }
 
-
-
     /**
-     * Registers the session in the type index.
+     * Registers the indexUrl in the typeIndex.
      *
      * @param {Session} session - The session object.
-     * @param {string} indexUrl - The URL of the type index.
-     * @param {boolean} isPrivate - Indicates if the type index is private.
-     * @return {Promise<true | undefined>} A promise that resolves to true if the registration is successful, or undefined if there is an error.
-     * @internal
+     * @param {string} indexUrl - The URL of the typeIndex.
+     * @param {boolean} isPrivate - Indicates whether the typeIndex is private.
+     * @return {Promise<SolidDataset>} A promise that resolves to the updated typeIndex.
      */
-    public static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean): Promise<true | undefined> {
-        const typeIndex = await this.getTypeIndex(session, isPrivate)
+    public static async registerInTypeIndex(session: Session, indexUrl: string, isPrivate: boolean): Promise<SolidDataset> {
+        const typeIndex = await this.getTypeIndex(session, isPrivate);
 
-        if (!typeIndex) return // TODO validate
+        const typeIndexDS = await getSolidDataset(typeIndex?.value, { fetch: session.fetch });
 
-        const ds = await getSolidDataset(typeIndex?.value, { fetch: session.fetch })
-
-        const bookmarkThing = buildThing(createThing({ name: "bookmarks_registery" }))
+        const bookmarksRegistery = buildThing(createThing({ name: "bookmarks_registery" }))
             .addNamedNode(__forClass, namedNode(__Bookmark))
             .addNamedNode(__solid_instance, namedNode(indexUrl))
             .addUrl(RDF.type, __solidTypeRegistration)
             .build();
 
-        const updatedBookmarkList = setThing(ds, bookmarkThing);
+        const updatedTypeIndexDS = setThing(typeIndexDS, bookmarksRegistery);
 
-        await saveSolidDatasetAt(typeIndex?.value, updatedBookmarkList, { fetch: session.fetch });
-
-        return true
+        return await saveSolidDatasetAt(typeIndex?.value, updatedTypeIndexDS, { fetch: session.fetch });
     }
 
-
-
-
     /**
-     * Creates a type index using the provided session and typeIndexUrl.
+     * Creates a typeIndex using the provided session and typeIndex URL.
      *
-     * @param {Session} session - The session object used to fetch the type index.
-     * @param {string} typeIndexUrl - The URL of the type index.
-     * @return {Promise<true | undefined>} A promise that resolves to true if the type index is created successfully, or undefined otherwise.
-     * @internal
+     * @param {Session} session - The session used for making the request.
+     * @param {string} typeIndexUrl - The URL of the typeIndex to create.
+     * @return {Promise<SolidDataset | undefined>} A promise that resolves to the created typeIndex.
      */
-    public static async createTypeIndex(session: Session, typeIndexUrl: string): Promise<true | undefined> {
-
+    public static async createTypeIndex(session: Session, typeIndexUrl: string): Promise<SolidDataset | undefined> {
         try {
             await session.fetch(typeIndexUrl, {
                 method: "PUT",
@@ -235,47 +186,39 @@ export class TypeIndexHelper {
                 },
                 body: `@prefix solid: <http://www.w3.org/ns/solid/terms#>.\n\n<> a solid:TypeIndex, solid:UnlistedDocument.`
             })
-            return true
+
+            return await getSolidDataset(typeIndexUrl, { fetch: session.fetch })
         } catch (error) {
 
         }
     }
 
-
-
     /**
-     * Returns the file name of the type index based on the given flag.
+     * Returns the name of the typeIndex file based on the value of the isPrivate parameter.
      *
-     * @param {boolean} isPrivate - Indicates whether the type index is private or public.
-     * @return {string} The file name of the type index.
-     * @internal
+     * @param {boolean} isPrivate - A boolean indicating whether the typeIndex file is private or not.
+     * @return {"privateTypeIndex" | "publicTypeIndex"} The name of the typeIndex file.
      */
-    public static getTypeIndexFileName(isPrivate: boolean) {
+    public static getTypeIndexFileName(isPrivate: boolean): "privateTypeIndex" | "publicTypeIndex" {
         return isPrivate ? "privateTypeIndex" : "publicTypeIndex";
     }
 
-
-
-
     /**
-     * Returns the type index predicate based on the value of isPrivate.
+     * Returns the typeIndex predicate based on whether the given flag is private or not.
      *
-     * @param {boolean} isPrivate - The flag indicating whether the type index is private.
-     * @return {string} The type index predicate.
-     * @internal
+     * @param {boolean} isPrivate - A flag indicating whether the typeIndex predicate should be private or public.
+     * @return {type} - The typeIndex predicate.
      */
     public static getTypeIndexPredicate(isPrivate: boolean): string {
         return isPrivate ? __privateTypeIndex : __publicTypeIndex;
     }
 
-
     /**
-     * Returns the URL for the type index file.
+     * Generates the URL for the typeIndex file based on the session and typeIndex file name.
      *
      * @param {Session} session - The session object.
-     * @param {string} typeIndexFileName - The name of the type index file.
-     * @return {string} The URL for the type index file.
-     * @internal
+     * @param {string} typeIndexFileName - The name of the typeIndex file.
+     * @return {string} The URL for the typeIndex file.
      */
     public static getTypeIndexURL(session: Session, typeIndexFileName: string): string {
         return `${session.info.webId?.split("/profile")[0]}/settings/${typeIndexFileName}.ttl`;

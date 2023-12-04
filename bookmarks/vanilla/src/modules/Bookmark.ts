@@ -56,16 +56,24 @@ export class Bookmark {
      * @param session Session
      * @returns string
      */
-    public static async getIndexUrl(session: Session) {
-
+    public static async getIndexUrl(session: Session): Promise<string[]> {
         const registeries = await TypeIndexHelper.getFromTypeIndex(session, true)
 
-        if (!!registeries.length) {
+        if (!!registeries?.length) {
             return registeries
         } else {
-            const pods = await getPodUrlAll(session.info.webId!, { fetch: session.fetch });
-            const defaultIndexUrl = `${pods[0]}bookmarks/index.ttl`;
-            await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
+            const pods = (await getPodUrlAll(session.info.webId!, { fetch: session.fetch }))[0];
+
+            const baseURL = pods ? pods : session.info.webId?.split("/profile")[0]
+
+            const defaultIndexUrl = `${baseURL}/bookmarks/index.ttl`;
+
+            const defaultIndexDataset = await getSolidDataset(defaultIndexUrl, { fetch: session.fetch });
+
+            if (!defaultIndexDataset) {
+                await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
+            }
+
             await TypeIndexHelper.registerInTypeIndex(session, defaultIndexUrl, true)
 
             return [defaultIndexUrl];

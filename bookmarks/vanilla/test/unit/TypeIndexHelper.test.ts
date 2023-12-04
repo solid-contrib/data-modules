@@ -53,13 +53,13 @@ describe('getFromTypeIndex', () => {
 
         const mock_Fetch = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(fetchResponse("profile.ttl")));
         const mockGetThing = jest.spyOn(inruptSOLIDClient, 'getThing').mockResolvedValue(loadFixture("me.json"));
-        const mock_getNamedNode = jest.spyOn(inruptSOLIDClient, 'getNamedNode').mockResolvedValue(namedNode("https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl") as never);
+        const mock_getNamedNode = jest.spyOn(inruptSOLIDClient, 'getNamedNode').mockResolvedValue(namedNode("https://fake-pod.net/settings/privateTypeIndex.ttl") as never);
 
         // Act
         const result = await TypeIndexHelper.getTypeIndex(session, true);
 
         // Assert
-        expect(result).toEqual(namedNode("https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl"));
+        expect(result).toEqual(namedNode("https://fake-pod.net/settings/privateTypeIndex.ttl"));
 
         // Tear down
         mock_Fetch.mockRestore();
@@ -68,31 +68,11 @@ describe('getFromTypeIndex', () => {
 
     })
 
-    it("The addTypeIndexToProfile method should add typeIndex to profile", async () => {
-        // Arrange
-        const mock_getTypeIndexURL = jest.spyOn(TypeIndexHelper, 'getTypeIndexURL').mockResolvedValue("https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl" as never);
-        const mock_addNamedNode = jest.spyOn(inruptSOLIDClient, 'addNamedNode').mockResolvedValue(loadFixture("me.json"));
-        const mock_Fetch = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(fetchResponse("privateTypeIndex.ttl")));
-        const mock_setThing = jest.spyOn(inruptSOLIDClient, 'setThing').mockResolvedValue(loadFixture("profileDS.json"));
-        const mock_saveSolidDatasetAt = jest.spyOn(inruptSOLIDClient, 'saveSolidDatasetAt').mockResolvedValue(loadFixture("profileDS.json"));
-
-        // Act
-        const result = await TypeIndexHelper.addTypeIndexToProfile(session, loadFixture("me.json"), true);
-
-        // Assert
-        expect(result).toEqual(true);
-
-        mock_getTypeIndexURL.mockRestore();
-        mock_addNamedNode.mockRestore();
-        mock_Fetch.mockRestore();
-        mock_setThing.mockRestore();
-        mock_saveSolidDatasetAt.mockRestore();
-    })
 
     it("The getFromTypeIndex method should return registeries from typeIndex", async () => {
 
         // Arrange
-        const mock_getTypeIndex = jest.spyOn(TypeIndexHelper, 'getTypeIndex').mockResolvedValue(namedNode("https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl") as never);
+        const mock_getTypeIndex = jest.spyOn(TypeIndexHelper, 'getTypeIndex').mockResolvedValue(namedNode("https://fake-pod.net/settings/privateTypeIndex.ttl") as never);
 
         const mock_Fetch = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(fetchResponse("privateTypeIndex.ttl")));
 
@@ -108,18 +88,19 @@ describe('getFromTypeIndex', () => {
     })
 
     it("The registerInTypeIndex method should register in typeIndex", async () => {
-        const mock_getTypeIndex = jest.spyOn(TypeIndexHelper, 'getTypeIndex').mockResolvedValue(namedNode("https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl") as never);
+        const mock_getTypeIndex = jest.spyOn(TypeIndexHelper, 'getTypeIndex').mockResolvedValue(namedNode("https://fake-pod.net/settings/privateTypeIndex.ttl") as never);
         const mock_Fetch = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(fetchResponse("privateTypeIndex.ttl")));
 
         const mock_setThing = jest.spyOn(inruptSOLIDClient, "setThing").mockReturnValue(loadFixture("privateTypeIndexDS.json"));
         const mock_saveSolidDatasetAt = jest.spyOn(inruptSOLIDClient, "saveSolidDatasetAt").mockReturnValue(loadFixture("privateTypeIndexDS.json"));
 
 
-        const res = await TypeIndexHelper.registerInTypeIndex(session, "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl", true)
-
+        const res = await TypeIndexHelper.registerInTypeIndex(session, "https://fake-pod.net/settings/privateTypeIndex.ttl", true)
         // Assert
-        expect(res).toEqual(true);
 
+        expect(res).toEqual(loadFixture("privateTypeIndexDS.json"));
+
+        // Tear down
         mock_getTypeIndex.mockRestore();
         mock_Fetch.mockRestore();
         mock_setThing.mockRestore();
@@ -131,10 +112,10 @@ describe('getFromTypeIndex', () => {
         const mock_Fetch = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(fetchResponse("privateTypeIndex.ttl")));
 
         // Act
-        const tes = await TypeIndexHelper.createTypeIndex(session, "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl");
+        const res = await TypeIndexHelper.createTypeIndex(session, "https://fake-pod.net/settings/privateTypeIndex.ttl");
 
         // Assert
-        expect(tes).toEqual(true);
+        expect(res).toBeDefined();
 
         mock_Fetch.mockRestore();
     })
