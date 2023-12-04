@@ -51,12 +51,15 @@ export type IBookmark = ICreateBookmark & {
 
 export class Bookmark {
 
+
+
     /**
-     * 
-     * @param session Session
-     * @returns string
+     * Retrieves the index URLs for the session.
+     *
+     * @param {Session} session - The session object.
+     * @return {Promise<string[]>} An array of index URLs.
      */
-    public static async getIndexUrl(session: Session): Promise<string[]> {
+    public static async getIndexUrls(session: Session): Promise<string[]> {
         const registeries = await TypeIndexHelper.getFromTypeIndex(session, true)
 
         if (!!registeries?.length) {
@@ -80,13 +83,15 @@ export class Bookmark {
         }
     }
 
+
     /**
-     * 
-     * @param session Session
-     * @returns Promise<IBookmark[]>
+     * Retrieves all bookmarks from the session.
+     *
+     * @param {Session} session - The session object.
+     * @return {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks.
      */
     public static async getAll(session: Session): Promise<IBookmark[]> {
-        const indexUrls = await this.getIndexUrl(session);
+        const indexUrls = await this.getIndexUrls(session);
         try {
             const all = indexUrls.map(async (indexUrl) => {
                 const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
@@ -106,11 +111,13 @@ export class Bookmark {
 
     }
 
+
     /**
-     * 
-     * @param url string
-     * @param session Session
-     * @returns Promise<IBookmark | undefined>
+     * Retrieves a bookmark from the specified URL using the provided session.
+     *
+     * @param {string} url - The URL of the bookmark to retrieve.
+     * @param {Session} session - The session object used for fetching the bookmark.
+     * @return {Promise<IBookmark | undefined>} A promise that resolves to the retrieved bookmark, or undefined if no bookmark was found.
      */
     public static async get(url: string, session: Session): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
@@ -120,11 +127,13 @@ export class Bookmark {
         return thing ? this.mapBookmark(thing) : undefined
     }
 
+
     /**
-     * 
-     * @param url string
-     * @param session Session
-     * @returns Promise<boolean>
+     * Deletes a resource from the specified URL using the provided session.
+     *
+     * @param {string} url - The URL of the resource to be deleted.
+     * @param {Session} session - The session object used for authentication and fetching.
+     * @returns {Promise<boolean>} - A Promise that resolves to true if the resource was successfully deleted, otherwise false.
      */
     public static async delete(url: string, session: Session): Promise<boolean> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
@@ -145,17 +154,18 @@ export class Bookmark {
 
 
     /**
-     * 
-     * @param payload ICreateBookmark
-     * @param session Session
-     * @returns Promise<boolean>
+     * Creates a new bookmark with the given payload and session.
+     *
+     * @param {ICreateBookmark} payload - The payload object containing the bookmark details.
+     * @param {Session} session - The session object for authentication.
+     * @return {Promise<boolean>} A promise that resolves to a boolean value indicating whether the bookmark was created successfully.
      */
     public static async create(payload: ICreateBookmark, session: Session): Promise<boolean> {
 
         const { title, link, creator, topic } = payload
 
         // default to create in first registery, so its fine to use 0th index
-        const [indexUrl] = await this.getIndexUrl(session);
+        const [indexUrl] = await this.getIndexUrls(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
 
@@ -178,10 +188,12 @@ export class Bookmark {
 
 
     /**
-     * 
-     * @param payload IUpdateBookmark
-     * @param session Session
-     * @returns Promise<IBookmark | undefined>
+     * Updates a bookmark with the given payload in the specified URL.
+     *
+     * @param {string} url - The URL of the bookmark to update.
+     * @param {IUpdateBookmark} payload - The payload containing the updated bookmark data.
+     * @param {Session} session - The session object containing the fetch function for making HTTP requests.
+     * @return {Promise<IBookmark | undefined>} A promise that resolves to the updated bookmark or undefined if the bookmark does not exist.
      */
     public static async update(url: string, payload: IUpdateBookmark, session: Session): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: session.fetch });
@@ -207,6 +219,12 @@ export class Bookmark {
     };
 
 
+    /**
+     * Maps a ThingPersisted object to an IBookmark object.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to be mapped.
+     * @return {IBookmark} - The mapped IBookmark object.
+     */
     private static mapBookmark(thing: ThingPersisted): IBookmark {
         const url = thing.url
         const title = this.mapTitle(thing)
@@ -226,12 +244,24 @@ export class Bookmark {
             ...(creator && { creator }),
         }
     }
+    /**
+     * Maps the title of a ThingPersisted object.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to map the title from.
+     * @return {string} The mapped title of the ThingPersisted object, or an empty string if no title is found.
+     */
     private static mapTitle(thing: ThingPersisted): string {
         return (
             getLiteral(thing, DCTERMS.title)?.value ??
             getLiteral(thing, RDFS.label)?.value ?? ""
         );
     }
+    /**
+     * Maps a link from a ThingPersisted object.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to map the link from.
+     * @return {string} The mapped link.
+     */
     private static mapLink(thing: ThingPersisted): string {
         // TODO: validate url
         // issue: https://github.com/solid-contrib/data-modules/issues/32
@@ -240,20 +270,44 @@ export class Bookmark {
             getNamedNode(thing, BOOKMARK.recalls)?.value ?? ""
         );
     }
+    /**
+     * Maps the created date of a ThingPersisted object.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to map.
+     * @return {string | undefined} The created date value, or undefined if not found.
+     */
     private static mapCreated(thing: ThingPersisted): string | undefined {
         return getLiteral(thing, DCTERMS.created)?.value
     }
+    /**
+     * Maps the updated value of a ThingPersisted object.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to map.
+     * @return {string | undefined} The updated value of the ThingPersisted object, or undefined if not found.
+     */
     private static mapUpdated(thing: ThingPersisted): string | undefined {
         return (
             getLiteral(thing, __DC_UPDATED)?.value
         );
     }
+    /**
+     * Maps the creator of a ThingPersisted object.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to map.
+     * @return {string | undefined} - The creator value if found, otherwise undefined.
+     */
     private static mapCreator(thing: ThingPersisted): string | undefined {
         return (
             getNamedNode(thing, DCTERMS.creator)?.value ??
             getNamedNode(thing, FOAF.maker)?.value
         );
     }
+    /**
+     * Maps the topic of a ThingPersisted.
+     *
+     * @param {ThingPersisted} thing - The ThingPersisted object to map the topic from.
+     * @return {string | undefined} The mapped topic value, or undefined if it doesn't exist.
+     */
     private static mapTopic(thing: ThingPersisted): string | undefined {
         return (
             getNamedNode(thing, BOOKMARK.hasTopic)?.value
