@@ -11,7 +11,6 @@ Milestones that are underway as of 4 December:
 * Reza: 65
 * Yashar: 0.5
 
-FIXME: Increase budget from 3k to 6k
 Budget: `6000-(65*80 + .5*80)=760`
 
 # M2 Contacts1
@@ -28,7 +27,6 @@ Budget: `3000-(20*80)=1400`
 * Reza: 15
 * Yashar: 15
 
-FIXME: Increase budget from 2k to 3k
 Budget: `3000-(15*80+15*80)=600`
 
 # E3 (Solid library for Java-Android)

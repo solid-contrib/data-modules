@@ -1,7 +1,7 @@
 # Milestones for the Solid Data Modules project
 ## Overview
-Modules: 3+2+2+2+4+2=15
-* M1 bookmarks 3k Reza
+Modules: 6+2+2+2+4+2=18
+* M1 bookmarks 6k Reza
 * M2 contacts1 2k Angelo
 * M3 contacts2 2k Angelo
 * M4 contacts3 2k Angelo
@@ -18,9 +18,9 @@ Foundational: 4+4+5=13
 * F2 rs.js Solid backend 4k Yashar
 * F3 LDO improvements 5k Jackson
 
-Ecosystem: 1+2+(4 * 1)+(3 * 2)=13
+Ecosystem: 1+3+(4 * 1)+(3 * 2)=14
 * E1 solidcommunity.net 1k Mahdi
-* E2 add Slack bridge to chat 2k Yashar
+* E2 add Slack bridge to chat 3k Yashar+Reza
 * E3 Android1 1k Erfan
 * E4 Android2 1k Erfan
 * E5 Android3 1k Erfan
@@ -29,19 +29,21 @@ Ecosystem: 1+2+(4 * 1)+(3 * 2)=13
 * E8 Outreach2 2k Rosano
 * E9 Outreach3 2k Rosano
 
-Sanity check: 15+9+13+13=50
+Sanity check: 18+9+13+14=54
 
-Per person: 16+9+8+6+6+4+1=50
+Per person: 16+9+11+7+6+4+1=54
 * Jackson: 4+3+4+5=16
 * Angelo: 2+2+2+3=9
-* Reza: 3+2+3=8
-* Yashar: 4+2=6
+* Reza: 6+2+3=11
+* Yashar: 4+3=7
 * Rosano: 3*2=6
 * Erfan: 4*1=4
 * Mahdi: 1
   
-### M1. Bookmarks module (3k)
+### M1. Bookmarks module (6k)
 We will produce the vanilla version of the Solid data module for bookmarks.
+This milestone includes the learning curve of team member Reza Soltani who spent the first few weeks
+in the project getting to understand Solid app development and getting ready to write a data module.
 See https://github.com/solid-contrib/data-modules#paradigms-covered for an explanation of "vanilla version".
 See https://github.com/solid-contrib/data-modules/issues/6 for more details about this milestone.
 
