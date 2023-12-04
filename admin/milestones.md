@@ -65,13 +65,14 @@ A bridge that adds Slack's API as a data format in the chat data module, and can
 and vice versa. This is an extension to the chat data module that shows how it can be used in practice to achieve real-time liquid data between
 different schemas for the same type of data.
 
-### E3. Solid Data Modules for Android (first part) 1k
-To be specified
+### E3. Solid library for Java-Android 1k
+The Inrupt Solid library for Java has some dependencies that are not available. In this milestone we will deliver a version of it that works with Android.
 
-### E4. Solid Data Modules for Android (second part) 1k
-To be specified
+### E4. Solid hello-world application for Android 1k
+Android app with a simple login and selecting the storage
 
-### E5. Solid Data Modules for Android (last part) 1k
+### E5. Solid Data Services SDK for Android 1k
+The app from E4 to expose APIs as a service to other Android apps on the same device.
 
 ### E6. Outreach (first part) 2k
 ### E7. Outreach (second part) 2k
