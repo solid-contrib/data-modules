@@ -64,7 +64,7 @@ See https://github.com/solid-contrib/data-modules/issues/8.
 ### P1. Modules for Soukai-Solid 3k
 All modules also available for for the Soukai-Solid paradigm
 
-### P2. Modules for rdflib.js 4k
+### P2. Modules for rdflib.js 3k
 All modules also available for for the rdflib.js paradigm
 
 ### P3. Modules for LDO 3k
@@ -78,7 +78,7 @@ The remoteStorage.js library currently supports three backends for personal data
 and Google Drive accounts. We want to add Solid pods as a fourth backend to this library. This will involve some work on the login widget,
 triggering the authentication flow, and accessing the pod for create/read/update/delete of files.
 
-### F3. LDO improvements 6k
+### F3. LDO improvements 5k
 To be specified by @jaxoncreed
 
 ### E1. solidcommunity.net NSS->CSS migration and server admin 1k
