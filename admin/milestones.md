@@ -103,10 +103,10 @@ The app from E4 to expose APIs as a service to other Android apps on the same de
 The app from E4 to expose APIs as a service to other Android apps on the same device.
 
 ### E7. Conventions archive 2k
-- Survey apps from the Solid ecosystem and beyond for what data is persisted to the personal data store; document schemas and sample data.
+Survey apps from the Solid ecosystem and beyond for what data is persisted to the personal data store; document schemas and sample data.
 
 ### E8. Landscape summary 2k
-- Reach out to developers to discover roadblocks to interoperability, document findings in a public text.
+Reach out to developers to discover roadblocks to interoperability, document findings in a public text.
 
 ### E9. Case study 2k
-- Publish a working software demonstration of how interoperability could function between multiple schemas or personal data stores.
+Publish a working software demonstration of how interoperability could function between multiple schemas or personal data stores.
