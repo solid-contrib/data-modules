@@ -82,6 +82,13 @@ triggering the authentication flow, and accessing the pod for create/read/update
 ### F3. LDO improvements 5k
 To be specified by @jaxoncreed
 
+- Add feature to @ldo/solid to suggest new URIs based on the type index. This must be documented on ldo.js.org and published to NPM.
+- Add feature to @ldo/solid to iterate through everything of a certain type in the type index. This must be documented on ldo.js.org and published to NPM.
+- Add hook(s) for type-index support in @ldo/solid-react. This must be documented on ldo.js.org and published to NPM. (€1,000)
+- Add a new command to @ldo/cli to generate an NPM project that can be published to NPM. This command must be documented on ldo.js.org and published to NPM.
+- Add support for common ShEx use cases (Or Type, And Type, Different Cardinalities on identical field in different shapes). This task will require a refactor of the @ldo/type-traverser, @ldo/schema-converter-shex, but it will allow for many more kinds of ShEx shapes to be parsed.
+- Add support for Webhooks in @ldo/solid
+
 ### E1. solidcommunity.net NSS->CSS migration and server admin 1k
 To help app developers make use of our modules, it is useful if our test server, solidcommunity.net, is updated to the latest code and we make sure
 the server is running reliably again, without memory leaks and restarts.
