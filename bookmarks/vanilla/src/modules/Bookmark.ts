@@ -28,6 +28,7 @@ import {
 import { namedNode } from '@rdfjs/data-model';
 import { __DC_UPDATED } from "../constants";
 import { TypeIndexHelper } from "solid-typeindex-support";
+import { isValidUrl } from "../utils";
 
 export type ICreateBookmark = {
     title: string
@@ -164,7 +165,10 @@ export class Bookmark {
 
         const { title, link, creator, topic } = payload
 
-        // default to create in first registery, so its fine to use 0th index
+        if (!isValidUrl(link)) throw new Error("link is not a valid URL")
+        if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL")
+
+
         const [indexUrl] = await this.getIndexUrls(session);
 
         const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
@@ -174,7 +178,10 @@ export class Bookmark {
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.title, title)
         newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.recalls, namedNode(link))
         if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
-        if (topic) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
+
+        if (topic && isValidUrl(topic)) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
+        if (topic && !isValidUrl(topic)) newBookmarkThing = addStringNoLocale(newBookmarkThing, BOOKMARK.hasTopic, topic)
+
         newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
         newBookmarkThing = addStringNoLocale(newBookmarkThing, __DC_UPDATED, new Date().toISOString())
 
@@ -202,10 +209,16 @@ export class Bookmark {
         if (thing) {
             const { title, link, creator, topic } = payload
 
+            if (!isValidUrl(link)) throw new Error("link is not a valid URL")
+            if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL")
+
             thing = setStringNoLocale(thing, DCTERMS.title, title)
             thing = setNamedNode(thing, BOOKMARK.recalls, namedNode(link))
             if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
-            if (topic) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
+
+            if (topic && isValidUrl(topic)) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
+            if (topic && !isValidUrl(topic)) thing = setStringNoLocale(thing, BOOKMARK.hasTopic, topic)
+
             thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString())
 
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
