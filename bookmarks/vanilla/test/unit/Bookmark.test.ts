@@ -2,7 +2,7 @@ import { Bookmark, IBookmark, ICreateBookmark, IUpdateBookmark } from "../../src
 import { Session } from "@inrupt/solid-client-authn-browser";
 import inruptClient from "@inrupt/solid-client";
 import { readFileSync } from "fs";
-import { TypeIndexHelper } from "../../src/utils/TypeIndexHelper";
+import { TypeIndexHelper } from "solid-typeindex-support";
 import { allBookmarksMock } from "./fixtures/allBookmarks.mock";
 
 export function loadFixture<T = string>(name: string): T {

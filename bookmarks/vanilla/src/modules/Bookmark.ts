@@ -26,8 +26,8 @@ import {
     RDFS
 } from "@inrupt/vocab-common-rdf";
 import { namedNode } from '@rdfjs/data-model';
-import { TypeIndexHelper } from "../utils/TypeIndexHelper";
 import { __DC_UPDATED } from "../constants";
+import { TypeIndexHelper } from "solid-typeindex-support";
 
 export type ICreateBookmark = {
     title: string
@@ -60,7 +60,7 @@ export class Bookmark {
      * @return {Promise<string[]>} An array of index URLs.
      */
     public static async getIndexUrls(session: Session): Promise<string[]> {
-        const registeries = await TypeIndexHelper.getFromTypeIndex(session, true)
+        const registeries = await TypeIndexHelper.getFromTypeIndex(session.info.webId!, session.fetch, true)
 
         if (!!registeries?.length) {
             return registeries
@@ -77,7 +77,7 @@ export class Bookmark {
                 await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(session, defaultIndexUrl, true)
+            await TypeIndexHelper.registerInTypeIndex(session.info.webId!, session.fetch, defaultIndexUrl, true)
 
             return [defaultIndexUrl];
         }
