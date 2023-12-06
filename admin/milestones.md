@@ -2,9 +2,9 @@
 ## Overview
 Modules: 6+2+2+2+4+2=18
 * M1 bookmarks 6k Reza
-* M2 contacts1 2k Angelo
-* M3 contacts2 2k Angelo
-* M4 contacts3 2k Angelo
+* M2 contacts core 2k Angelo
+* M3 contacts groups 2k Angelo
+* M4 contacts completion 2k Angelo
 * M5 chat 4k Jackson
 * M6 maps 2k Reza
 
@@ -46,14 +46,14 @@ in the project getting to understand Solid app development and getting ready to 
 See https://github.com/solid-contrib/data-modules#paradigms-covered for an explanation of "vanilla version".
 See https://github.com/solid-contrib/data-modules/issues/6 for more details about this milestone.
 
-### M2. Addressbook module (first part) 2k
-First part (to be defined by @angelo-v) of the module for dealing with contacts and addressbooks.
+### M2. Addressbook module core 2k
+Core functionality for rdflib contacts module (address books and contacts).
 
-### M3. Addressbook module (second part) 2k
-Second part (to be defined by @angelo-v) of the module for dealing with contacts and addressbooks.
+### M3. Addressbook module groups 2k
+Add group management
 
-### M4. Addressbook module (first part) 2k
-Last part (to be defined by @angelo-v) of the module for dealing with contacts and addressbooks.
+### M4. Addressbook module completion 2k
+Type index support, optional features and work in developer feedback
 
 ### M5. Chat module 4k
 A module for reading and writing chat messages, compatible with both SolidOS LongChat and Liqid Chat.
@@ -66,7 +66,7 @@ See https://github.com/solid-contrib/data-modules/issues/8.
 All modules also available for for the Soukai-Solid paradigm
 
 ### P2. Modules for rdflib.js 3k
-All modules also available for for the rdflib.js paradigm
+All modules also available for for the rdflib.js paradigm (or at least create foundation for rdflib modules other than contacts)
 
 ### P3. Modules for LDO 3k
 All modules also available for for the LDO paradigm
