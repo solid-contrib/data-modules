@@ -101,7 +101,19 @@ export class Bookmark {
 
                 const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
-                return bookmarks
+                const resources = bookmarks.filter(Bookmark => !Bookmark.url.endsWith('-metadata'))
+                const metadatas = bookmarks.filter(Bookmark => Bookmark.url.endsWith('-metadata'))
+
+                const responce = resources.map(bookmark => {
+                    const metadata = metadatas.find((meta: any) => meta.resource === bookmark.url)
+
+                    return {
+                        ...bookmark,
+                        ...(metadata && metadata)
+                    }
+                })
+
+                return responce
             })
             const allPromise = Promise.all([...all]);
             const values = (await allPromise).flat();
