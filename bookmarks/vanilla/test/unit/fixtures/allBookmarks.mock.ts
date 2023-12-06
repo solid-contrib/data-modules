@@ -26,9 +26,4 @@ export const allBookmarksMock: IBookmark[] = [
         title: 'sdf',
         link: 'http://example.com',
     },
-    {
-        url: '/b93d9944-d54d-42f6-a39b-6ea3f9217763-metadata',
-        title: '',
-        link: '',
-    }
 ]
