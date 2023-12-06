@@ -24,6 +24,5 @@ authenticated fetcher, such as [Solid Auth Fetcher](https://github.com/solid-con
 or the fetcher from the [Inrupt JS Libs](https://docs.inrupt.com/developer-tools/javascript/client-libraries/authentication/).
 Apart from this "vanilla" version, we will also package each data module for use in combination with the following client-side Solid app paradigms:
 * [Soukai-Solid](https://github.com/NoelDeMartin/soukai-solid)
-* [remoteStorage.js](https://github.com/remotestorage/remotestorage.js)
 * [rdflib](https://github.com/linkeddata/rdflib.js)
 * [LDO](https://github.com/o-development/ldo)
