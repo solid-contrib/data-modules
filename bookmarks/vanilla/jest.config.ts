@@ -4,6 +4,12 @@ const jestConfig: JestConfigWithTsJest = {
   preset: "ts-jest",
   testRegex: "\\.test\\.ts$",
   testEnvironment: "node",
+  transform: {
+    "^.+\\.[tj]s$": "ts-jest"
+  },
+  transformIgnorePatterns: [
+    "<rootDir>/node_modules/(?!solid-typeindex-support)"
+  ],
 };
 
 export default jestConfig;
