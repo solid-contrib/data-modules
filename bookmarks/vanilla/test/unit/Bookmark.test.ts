@@ -313,4 +313,30 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
     });
+    it("should throw and Error if link is not a valid URL", async () => {
+        const payload: ICreateBookmark = {
+            title: "new",
+            link: "not valid url",
+            creator: "https://michielbdejong.solidcommunity.net/profile/card#me",
+        }
+
+        try {
+            await Bookmark.create(payload, session);
+        } catch (e: any) {
+            expect(e.message).toBe("link is not a valid URL");
+        }
+    });
+    it("should throw and Error if link is not a valid URL", async () => {
+        const payload: ICreateBookmark = {
+            title: "new",
+            link: "http://test.com",
+            creator: "non valid creator",
+        }
+
+        try {
+            await Bookmark.create(payload, session);
+        } catch (e: any) {
+            expect(e.message).toBe("creator is not a valid URL");
+        }
+    });
 });
