@@ -11,34 +11,32 @@ export function loadFixture<T = string>(name: string): T {
     return /\.json(ld)$/.test(name) ? JSON.parse(raw) : raw;
 }
 
+let session: jest.Mocked<Session>;
+
+beforeEach(() => {
+    session = {
+        fetch: jest.fn(),
+        info: {
+            webId: "https://fake-pod.net/profile/card#me",
+            isLoggedIn: true,
+            sessionId: "123",
+            clientAppId: "https://clientAppId.com",
+            expirationDate: new Date().getDate() + 1000000000,
+        },
+        logout: jest.fn(),
+        login: jest.fn(),
+    } as unknown as jest.Mocked<Session>;
+});
+
+afterEach(() => {
+    jest.restoreAllMocks()
+    session.fetch.mockReset();
+    session.login.mockReset();
+    session.logout.mockReset();
+});
+
 
 describe("Bookmark", () => {
-    let session: jest.Mocked<Session>;
-
-    beforeEach(() => {
-
-        session = {
-            fetch: jest.fn(),
-            info: {
-                webId: "https://fake-pod.net/profile/card#me",
-                isLoggedIn: true,
-                sessionId: "123",
-                clientAppId: "https://clientAppId.com",
-                expirationDate: new Date().getDate() + 1000000000,
-            },
-            logout: jest.fn(),
-            login: jest.fn(),
-        } as unknown as jest.Mocked<Session>;
-    });
-
-    afterEach(() => {
-        session.fetch.mockReset();
-        session.login.mockReset();
-        session.logout.mockReset();
-    });
-
-    // TODO: Improve existing tests to mock fetch and not getSolidDataset etc
-    // See https://github.com/solid-contrib/data-modules/issues/23
 
     it("The getIndexUrl method should return index url with registery exists in typeIndex", async () => {
         const podUrls = ["https://fake-pod.net/"];
@@ -46,16 +44,14 @@ describe("Bookmark", () => {
 
         const registeries = ["https://fake-pod.net/bookmarks/index.ttl"]
 
-        const mockBookmarkRegisteries = jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockReturnValue(Promise.resolve(registeries));
-        const mockGetPodUrlAll = jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockReturnValue(Promise.resolve(registeries));
+        jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
         const res = await Bookmark.getIndexUrls(session);
 
         expect(inruptClient.getPodUrlAll).toHaveBeenCalledTimes(0);
 
         expect(res).toStrictEqual(expectedIndexUrl);
-        mockBookmarkRegisteries.mockRestore();
-        mockGetPodUrlAll.mockRestore();
     });
 
     it("the getAll method should get all bookmarks", async () => {
@@ -74,9 +70,9 @@ describe("Bookmark", () => {
             }
         };
 
-        const mockGetIndexUrl = jest.spyOn(Bookmark, "getIndexUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
+        jest.spyOn(Bookmark, "getIndexUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
-        const mockFetch = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.getAll(session);
 
@@ -84,8 +80,6 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(expected);
 
-        mockGetIndexUrl.mockRestore();
-        mockFetch.mockRestore();
     });
 
     it("the delete method should delete bookmark", async () => {
@@ -110,19 +104,15 @@ describe("Bookmark", () => {
             }
         }
 
-        const mockGetIndexUrl = jest.spyOn(Bookmark, "getIndexUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
+        jest.spyOn(Bookmark, "getIndexUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
-        const mockFetchGet = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
-        const mockGetThing = jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
-        const mockFetchDelete = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseDelete));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
+        jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseDelete));
 
         const res = await Bookmark.delete(url, session);
 
         expect(res).toEqual(true);
-        mockGetIndexUrl.mockRestore();
-        mockFetchGet.mockRestore();
-        mockGetThing.mockRestore();
-        mockFetchDelete.mockRestore();
     });
 
     it("the create method should create bookmark", async () => {
@@ -152,13 +142,13 @@ describe("Bookmark", () => {
             }
         }
 
-        const mockGetIndexUrl = jest.spyOn(Bookmark, "getIndexUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
+        jest.spyOn(Bookmark, "getIndexUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
-        const mockFetchGet = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
 
-        const mockSetThing = jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-new.json")));
+        jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-new.json")));
 
-        const mockFetchCreate = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseCreate));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseCreate));
 
         const res = await Bookmark.create(payload, session);
 
@@ -166,10 +156,6 @@ describe("Bookmark", () => {
 
         expect(res).toEqual(true);
 
-        mockGetIndexUrl.mockRestore();
-        mockFetchGet.mockRestore();
-        mockSetThing.mockRestore();
-        mockFetchCreate.mockRestore();
     });
     it("the update method should update bookmark", async () => {
 
@@ -199,17 +185,9 @@ describe("Bookmark", () => {
             }
         };
 
-        const responseUpdate = {
-            ...responseGet,
-            text: () => {
-                return Promise.resolve(loadFixture("bookmark-formats-with-updated.ttl"));
-            }
-        }
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
 
-
-        const mockFetchGet = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
-
-        const mockSetThing = jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-updated.json")));
+        jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-updated.json")));
 
         const res = await Bookmark.update(url, payload, session);
 
@@ -218,8 +196,6 @@ describe("Bookmark", () => {
         expect(res?.link).toEqual(expected.link);
         expect(res?.creator).toEqual(expected.creator);
 
-        mockFetchGet.mockRestore();
-        mockSetThing.mockRestore();
     });
     it("should parse bookmarks in format one", async () => {
         const url = 'https://fake-pod.net/path/to/bookmark-formats.ttl#one';
@@ -244,13 +220,12 @@ describe("Bookmark", () => {
             }
         };
 
-        const fetchMock = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.get(url, session);
 
 
         expect(res).toEqual(expected);
-        fetchMock.mockRestore();
 
     });
     it("should parse bookmarks in format two", async () => {
@@ -274,12 +249,11 @@ describe("Bookmark", () => {
             }
         };
 
-        const fetchMock = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.get(url, session);
 
         expect(res).toEqual(expected);
-        fetchMock.mockRestore();
     });
 
     it("should parse bookmarks in format three", async () => {
@@ -303,13 +277,12 @@ describe("Bookmark", () => {
             }
         };
 
-        const fetchMock = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.get(url, session);
 
 
         expect(res).toEqual(expected);
-        fetchMock.mockRestore();
     });
     it("should parse bookmarks created with soukai", async () => {
         const url = 'https://fake-pod.ne/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763';
@@ -333,12 +306,11 @@ describe("Bookmark", () => {
             }
         };
 
-        const fetchMock = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+        jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.get(url, session);
 
 
         expect(res).toEqual(expected);
-        fetchMock.mockRestore();
     });
 });
