@@ -105,11 +105,12 @@ export class Bookmark {
                 const metadatas = bookmarks.filter(Bookmark => Bookmark.url.endsWith('-metadata'))
 
                 const responce = resources.map(bookmark => {
-                    const metadata = metadatas.find((meta: any) => meta.resource === bookmark.url)
+                    const metadata = metadatas.find((meta: any) => meta.resource === bookmark.url) as any
 
                     return {
                         ...bookmark,
-                        ...(metadata && metadata)
+                        ...(metadata?.createdAt && { created: metadata.createdAt }),
+                        ...(metadata?.createdAt && { updated: metadata.createdAt }),
                     }
                 })
 
