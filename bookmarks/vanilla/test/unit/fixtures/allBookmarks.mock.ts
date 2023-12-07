@@ -22,8 +22,10 @@ export const allBookmarksMock: IBookmark[] = [
         link: 'http://example.com',
     },
     {
-        url: '/b93d9944-d54d-42f6-a39b-6ea3f9217763',
+        url: 'https://fake-pod.ne/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763',
         title: 'sdf',
         link: 'http://example.com',
+        created: "2023-11-21T12:50:32.051Z",
+        updated: "2023-11-21T12:50:32.051Z",
     },
 ]
