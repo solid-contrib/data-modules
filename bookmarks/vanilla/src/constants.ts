@@ -12,5 +12,9 @@ export const __solid_instance = "http://www.w3.org/ns/solid/terms#instance"
 export const __solid_instance_container = "http://www.w3.org/ns/solid/terms#instanceContainer"
 export const __DC_UPDATED = "http://purl.org/dc/terms/updated"
 
+export const __crdt_resource = "http://soukai-solid.com/crdt/resource"
+export const __crdt_createdAt = "http://soukai-solid.com/crdt/createdAt"
+export const __crdt_updatedAt = "http://soukai-solid.com/crdt/updatedAt"
+
 export const __schemaPerson = "http://schema.org/Person";
 export const __foafPerson = "http://xmlns.com/foaf/0.1/Person";

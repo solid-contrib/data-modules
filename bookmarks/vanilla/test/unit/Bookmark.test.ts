@@ -186,7 +186,7 @@ describe("Bookmark", () => {
             title: 'updated',
             link: 'http://updated.com',
             creator: 'https://michielbdejong.solidcommunity.net/profile/card#me'
-          }
+        }
 
         const responseGet: any = {
             status: 200,
@@ -212,7 +212,6 @@ describe("Bookmark", () => {
         const mockSetThing = jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-updated.json")));
 
         const res = await Bookmark.update(url, payload, session);
-        console.log("🚀 ~ file: Bookmark.test.ts:215 ~ it ~ res:", res)
 
 
         expect(res?.title).toEqual(expected.title);
@@ -307,7 +306,37 @@ describe("Bookmark", () => {
         const fetchMock = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.get(url, session);
-        
+
+
+        expect(res).toEqual(expected);
+        fetchMock.mockRestore();
+    });
+    it("should parse bookmarks created with soukai", async () => {
+        const url = 'https://fake-pod.ne/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763';
+
+        const expected = {
+            url: 'https://fake-pod.ne/bookmarks/b93d9944-d54d-42f6-a39b-6ea3f9217763',
+            title: 'sdf',
+            link: 'http://example.com',
+            created: '2023-11-21T12:50:32.051Z',
+            updated: '2023-11-21T12:50:32.051Z'
+        }
+
+        const responseObject: any = {
+            status: 200,
+            ok: true,
+            headers: {
+                get: (h: string) => (h == "Content-Type" ? "text/turtle" : undefined)
+            },
+            text: () => {
+                return Promise.resolve(loadFixture("bookmark-formats.ttl"));
+            }
+        };
+
+        const fetchMock = jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
+
+        const res = await Bookmark.get(url, session);
+
 
         expect(res).toEqual(expected);
         fetchMock.mockRestore();

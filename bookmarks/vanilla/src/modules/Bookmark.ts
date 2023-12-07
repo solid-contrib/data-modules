@@ -26,7 +26,7 @@ import {
     RDFS
 } from "@inrupt/vocab-common-rdf";
 import { namedNode } from '@rdfjs/data-model';
-import { __DC_UPDATED } from "../constants";
+import { __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt, __crdt_resource } from "../constants";
 import { TypeIndexHelper } from "solid-typeindex-support";
 import { isValidUrl } from "../utils";
 
@@ -101,7 +101,20 @@ export class Bookmark {
 
                 const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
-                return bookmarks
+                const resources = bookmarks.filter(Bookmark => !Bookmark.url.endsWith('-metadata'))
+                const metadatas = bookmarks.filter(Bookmark => Bookmark.url.endsWith('-metadata'))
+
+                const responce = resources.map(bookmark => {
+                    const metadata = metadatas.find((meta: any) => meta.resource === bookmark.url) as any
+
+                    return {
+                        ...bookmark,
+                        ...(metadata?.created && { created: metadata.created }),
+                        ...(metadata?.updated && { updated: metadata.updated }),
+                    }
+                })
+
+                return responce
             })
             const allPromise = Promise.all([...all]);
             const values = (await allPromise).flat();
@@ -125,9 +138,16 @@ export class Bookmark {
 
         const thing = getThing(ds, url)
 
-        return thing ? this.mapBookmark(thing) : undefined
-    }
+        const meta = getThing(ds, `${url}-metadata`)
 
+        const metadata = meta ? this.mapBookmark(meta) : undefined as any
+
+        return thing ? {
+            ...this.mapBookmark(thing),
+            ...(metadata?.created && { created: metadata.created }),
+            ...(metadata?.updated && { updated: metadata.updated }),
+        } : undefined
+    }
 
     /**
      * Deletes a resource from the specified URL using the provided session.
@@ -246,7 +266,7 @@ export class Bookmark {
         const created = this.mapCreated(thing)
         const updated = this.mapUpdated(thing)
         const creator = this.mapCreator(thing)
-
+        const resource = getNamedNode(thing, __crdt_resource)?.value
         return {
             url,
             title,
@@ -255,6 +275,7 @@ export class Bookmark {
             ...(created && { created }),
             ...(updated && { updated }),
             ...(creator && { creator }),
+            ...(resource && { resource }),
         }
     }
     /**
@@ -290,7 +311,7 @@ export class Bookmark {
      * @return {string | undefined} The created date value, or undefined if not found.
      */
     private static mapCreated(thing: ThingPersisted): string | undefined {
-        return getLiteral(thing, DCTERMS.created)?.value
+        return getLiteral(thing, DCTERMS.created)?.value ?? getLiteral(thing, __crdt_createdAt)?.value
     }
     /**
      * Maps the updated value of a ThingPersisted object.
@@ -300,7 +321,7 @@ export class Bookmark {
      */
     private static mapUpdated(thing: ThingPersisted): string | undefined {
         return (
-            getLiteral(thing, __DC_UPDATED)?.value
+            getLiteral(thing, __DC_UPDATED)?.value ?? getLiteral(thing, __crdt_updatedAt)?.value
         );
     }
     /**
