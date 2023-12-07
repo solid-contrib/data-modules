@@ -144,8 +144,8 @@ export class Bookmark {
 
         return thing ? {
             ...this.mapBookmark(thing),
-            ...(metadata?.created && { created: metadata.created }),
-            ...(metadata?.updated && { updated: metadata.updated }),
+            ...(metadata?.resource === thing?.url && metadata?.created && { created: metadata?.created }),
+            ...(metadata?.resource === thing?.url && metadata?.updated && { updated: metadata?.updated }),
         } : undefined
     }
 
