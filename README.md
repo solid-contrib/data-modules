@@ -1,6 +1,7 @@
 # data-modules
 Solid Data Modules are snippets of JavaScript code that handle the reading and writing of one specific
-type of data in the user's Solid pod, regardless of how the data formats used by various Solid apps evolve.
+type of data in the user's Solid pod, regardless of how the different data formats used by various Solid apps,
+and how they evolve.
 
 [Join our chat room on Matrix](https://app.gitter.im/index.html#/room/#solid-data-modules:gitter.im)
 
