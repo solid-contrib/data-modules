@@ -104,6 +104,49 @@ describe("createNewContact", () => {
       );
     });
 
+    it("inserts the contact e-mail to the contact document", () => {
+      const result = createNewContact(addressBookQuery, {
+        name: "Zinnia Lisa",
+        email: "zinnia.lisa@mail.test",
+      });
+      expect(result.insertions).toContainEqual(
+        st(
+          newContactNode,
+          vcard("hasEmail"),
+          sym(
+            "https://pod.test/contacts/Person/80363534-f3d1-455e-a3d9-b29dcbb755d2/index.ttl#email",
+          ),
+          newContactNode.doc(),
+        ),
+      );
+      expect(result.insertions).toContainEqual(
+        st(
+          sym(
+            "https://pod.test/contacts/Person/80363534-f3d1-455e-a3d9-b29dcbb755d2/index.ttl#email",
+          ),
+          vcard("value"),
+          sym("mailto:zinnia.lisa@mail.test"),
+          newContactNode.doc(),
+        ),
+      );
+    });
+
+    it("does not insert an e-mail node if no e-mail is given", () => {
+      const result = createNewContact(addressBookQuery, {
+        name: "Zinnia Lisa",
+      });
+      expect(result.insertions).not.toContainEqual(
+        st(
+          newContactNode,
+          vcard("hasEmail"),
+          sym(
+            "https://pod.test/contacts/Person/80363534-f3d1-455e-a3d9-b29dcbb755d2/index.ttl#email",
+          ),
+          newContactNode.doc(),
+        ),
+      );
+    });
+
     it("adds a type to the new contact", () => {
       const result = createNewContact(addressBookQuery, {
         name: "anyone",
