@@ -8,6 +8,7 @@ import { createNewContact } from "./createNewContact";
 jest.mock("./createAddressBook");
 jest.mock("./createNewContact");
 jest.mock("./web-operations/executeUpdate");
+jest.mock("./web-operations/fetchNode");
 
 describe("ContactsModuleRdfLib", () => {
   describe("createAddressBook", () => {

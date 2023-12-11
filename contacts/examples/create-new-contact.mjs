@@ -10,8 +10,6 @@ const contacts = new ContactsModule({store, fetcher, updater})
 
 let addressBook = "http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/index.ttl#this";
 
-await contacts.readAddressBook(addressBook)
-
 const name = faker.person.fullName();
 const uri = await contacts.createNewContact({
     addressBook: addressBook,

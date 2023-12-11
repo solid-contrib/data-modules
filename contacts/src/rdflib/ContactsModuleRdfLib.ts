@@ -4,6 +4,7 @@ import { AddressBookQuery } from "./AddressBookQuery";
 import { createAddressBook } from "./createAddressBook";
 import { executeUpdate } from "./web-operations/executeUpdate";
 import { createNewContact } from "./createNewContact";
+import { fetchNode } from "./web-operations/fetchNode";
 
 interface CreateAddressBookCommand {
   container: string;
@@ -57,9 +58,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   private async fetchNode(node: Node | null) {
-    if (node) {
-      await this.fetcher.load(node.value);
-    }
+    return fetchNode(this.fetcher, node);
   }
 
   async createAddressBook({ container, name }: CreateAddressBookCommand) {
@@ -69,8 +68,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async createNewContact({ addressBook, contact }: CreateNewContactCommand) {
+    const addressBookNode = sym(addressBook);
+    await this.fetchNode(addressBookNode);
     const operation = createNewContact(
-      new AddressBookQuery(this.store, sym(addressBook)),
+      new AddressBookQuery(this.store, addressBookNode),
       contact,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
