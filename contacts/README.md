@@ -11,8 +11,24 @@ interoperable way.
 
 ## Run tests
 
+### Unit and integration tests
+
 ```shell
 npm test
+```
+
+### End-to-end tests
+
+Those tests need the development server running, so first start it via 
+
+```shell
+npm run pod
+```
+
+Then you can start the tests via
+
+```shell
+npm run test:e2e
 ```
 
 ## Build

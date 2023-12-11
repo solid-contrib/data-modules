@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --detectOpenHandles --forceExit",
+    "test:e2e": "jest --config jest.e2e.config.js --detectOpenHandles --forceExit",
     "pod": "community-solid-server --config @css:config/file.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
     "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
     "pod:clean": "rm -rf ./dev-server/data"
