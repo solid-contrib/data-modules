@@ -29,4 +29,4 @@ Apart from this "vanilla" version, we will also package each data module for use
 * [rdflib](https://github.com/linkeddata/rdflib.js)
 * [LDO](https://github.com/o-development/ldo)
 
-Create a new module [Link to tutorial](http://ff.com)
+Create a new module [Link to tutorial](./new-module.md)

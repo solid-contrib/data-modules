@@ -11,6 +11,7 @@ the criteria is to match previus packages while adding a new package, e.g. they 
 git clone git@github.com:solid-contrib/data-modules.git
 cd data-modules
 mkdir bookmarks/inrupt
+cd bookmarks/inrupt
 npm init -y
 npm i typescript @types/node -D
 npm i @inrupt/solid-client solid-typeindex-support
