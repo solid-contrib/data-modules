@@ -1,6 +1,7 @@
 # Bookmarks Data Module for Soukai
 
 ## Development
+Make sure you have node v. 20.10.0 installed. 
 ```
 git clone https://github.com/solid-contrib/data-modules
 cd data-modules
