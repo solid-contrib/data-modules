@@ -77,4 +77,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
+
+  async readContact(uri: string) {
+    return {
+      name: "Molly Braaten",
+    };
+  }
 }

@@ -31,4 +31,20 @@ describe("contacts module", () => {
       name,
     });
   });
+
+  it("can read a existing contact", async () => {
+    const store = graph();
+    const fetcher = new Fetcher(store);
+    const updater = new UpdateManager(store);
+    const contacts = new ContactsModule({ store, fetcher, updater });
+
+    const contactUri =
+      "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+    const result = await contacts.readContact(contactUri);
+
+    expect(result).toEqual({
+      name: "Molly Braaten",
+    });
+  });
 });
