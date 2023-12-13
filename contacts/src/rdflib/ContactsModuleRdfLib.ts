@@ -5,6 +5,7 @@ import { createAddressBook } from "./createAddressBook";
 import { executeUpdate } from "./web-operations/executeUpdate";
 import { createNewContact } from "./createNewContact";
 import { fetchNode } from "./web-operations/fetchNode";
+import { ContactQuery } from "./ContactQuery";
 
 interface CreateAddressBookCommand {
   container: string;
@@ -79,8 +80,12 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async readContact(uri: string) {
+    const contactNode = sym(uri);
+    await this.fetchNode(contactNode);
+    const query = new ContactQuery(this.store, contactNode);
+    const name = query.queryName();
     return {
-      name: "Molly Braaten",
+      name,
     };
   }
 }
