@@ -20,7 +20,7 @@ export interface FullContact {
   emails: Email[];
 }
 
-interface Email {
+export interface Email {
   uri: string;
   value: string;
 }

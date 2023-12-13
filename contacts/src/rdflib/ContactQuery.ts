@@ -1,7 +1,6 @@
-import { IndexedFormula, isNamedNode, NamedNode, sym } from "rdflib";
-import { dc, vcard } from "./namespaces";
-import { Contact, Group } from "../index";
-import { v4 as uuid } from "uuid";
+import { IndexedFormula, NamedNode, sym } from "rdflib";
+import { vcard } from "./namespaces";
+import { Email } from "../index";
 
 export class ContactQuery {
   private contactDoc: NamedNode;
@@ -21,5 +20,20 @@ export class ContactQuery {
         this.contactDoc,
       ) ?? ""
     );
+  }
+
+  queryEmails(): Email[] {
+    const uri = this.store.anyValue(this.contactNode, vcard("hasEmail"));
+    if (!uri) {
+      return [];
+    }
+    const value: string = this.store.anyValue(sym(uri), vcard("value")) ?? "";
+
+    return [
+      {
+        uri,
+        value: value.split("mailto:")[1],
+      },
+    ];
   }
 }

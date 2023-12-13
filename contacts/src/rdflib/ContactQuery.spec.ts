@@ -63,4 +63,42 @@ describe("ContactQuery", () => {
       expect(result).toEqual("");
     });
   });
+  describe("query emails", () => {
+    it("returns empty array if store is empty", () => {
+      const store = graph();
+
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+    it("returns a single plain email without mailto prefix", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        sym("mailto:bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([
+        {
+          uri: "https://pod.test/alice/contact/1/index.ttl#email",
+          value: "bob@mail.test",
+        },
+      ]);
+    });
+  });
 });

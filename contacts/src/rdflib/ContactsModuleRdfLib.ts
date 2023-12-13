@@ -84,15 +84,11 @@ export class ContactsModuleRdfLib implements ContactsModule {
     await this.fetchNode(contactNode);
     const query = new ContactQuery(this.store, contactNode);
     const name = query.queryName();
+    const emails = query.queryEmails();
     return {
       uri,
       name,
-      emails: [
-        {
-          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497197769",
-          value: "molly.braaten@gov.test",
-        },
-      ],
+      emails,
     };
   }
 }
