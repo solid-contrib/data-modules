@@ -12,7 +12,14 @@ export class ContactQuery {
   ) {
     this.contactDoc = contactNode.doc();
   }
-  queryName() {
-    return this.store.anyValue(this.contactNode, vcard("fn"));
+  queryName(): string {
+    return (
+      this.store.anyValue(
+        this.contactNode,
+        vcard("fn"),
+        undefined,
+        this.contactDoc,
+      ) ?? ""
+    );
   }
 }
