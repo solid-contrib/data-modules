@@ -23,11 +23,26 @@ export class ContactQuery {
   }
 
   queryEmails(): Email[] {
-    const uri = this.store.anyValue(this.contactNode, vcard("hasEmail"));
+    const uri = this.store.anyValue(
+      this.contactNode,
+      vcard("hasEmail"),
+      undefined,
+      this.contactDoc,
+    );
     if (!uri) {
       return [];
     }
-    const value: string = this.store.anyValue(sym(uri), vcard("value")) ?? "";
+    const value: string =
+      this.store.anyValue(
+        sym(uri),
+        vcard("value"),
+        undefined,
+        this.contactDoc,
+      ) ?? "";
+
+    if (!value) {
+      return [];
+    }
 
     return [
       {

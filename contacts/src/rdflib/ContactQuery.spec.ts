@@ -74,6 +74,95 @@ describe("ContactQuery", () => {
       const result = query.queryEmails();
       expect(result).toEqual([]);
     });
+
+    it("returns an empty array if hasEmail is in wrong document", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/wrong.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        sym("mailto:bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if email value is in wrong document", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        sym("mailto:bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/wrong.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if hasEmail is of wrong contact", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/wrong.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        sym("mailto:bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if hasEmail node and value are unrelated", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#other"),
+        vcard("value"),
+        sym("mailto:bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+
     it("returns a single plain email without mailto prefix", () => {
       const store = graph();
       store.add(
