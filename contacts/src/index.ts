@@ -17,6 +17,12 @@ export interface Contact {
 export interface FullContact {
   uri: string;
   name: string;
+  emails: Email[];
+}
+
+interface Email {
+  uri: string;
+  value: string;
 }
 
 export interface Group {}

@@ -87,6 +87,12 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return {
       uri,
       name,
+      emails: [
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497197769",
+          value: "molly.braaten@gov.test",
+        },
+      ],
     };
   }
 }

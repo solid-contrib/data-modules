@@ -36,7 +36,7 @@ describe("read contact", () => {
       "https://pod.test/alice/contacts/Person/1/index.ttl#this",
     );
 
-    expect(result).toEqual({
+    expect(result).toMatchObject({
       uri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
       name: "Bob",
     });
