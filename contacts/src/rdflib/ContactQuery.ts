@@ -1,6 +1,8 @@
-import { IndexedFormula, NamedNode, sym } from "rdflib";
+import { IndexedFormula, isNamedNode, NamedNode, sym, Node } from "rdflib";
 import { vcard } from "./namespaces";
 import { Email } from "../index";
+
+const MAILTO_URI_SCHEME = "mailto:";
 
 export class ContactQuery {
   private contactDoc: NamedNode;
@@ -32,23 +34,28 @@ export class ContactQuery {
     if (!uri) {
       return [];
     }
-    const value: string =
-      this.store.anyValue(
-        sym(uri),
-        vcard("value"),
-        undefined,
-        this.contactDoc,
-      ) ?? "";
+    const valueNode = this.store.any(
+      sym(uri),
+      vcard("value"),
+      undefined,
+      this.contactDoc,
+    );
 
-    if (!value) {
+    if (!isMailtoNode(valueNode)) {
       return [];
     }
 
     return [
       {
         uri,
-        value: value.split("mailto:")[1],
+        value: valueNode.value.split(MAILTO_URI_SCHEME)[1],
       },
     ];
   }
+}
+
+function isMailtoNode(valueNode: Node | null): valueNode is NamedNode {
+  return (
+    isNamedNode(valueNode) && valueNode.value.startsWith(MAILTO_URI_SCHEME)
+  );
 }

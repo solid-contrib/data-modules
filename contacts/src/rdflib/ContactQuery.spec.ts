@@ -163,6 +163,50 @@ describe("ContactQuery", () => {
       expect(result).toEqual([]);
     });
 
+    it("ignores emails that are not a named node", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        lit("bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+
+    it("ignores emails that are not a mailto: URI", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        sym("https://bob.mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([]);
+    });
+
     it("returns a single plain email without mailto prefix", () => {
       const store = graph();
       store.add(
