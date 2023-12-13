@@ -131,6 +131,33 @@ describe("createNewContact", () => {
       );
     });
 
+    it("inserts the contact phone number to the contact document", () => {
+      const result = createNewContact(addressBookQuery, {
+        name: "Zinnia Lisa",
+        phoneNumber: "0118-999-881-99-9119-725-3",
+      });
+      expect(result.insertions).toContainEqual(
+        st(
+          newContactNode,
+          vcard("hasTelephone"),
+          sym(
+            "https://pod.test/contacts/Person/80363534-f3d1-455e-a3d9-b29dcbb755d2/index.ttl#phone",
+          ),
+          newContactNode.doc(),
+        ),
+      );
+      expect(result.insertions).toContainEqual(
+        st(
+          sym(
+            "https://pod.test/contacts/Person/80363534-f3d1-455e-a3d9-b29dcbb755d2/index.ttl#phone",
+          ),
+          vcard("value"),
+          sym("tel:0118-999-881-99-9119-725-3"),
+          newContactNode.doc(),
+        ),
+      );
+    });
+
     it("does not insert an e-mail node if no e-mail is given", () => {
       const result = createNewContact(addressBookQuery, {
         name: "Zinnia Lisa",

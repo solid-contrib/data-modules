@@ -14,7 +14,6 @@ export function createNewContact(
   if (!nameEmailIndex) {
     throw new Error("name-email index is missing or invalid");
   }
-  const emailNode = sym(contactNode.doc().uri + "#email");
   const insertions = [
     st(
       contactNode,
@@ -27,12 +26,26 @@ export function createNewContact(
     st(contactNode, rdf("type"), vcard("Individual"), contactNode.doc()),
   ];
   if (newContact.email) {
+    const emailNode = sym(contactNode.doc().uri + "#email");
+
     insertions.push(
       st(contactNode, vcard("hasEmail"), emailNode, contactNode.doc()),
       st(
         emailNode,
         vcard("value"),
         sym("mailto:" + newContact.email),
+        contactNode.doc(),
+      ),
+    );
+  }
+  if (newContact.phoneNumber) {
+    const phoneNode = sym(contactNode.doc().uri + "#phone");
+    insertions.push(
+      st(contactNode, vcard("hasTelephone"), phoneNode, contactNode.doc()),
+      st(
+        phoneNode,
+        vcard("value"),
+        sym("tel:" + newContact.phoneNumber),
         contactNode.doc(),
       ),
     );
