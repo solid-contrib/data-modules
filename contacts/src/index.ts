@@ -14,6 +14,11 @@ export interface Contact {
   name: string;
 }
 
+export interface FullContact {
+  uri: string;
+  name: string;
+}
+
 export interface Group {}
 
 export interface NewContact {

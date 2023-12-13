@@ -1,17 +1,13 @@
 import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import {
-  mockNotFound,
-  mockTurtleResponse,
-} from "../test-support/mockResponses";
+import { mockTurtleResponse } from "../test-support/mockResponses";
 
 import { v4 as uuid } from "uuid";
-import { expectPatchRequest } from "../test-support/expectRequests";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
 jest.mock("uuid");
 
 describe("read contact", () => {
-  it("returns the contact's name", async () => {
+  it("returns the contact's name and uri", async () => {
     const authenticatedFetch = jest.fn();
 
     const store = graph();
@@ -40,6 +36,9 @@ describe("read contact", () => {
       "https://pod.test/alice/contacts/Person/1/index.ttl#this",
     );
 
-    expect(result).toEqual({ name: "Bob" });
+    expect(result).toEqual({
+      uri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
+      name: "Bob",
+    });
   });
 });

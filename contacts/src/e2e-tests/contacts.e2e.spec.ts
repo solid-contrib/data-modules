@@ -44,6 +44,7 @@ describe("contacts module", () => {
     const result = await contacts.readContact(contactUri);
 
     expect(result).toEqual({
+      uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this",
       name: "Molly Braaten",
     });
   });

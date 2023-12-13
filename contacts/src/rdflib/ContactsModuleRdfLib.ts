@@ -1,5 +1,5 @@
 import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
-import { AddressBook, ContactsModule, NewContact } from "..";
+import { AddressBook, ContactsModule, FullContact, NewContact } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { createAddressBook } from "./createAddressBook";
 import { executeUpdate } from "./web-operations/executeUpdate";
@@ -79,12 +79,13 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return operation.uri;
   }
 
-  async readContact(uri: string) {
+  async readContact(uri: string): Promise<FullContact> {
     const contactNode = sym(uri);
     await this.fetchNode(contactNode);
     const query = new ContactQuery(this.store, contactNode);
     const name = query.queryName();
     return {
+      uri,
       name,
     };
   }
