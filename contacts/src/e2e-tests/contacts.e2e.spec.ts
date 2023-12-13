@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 
 describe("contacts module", () => {
   beforeAll(async () => {
-    const response = await fetch("http://localhost:3000");
+    const response = await fetch("http://localhost:3000/alice/");
     expect(response.status).toBe(200);
   });
   it("can create a new contact within an existing address book", async () => {
