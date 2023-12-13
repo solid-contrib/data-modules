@@ -14,9 +14,9 @@ Milestones that are underway as of 4 December:
 Budget: `6000-(65*80 + .5*80)=760`
 
 # M2 Contacts1
-* Angelo: 2
+* Angelo: 3
 
-Budget: `2000-(2*500)=1000`
+Budget: `2000-(3*500)=500`
 
 # P1 Soukai-Solid
 * Reza: 20
