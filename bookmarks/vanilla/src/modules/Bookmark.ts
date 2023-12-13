@@ -61,7 +61,7 @@ export class Bookmark {
      * @return {Promise<string[]>} An array of index URLs.
      */
     public static async getIndexUrls(session: Session): Promise<string[]> {
-        const registeries = await TypeIndexHelper.getFromTypeIndex(session.info.webId!, session.fetch, true)
+        const registeries = await TypeIndexHelper.getFromTypeIndex(session.info.webId!, BOOKMARK.Bookmark, session.fetch, true)
 
         if (!!registeries?.length) {
             return registeries
@@ -78,7 +78,7 @@ export class Bookmark {
                 await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(session.info.webId!, session.fetch, defaultIndexUrl, true)
+            await TypeIndexHelper.registerInTypeIndex(session.info.webId!, "bookmarks_registery", BOOKMARK.Bookmark, session.fetch, defaultIndexUrl, true)
 
             return [defaultIndexUrl];
         }

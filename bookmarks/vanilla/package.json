@@ -35,7 +35,7 @@
     "@inrupt/solid-client-authn-browser": "^1.17.5",
     "@inrupt/vocab-common-rdf": "^1.0.5",
     "@rdfjs/data-model": "^1.3.4",
-    "solid-typeindex-support": "^0.0.1"
+    "solid-typeindex-support": "^0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.10",
