@@ -2,23 +2,6 @@
 
 # How to use this module
 
-# typeIndex Support
-
-The [Bookmak.getIndexUrl](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/modules/Bookmark.ts#L58C29-L58C29) is the entrypoint for the data module and typeIndex.
-it checkes if typeIndex has a `solid:instance` or `solid:instanceContainer` registerd and returns the url of them as an array of strings.
-
-see [TypeIndexHelper.getFromTypeIndex](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L49C25-L49C41)
-
-if there is a typeIndex document, it will read the whole dataset to get all `solid:instance` and `solid:instanceContainer` items and returns the url them as an array of strings.
-
-in case there is not typeIndex document with the given access level `public or private`, it creates a default instance and register it inside typeIndex [TypeIndexHelper.registerInTypeIndex](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/modules/Bookmark.ts#L67) and returns the url of the instance as the result.
-
-
-We also loop over all solid:instanceContainers to get all solid:instances inside them and merge them together into one array of urls [**See](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L75-L83)
-
-at the end it returns a unique array of urls of all `solid:instance` and `solid:instanceContainer` items.
-[**See](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L88C45-L88C45)
-
 ## Development
 
 ```bash
@@ -139,3 +122,19 @@ updated: DateTime string e.g. "2023-10-21T14:16:16Z" (optional)
 }
 ```
 
+# typeIndex Support
+
+The [Bookmak.getIndexUrl](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/modules/Bookmark.ts#L58C29-L58C29) is the entrypoint for the data module and typeIndex.
+it checkes if typeIndex has a `solid:instance` or `solid:instanceContainer` registerd and returns the url of them as an array of strings.
+
+see [TypeIndexHelper.getFromTypeIndex](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L49C25-L49C41)
+
+if there is a typeIndex document, it will read the whole dataset to get all `solid:instance` and `solid:instanceContainer` items and returns the url them as an array of strings.
+
+in case there is not typeIndex document with the given access level `public or private`, it creates a default instance and register it inside typeIndex [TypeIndexHelper.registerInTypeIndex](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/modules/Bookmark.ts#L67) and returns the url of the instance as the result.
+
+
+We also loop over all solid:instanceContainers to get all solid:instances inside them and merge them together into one array of urls [**See](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L75-L83)
+
+at the end it returns a unique array of urls of all `solid:instance` and `solid:instanceContainer` items.
+[**See](https://github.com/solid-contrib/data-modules/blob/c717e683a27904d51fc602c2afa89d45b749293e/bookmarks/vanilla/src/utils/TypeIndexHelper.ts#L88C45-L88C45)
