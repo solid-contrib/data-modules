@@ -1,0 +1,4 @@
+<#this> a <http://www.w3.org/2006/vcard/ns#AddressBook>;
+    <http://purl.org/dc/elements/1.1/title> "new address book";
+    <http://www.w3.org/2006/vcard/ns#nameEmailIndex> <http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/people.ttl>;
+    <http://www.w3.org/2006/vcard/ns#groupIndex> <http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/groups.ttl>.

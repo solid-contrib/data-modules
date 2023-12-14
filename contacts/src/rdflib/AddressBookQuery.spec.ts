@@ -1,6 +1,10 @@
 import { AddressBookQuery } from "./AddressBookQuery";
-import { graph, sym } from "rdflib";
+import { graph, lit, sym } from "rdflib";
 import { dc, vcard } from "./namespaces";
+
+import { v4 as uuid } from "uuid";
+
+jest.mock("uuid");
 
 describe("AddressBookQuery", () => {
   describe("query title", () => {
@@ -63,6 +67,25 @@ describe("AddressBookQuery", () => {
     it("returns null if nothing found in store", () => {
       const query = new AddressBookQuery(
         graph(),
+        sym("http://pod.test/alice/contacts/index.ttl#this"),
+      );
+      const result = query.queryNameEmailIndex();
+      expect(result).toBe(null);
+    });
+
+    it("returns null if index is not a named node", () => {
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      store.add(
+        addressBookNode,
+        vcard("nameEmailIndex"),
+        lit("invalid index"),
+        addressBookNode.doc(),
+      );
+      const query = new AddressBookQuery(
+        store,
         sym("http://pod.test/alice/contacts/index.ttl#this"),
       );
       const result = query.queryNameEmailIndex();
@@ -604,6 +627,25 @@ describe("AddressBookQuery", () => {
       );
       const result = query.queryGroups();
       expect(result).toEqual([]);
+    });
+  });
+
+  describe("propose new contact node", () => {
+    it("mints a new URI based on the address book container", () => {
+      (uuid as jest.Mock).mockReturnValueOnce(
+        "44a5fc88-fc3c-4f69-83ab-78d49764881c",
+      );
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      const query = new AddressBookQuery(store, addressBookNode);
+      const contactNode = query.proposeNewContactNode();
+      expect(contactNode).toEqual(
+        sym(
+          "http://pod.test/alice/contacts/Person/44a5fc88-fc3c-4f69-83ab-78d49764881c/index.ttl#this",
+        ),
+      );
     });
   });
 });

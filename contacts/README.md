@@ -11,8 +11,20 @@ interoperable way.
 
 ## Run tests
 
+### Unit and integration tests
+
 ```shell
 npm test
+```
+
+### End-to-end tests
+
+Those tests need the development server running and initialized, please follow the instruction in the section "Development server" before running the tests.
+
+After that you can start the tests via
+
+```shell
+npm run test:e2e
 ```
 
 ## Build
