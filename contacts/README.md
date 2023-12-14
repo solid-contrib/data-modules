@@ -19,13 +19,9 @@ npm test
 
 ### End-to-end tests
 
-Those tests need the development server running, so first start it via 
+Those tests need the development server running and initialized, please follow the instruction in the section "Development server" before running the tests.
 
-```shell
-npm run pod
-```
-
-Then you can start the tests via
+After that you can start the tests via
 
 ```shell
 npm run test:e2e
