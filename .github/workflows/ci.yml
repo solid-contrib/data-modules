@@ -14,6 +14,18 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm test
+  test-contacts-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./contacts/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run pod
       - run: npm run test:e2e
   test-bookmarks-vanilla:
     runs-on: ubuntu-latest
