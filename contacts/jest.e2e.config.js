@@ -2,6 +2,5 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  rootDir: "src",
-  testPathIgnorePatterns: [".*\\.e2e\\.spec\\.ts"],
+  rootDir: "src/e2e-tests",
 };

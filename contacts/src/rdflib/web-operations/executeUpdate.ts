@@ -16,7 +16,7 @@ export async function executeUpdate(
   updater: UpdateManager,
   operation: UpdateOperation,
 ) {
-  await updater.update(operation.deletions, operation.insertions);
+  await updater.updateMany(operation.deletions, operation.insertions);
   operation.filesToCreate.map((file) => {
     createEmptyTurtleFile(fetcher, file.uri);
   });

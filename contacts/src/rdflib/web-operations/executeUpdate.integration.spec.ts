@@ -78,6 +78,50 @@ describe("executeUpdate", () => {
     );
   });
 
+  it("can insert to multiple destinations", async () => {
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/resource-to-update",
+      "",
+    );
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/another-resource",
+      "",
+    );
+    await executeUpdate(fetcher, updater, {
+      uri: "https://pod.test/resource-to-update",
+      deletions: [],
+      insertions: [
+        st(
+          sym("https://pod.test/resource-to-update#it"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          vcard("AddressBook"),
+          sym("https://pod.test/resource-to-update"),
+        ),
+        st(
+          sym("https://pod.test/another-resource#it"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          vcard("AddressBook"),
+          sym("https://pod.test/another-resource"),
+        ),
+      ],
+      filesToCreate: [],
+    });
+    expectPatchRequest(
+      authenticatedFetch,
+      "https://pod.test/resource-to-update",
+      `INSERT DATA { <https://pod.test/resource-to-update#it> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#AddressBook> .
+ }`,
+    );
+    expectPatchRequest(
+      authenticatedFetch,
+      "https://pod.test/another-resource",
+      `INSERT DATA { <https://pod.test/another-resource#it> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#AddressBook> .
+ }`,
+    );
+  });
+
   it("creates a new empty file via PUT", async () => {
     mockNotFound(authenticatedFetch, "https://pod.test/file-to-create");
     await executeUpdate(fetcher, updater, {

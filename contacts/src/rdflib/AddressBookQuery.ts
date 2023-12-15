@@ -1,15 +1,23 @@
-import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
+import { IndexedFormula, isNamedNode, NamedNode, sym } from "rdflib";
 import { dc, vcard } from "./namespaces";
 import { Contact, Group } from "../index";
+import { v4 as uuid } from "uuid";
 
 export class AddressBookQuery {
   private addressBookDoc: NamedNode;
 
   constructor(
     private store: IndexedFormula,
-    private addressBookNode: NamedNode,
+    public addressBookNode: NamedNode,
   ) {
     this.addressBookDoc = addressBookNode.doc();
+  }
+
+  proposeNewContactNode(): NamedNode {
+    const id = uuid();
+    const baseUri = this.addressBookNode.dir()?.uri;
+    const personDir = "Person";
+    return sym(`${baseUri}${personDir}/${id}/index.ttl#this`);
   }
 
   queryTitle() {
@@ -23,13 +31,18 @@ export class AddressBookQuery {
     );
   }
 
-  queryNameEmailIndex() {
-    return this.store.any(
+  queryNameEmailIndex(): NamedNode | null {
+    const index = this.store.any(
       this.addressBookNode,
       vcard("nameEmailIndex"),
       undefined,
       this.addressBookDoc,
     );
+    if (isNamedNode(index)) {
+      return index as NamedNode;
+    } else {
+      return null;
+    }
   }
 
   queryContacts(): Contact[] {
