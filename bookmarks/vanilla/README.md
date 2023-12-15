@@ -15,41 +15,33 @@ import { Bookmark } from "@solid-data-modules/bookmarks-vanilla"
 use it to work with bookmarks
 
 ```typescript
-const result: IBookmark[] = await Bookmark.getAll(session);
+const result: IBookmark[] = await Bookmark.getAll(session.fetch, session.info.webId);
 ```
 the `getAll` method will return an array of IBookmark, in case there are no bookmarks it will return an empty array.
 ```typescript
-const result: IBookmark | undefined  = await Bookmark.get("<pk>", session);
+const result: IBookmark | undefined  = await Bookmark.get("<pk>", session.fetch);
 ```
 the `get` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
 ```typescript
-const result: boolean  = await Bookmark.delete("<pk>", session);
+const result: boolean  = await Bookmark.delete("<pk>", session.fetch);
 ```
 the `delete` method will return a boolean indicating if the bookmark was deleted.
 ```typescript
-const result: boolean  = await Bookmark.create(payload: ICreateBookmark, session);
+const result: boolean  = await Bookmark.create(payload: ICreateBookmark, session.fetch, session.info.webId);
 ```
 the `create` method will return a boolean indicating if the bookmark was created.
 ```typescript
-const result: IBookmark | undefined = await Bookmark.update("<pk>", payload: IUpdateBookmark, session);
+const result: IBookmark | undefined = await Bookmark.update("<pk>", payload: IUpdateBookmark, session.fetch);
 ```
 the `update` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
 
 - pk indicates the primary key of the bookmark, in this case its the url of the bookmark
 - payload is an object containing the fields of the bookmark
-- you need to pass the authenticated session to the methods, this session is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts)
+- you need to pass the authenticated fetch and a webId to the methods, these values is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts) in the demo app.
 - session object can be obtained from:
     - `useSession` hook inside React Components, after `handleIncomingRedirect` hook is called.
     - `getDefaultSession` function inside vanilla js, after `handleIncomingRedirect` hook is called.
-- a bare minimum session object should looks like:
-```typescript
-const session = {
-    info:{
-        webId: "some-webid"
-    },
-    fetch: {} // some authenticated fetch function
-}
-```
+
 
 
 ## Types
@@ -106,13 +98,15 @@ Once its completed the auth proccess it will redirect to the redirect url, and f
 
 
 ## methods
-the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes an authenticated session to use for fetching the data.
+the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes an authenticated fetch to use for fetching the data as well as a webId of the logedin user.
 
-the [`Bookmark.get`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L94) and [`Bookmark.delete`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L108) methods take the url of the bookmark as the primary key and an authenticated session.
+the [`Bookmark.get`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L94) and [`Bookmark.delete`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L108) methods take the url of the bookmark as the primary key and an authenticated fetch.
 
-the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L135) takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` as the payload with an authenticated
+the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L135) takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` as the payload with an authenticated fetch and a webId.
 
-the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L169) takes the `url` of the bookmark as primary key, then as a payload, it takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` with an authenticated session.
+the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L169) takes the `url` of the bookmark as primary key, then as a payload, it takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` with an authenticated fetch.
+
+the [`Bookmark.delete`](https://github.com/solid-contrib/data-modules/blob/b4e69e20481f2590b4bd1a1d17b192e2e6b4514e/bookmarks/vanilla/src/modules/Bookmark.ts#L164) takes the `url` of the bookmark as primary key, with an authenticated fetch.
 
 Schema:
 label: any string value should be fine (required)

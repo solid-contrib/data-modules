@@ -65,7 +65,7 @@ export class Bookmark {
      * @param {Session} session - The session object.
      * @return {Promise<string[]>} An array of index URLs.
      */
-    public static async getIndexUrls(fetch: any, webId: string): Promise<string[]> {
+    public static async getIndexUrls(fetch: typeof globalThis.fetch, webId: string): Promise<string[]> {
         const registeries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
 
         if (!!registeries?.length) {
@@ -96,7 +96,7 @@ export class Bookmark {
      * @param {Session} session - The session object.
      * @return {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks.
      */
-    public static async getAll(fetch: any, webId: string): Promise<IBookmark[]> {
+    public static async getAll(fetch: typeof globalThis.fetch, webId: string): Promise<IBookmark[]> {
         const indexUrls = await this.getIndexUrls(fetch, webId);
         try {
             const all = indexUrls.map(async (indexUrl) => {
@@ -138,7 +138,7 @@ export class Bookmark {
      * @param {Session} session - The session object used for fetching the bookmark.
      * @return {Promise<IBookmark | undefined>} A promise that resolves to the retrieved bookmark, or undefined if no bookmark was found.
      */
-    public static async get(url: string, fetch: any): Promise<IBookmark | undefined> {
+    public static async get(url: string, fetch: typeof globalThis.fetch): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: fetch });
 
         const thing = getThing(ds, url)
@@ -161,7 +161,7 @@ export class Bookmark {
      * @param {Session} session - The session object used for authentication and fetching.
      * @returns {Promise<boolean>} - A Promise that resolves to true if the resource was successfully deleted, otherwise false.
      */
-    public static async delete(url: string, fetch: any): Promise<boolean> {
+    public static async delete(url: string, fetch: typeof globalThis.fetch): Promise<boolean> {
         const ds = await getSolidDataset(url, { fetch: fetch });
 
         const thing = getThing(ds, url);
@@ -186,7 +186,7 @@ export class Bookmark {
      * @param {Session} session - The session object for authentication.
      * @return {Promise<boolean>} A promise that resolves to a boolean value indicating whether the bookmark was created successfully.
      */
-    public static async create(payload: ICreateBookmark, fetch: any, webId: string): Promise<boolean> {
+    public static async create(payload: ICreateBookmark, fetch: typeof globalThis.fetch, webId: string): Promise<boolean> {
 
         const { title, link, creator, topic } = payload
 
@@ -226,7 +226,7 @@ export class Bookmark {
      * @param {Session} session - The session object containing the fetch function for making HTTP requests.
      * @return {Promise<IBookmark | undefined>} A promise that resolves to the updated bookmark or undefined if the bookmark does not exist.
      */
-    public static async update(url: string, payload: IUpdateBookmark, fetch: any): Promise<IBookmark | undefined> {
+    public static async update(url: string, payload: IUpdateBookmark, fetch: typeof globalThis.fetch): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: fetch });
         let thing = getThing(ds, url)
 
