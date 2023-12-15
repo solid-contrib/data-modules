@@ -2,37 +2,54 @@
 
 # How to use this module
 
-## Development
-
+install it as a dependency to you application
 ```bash
-git clone https://github.com/solid-contrib/data-modules
-cd data-modules
-cd bookmarks/vanilla
-npm install
-npm run test
+npm i @solid-data-modules/bookmarks-vanilla
 ```
 
-## Demo app
-
-Assuming you just ran the 'development' steps above and are now in the bookmarks/vanilla folder.
-
-```bash
-npm run build
-cd demo
-npm install
-npm run dev
+import the module
+```typescript
+import { Bookmark } from "@solid-data-modules/bookmarks-vanilla"
 ```
 
-## Explanation of the demo app
+use it to work with bookmarks
 
-The login is handled by [`src/utils/auth.ts`](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts).
+```typescript
+const result: IBookmark[] = await Bookmark.getAll(session);
+```
+the `getAll` method will return an array of IBookmark, in case there are no bookmarks it will return an empty array.
+```typescript
+const result: IBookmark | undefined  = await Bookmark.get("<pk>", session);
+```
+the `get` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
+```typescript
+const result: boolean  = await Bookmark.delete("<pk>", session);
+```
+the `delete` method will return a boolean indicating if the bookmark was deleted.
+```typescript
+const result: boolean  = await Bookmark.create(payload: ICreateBookmark, session);
+```
+the `create` method will return a boolean indicating if the bookmark was created.
+```typescript
+const result: IBookmark | undefined = await Bookmark.update("<pk>", payload: IUpdateBookmark, session);
+```
+the `update` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
 
-Once its completed the auth proccess it will redirect to the redirect url, and from there it will use Bookmark static methods to CRUD the bookmarks in [Bookmarks component](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/components/Bookmarks/Bookmarks.tsx)
-
-
-These are the methods implemented to deal with bookmarks
-They will return a promise containing the JSON representation of the bookmark
-
+- pk indicates the primary key of the bookmark, in this case its the url of the bookmark
+- payload is an object containing the fields of the bookmark
+- you need to pass the authenticated session to the methods, this session is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts)
+- session object can be obtained from:
+    - `useSession` hook inside React Components, after `handleIncomingRedirect` hook is called.
+    - `getDefaultSession` function inside vanilla js, after `handleIncomingRedirect` hook is called.
+- a bare minimum session object should looks like:
+```typescript
+const session = {
+    info:{
+        webId: "some-webid"
+    },
+    fetch: {} // some authenticated fetch function
+}
+```
 
 
 ## Types
@@ -59,36 +76,33 @@ type IBookmark = ICreateBookmark & {
 }
 ```
 
-```typescript
-import { Session } from "@inrupt/solid-client-authn-browser";
-```
-this is the Session type to pass as an required parameter to all the methods
 
-```typescript
-const result: IBookmark[] = await Bookmarks.getAll(session: Session);
-```
-the `getAll` method will return an array of IBookmark, in case there are no bookmarks it will return an empty array.
-```typescript
-const result: IBookmark | undefined  = await Bookmarks.get("<pk>", session: Session);
-```
-the `get` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
-```typescript
-const result: boolean  = await Bookmarks.delete("<pk>", session: Session);
-```
-the `delete` method will return a boolean indicating if the bookmark was deleted.
-```typescript
-const result: boolean  = await Bookmarks.create(payload: ICreateBookmark, session: Session);
-```
-the `create` method will return a boolean indicating if the bookmark was created.
-```typescript
-const result: IBookmark | undefined = await Bookmarks.update("<pk>", payload: IUpdateBookmark, session: Session);
-```
-the `update` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
+## Development
 
-- pk indicates the primary key of the bookmark, in this case its the url of the bookmark
-- payload is an object containing the fields of the bookmark
-- you need to pass the authenticated session to the methods, this session is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts)
+```bash
+git clone https://github.com/solid-contrib/data-modules
+cd data-modules
+cd bookmarks/vanilla
+npm install
+npm run test
+```
 
+## Demo app
+
+Assuming you just ran the 'development' steps above and are now in the bookmarks/vanilla folder.
+
+```bash
+npm run build
+cd demo
+npm install
+npm run dev
+```
+
+## Explanation of the demo app
+
+The login is handled by [`src/utils/auth.ts`](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts).
+
+Once its completed the auth proccess it will redirect to the redirect url, and from there it will use Bookmark static methods to CRUD the bookmarks in [Bookmarks component](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/components/Bookmarks/Bookmarks.tsx)
 
 
 ## methods

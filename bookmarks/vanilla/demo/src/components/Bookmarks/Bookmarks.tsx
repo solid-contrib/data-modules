@@ -41,7 +41,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
   async function loadBookmarks() {
-    const list = await Bookmark.getAll(session);
+    const list = await Bookmark.getAll(session.fetch, session.info.webId!);
     setBookmarks(list);
   }
 
@@ -55,7 +55,8 @@ const Bookmarks: FC<IProps> = ({ }) => {
         title: bookmarkTitle,
         link: bookmarkLink,
       },
-      session
+      session.fetch,
+      session.info.webId!
     );
     setbookmarkTitle("");
     setbookmarkLink("");
@@ -106,7 +107,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
                     <TableCell
                       component="th"
                       scope="row"
-                      onClick={async () => console.log(await Bookmark.get(row.url, session))}
+                      onClick={async () => console.log(await Bookmark.get(row.url, session.fetch))}
                     >
                       {row.title}
                     </TableCell>
@@ -123,7 +124,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
                       scope="row"
                     >
                       <IconButton
-                        onClick={async () => console.log(await Bookmark.delete(row.url, session))}
+                        onClick={async () => console.log(await Bookmark.delete(row.url, session.fetch))}
                       >
                         DEL
                       </IconButton>
@@ -135,7 +136,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
                             title: `${randStr} - UPDATED`,
                             link: `http://${randStr}.com`,
                           }
-                          const res = await Bookmark.update(row.url, payload, session)
+                          const res = await Bookmark.update(row.url, payload, session.fetch)
                           console.log(res)
 
                           loadBookmarks()

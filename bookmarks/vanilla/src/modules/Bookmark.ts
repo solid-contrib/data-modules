@@ -16,7 +16,6 @@ import {
     setThing,
     setUrl
 } from "@inrupt/solid-client";
-import { Session } from "@inrupt/solid-client-authn-browser";
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
     BOOKMARK,
@@ -29,6 +28,13 @@ import { namedNode } from '@rdfjs/data-model';
 import { __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt, __crdt_resource } from "../constants";
 import { TypeIndexHelper } from "solid-typeindex-support";
 import { isValidUrl } from "../utils";
+
+
+
+type IFetch = {
+    (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
+    (input: RequestInfo, init?: RequestInit | undefined): Promise<any>;
+};
 
 export type ICreateBookmark = {
     title: string
@@ -49,7 +55,6 @@ export type IBookmark = ICreateBookmark & {
     created?: string
     updated?: string
 }
-
 export class Bookmark {
 
 
@@ -60,25 +65,25 @@ export class Bookmark {
      * @param {Session} session - The session object.
      * @return {Promise<string[]>} An array of index URLs.
      */
-    public static async getIndexUrls(session: Session): Promise<string[]> {
-        const registeries = await TypeIndexHelper.getFromTypeIndex(session.info.webId!, BOOKMARK.Bookmark, session.fetch, true)
+    public static async getIndexUrls(fetch: any, webId: string): Promise<string[]> {
+        const registeries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
 
         if (!!registeries?.length) {
             return registeries
         } else {
-            const pods = (await getPodUrlAll(session.info.webId!, { fetch: session.fetch }))[0];
+            const pods = (await getPodUrlAll(webId!, { fetch: fetch }))[0];
 
-            const baseURL = pods ? pods : session.info.webId?.split("/profile")[0]
+            const baseURL = pods ? pods : webId?.split("/profile")[0]
 
             const defaultIndexUrl = `${baseURL}/bookmarks/index.ttl`;
 
-            const defaultIndexDataset = await getSolidDataset(defaultIndexUrl, { fetch: session.fetch });
+            const defaultIndexDataset = await getSolidDataset(defaultIndexUrl, { fetch: fetch });
 
             if (!defaultIndexDataset) {
-                await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: session.fetch });
+                await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(session.info.webId!, "bookmarks_registery", BOOKMARK.Bookmark, session.fetch, defaultIndexUrl, true)
+            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registery", BOOKMARK.Bookmark, fetch, defaultIndexUrl, true)
 
             return [defaultIndexUrl];
         }
@@ -91,11 +96,11 @@ export class Bookmark {
      * @param {Session} session - The session object.
      * @return {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks.
      */
-    public static async getAll(session: Session): Promise<IBookmark[]> {
-        const indexUrls = await this.getIndexUrls(session);
+    public static async getAll(fetch: any, webId: string): Promise<IBookmark[]> {
+        const indexUrls = await this.getIndexUrls(fetch, webId);
         try {
             const all = indexUrls.map(async (indexUrl) => {
-                const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+                const ds = await getSolidDataset(indexUrl, { fetch: fetch });
 
                 const things = getThingAll(ds)
 
@@ -133,8 +138,8 @@ export class Bookmark {
      * @param {Session} session - The session object used for fetching the bookmark.
      * @return {Promise<IBookmark | undefined>} A promise that resolves to the retrieved bookmark, or undefined if no bookmark was found.
      */
-    public static async get(url: string, session: Session): Promise<IBookmark | undefined> {
-        const ds = await getSolidDataset(url, { fetch: session.fetch });
+    public static async get(url: string, fetch: any): Promise<IBookmark | undefined> {
+        const ds = await getSolidDataset(url, { fetch: fetch });
 
         const thing = getThing(ds, url)
 
@@ -156,13 +161,13 @@ export class Bookmark {
      * @param {Session} session - The session object used for authentication and fetching.
      * @returns {Promise<boolean>} - A Promise that resolves to true if the resource was successfully deleted, otherwise false.
      */
-    public static async delete(url: string, session: Session): Promise<boolean> {
-        const ds = await getSolidDataset(url, { fetch: session.fetch });
+    public static async delete(url: string, fetch: any): Promise<boolean> {
+        const ds = await getSolidDataset(url, { fetch: fetch });
 
         const thing = getThing(ds, url);
         if (thing) {
             const updatedBookmarks = removeThing(ds, thing);
-            const updatedDataset = await saveSolidDatasetAt(url, updatedBookmarks, { fetch: session.fetch });
+            const updatedDataset = await saveSolidDatasetAt(url, updatedBookmarks, { fetch: fetch });
             if (updatedDataset) {
                 return true
             } else {
@@ -181,17 +186,16 @@ export class Bookmark {
      * @param {Session} session - The session object for authentication.
      * @return {Promise<boolean>} A promise that resolves to a boolean value indicating whether the bookmark was created successfully.
      */
-    public static async create(payload: ICreateBookmark, session: Session): Promise<boolean> {
+    public static async create(payload: ICreateBookmark, fetch: any, webId: string): Promise<boolean> {
 
         const { title, link, creator, topic } = payload
 
         if (!isValidUrl(link)) throw new Error("link is not a valid URL")
         if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL")
 
+        const [indexUrl] = await this.getIndexUrls(fetch, webId);
 
-        const [indexUrl] = await this.getIndexUrls(session);
-
-        const ds = await getSolidDataset(indexUrl, { fetch: session.fetch });
+        const ds = await getSolidDataset(indexUrl, { fetch: fetch });
 
         let newBookmarkThing = createThing()
 
@@ -208,7 +212,7 @@ export class Bookmark {
         newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
-        const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: session.fetch });
+        const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: fetch });
 
         return updatedDataset ? true : false
     };
@@ -222,8 +226,8 @@ export class Bookmark {
      * @param {Session} session - The session object containing the fetch function for making HTTP requests.
      * @return {Promise<IBookmark | undefined>} A promise that resolves to the updated bookmark or undefined if the bookmark does not exist.
      */
-    public static async update(url: string, payload: IUpdateBookmark, session: Session): Promise<IBookmark | undefined> {
-        const ds = await getSolidDataset(url, { fetch: session.fetch });
+    public static async update(url: string, payload: IUpdateBookmark, fetch: any): Promise<IBookmark | undefined> {
+        const ds = await getSolidDataset(url, { fetch: fetch });
         let thing = getThing(ds, url)
 
         if (thing) {
@@ -244,7 +248,7 @@ export class Bookmark {
             thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
 
             const updatedBookmarkList = setThing(ds, thing);
-            await saveSolidDatasetAt(url, updatedBookmarkList, { fetch: session.fetch });
+            await saveSolidDatasetAt(url, updatedBookmarkList, { fetch: fetch });
 
             return this.mapBookmark(thing)
         }

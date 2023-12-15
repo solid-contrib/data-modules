@@ -47,7 +47,7 @@ describe("Bookmark", () => {
         jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockReturnValue(Promise.resolve(registeries));
         jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
-        const res = await Bookmark.getIndexUrls(session);
+        const res = await Bookmark.getIndexUrls(session.fetch, session.info.webId!);
 
         expect(inruptClient.getPodUrlAll).toHaveBeenCalledTimes(0);
 
@@ -74,7 +74,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
-        const res = await Bookmark.getAll(session);
+        const res = await Bookmark.getAll(session.fetch, session.info.webId!);
 
         expect(Bookmark.getIndexUrls).toHaveBeenCalled();
 
@@ -110,7 +110,7 @@ describe("Bookmark", () => {
         jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseDelete));
 
-        const res = await Bookmark.delete(url, session);
+        const res = await Bookmark.delete(url, session.fetch);
 
         expect(res).toEqual(true);
     });
@@ -150,7 +150,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseCreate));
 
-        const res = await Bookmark.create(payload, session);
+        const res = await Bookmark.create(payload, session.fetch, session.info.webId!);
 
         expect(Bookmark.getIndexUrls).toHaveBeenCalled();
 
@@ -189,7 +189,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(inruptClient, "setThing").mockReturnValue(JSON.parse(loadFixture("ds-with-updated.json")));
 
-        const res = await Bookmark.update(url, payload, session);
+        const res = await Bookmark.update(url, payload, session.fetch);
 
 
         expect(res?.title).toEqual(expected.title);
@@ -222,7 +222,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
-        const res = await Bookmark.get(url, session);
+        const res = await Bookmark.get(url, session.fetch);
 
 
         expect(res).toEqual(expected);
@@ -251,7 +251,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
-        const res = await Bookmark.get(url, session);
+        const res = await Bookmark.get(url, session.fetch);
 
         expect(res).toEqual(expected);
     });
@@ -279,7 +279,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
-        const res = await Bookmark.get(url, session);
+        const res = await Bookmark.get(url, session.fetch);
 
 
         expect(res).toEqual(expected);
@@ -308,7 +308,7 @@ describe("Bookmark", () => {
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
-        const res = await Bookmark.get(url, session);
+        const res = await Bookmark.get(url, session.fetch);
 
 
         expect(res).toEqual(expected);
@@ -321,7 +321,7 @@ describe("Bookmark", () => {
         }
 
         try {
-            await Bookmark.create(payload, session);
+            await Bookmark.create(payload, session.fetch, session.info.webId!);
         } catch (e: any) {
             expect(e.message).toBe("link is not a valid URL");
         }
@@ -334,7 +334,7 @@ describe("Bookmark", () => {
         }
 
         try {
-            await Bookmark.create(payload, session);
+            await Bookmark.create(payload, session.fetch, session.info.webId!);
         } catch (e: any) {
             expect(e.message).toBe("creator is not a valid URL");
         }
