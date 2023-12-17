@@ -9,13 +9,12 @@ on:
     paths:
       - contacts/**
 
-defaults:
-  run:
-    working-directory: ./contacts/
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./contacts/
     strategy:
       matrix:
         node-version: [ 20 ]
