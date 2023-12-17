@@ -7,7 +7,7 @@
     "build": "tsc",
     "test": "jest --detectOpenHandles --forceExit",
     "test:e2e": "jest --config jest.e2e.config.js --detectOpenHandles --forceExit",
-    "pod": "community-solid-server --config @css:config/file.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
+    "pod": "community-solid-server --config ./dev-server/config/config-mashlib.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
     "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
     "pod:clean": "rm -rf ./dev-server/data"
   },
@@ -40,6 +40,7 @@
     "eslint": "^8.53.0",
     "jest": "^29.7.0",
     "jest-when": "^3.6.0",
+    "mashlib": "^1.8.8",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
