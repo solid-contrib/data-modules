@@ -277,4 +277,219 @@ describe("ContactQuery", () => {
       ]);
     });
   });
+
+  describe("query phone numbers", () => {
+    it("returns empty array if store is empty", () => {
+      const store = graph();
+
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if hasTelephone is in wrong document", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/wrong.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        sym("tel:1234"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if phone value is in wrong document", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        sym("tel:1234"),
+        sym("https://pod.test/alice/contact/1/wrong.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if hasTelephone is of wrong contact", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/wrong.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        sym("tel:1234"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("returns an empty array if hasTelephone node and value are unrelated", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#other"),
+        vcard("value"),
+        sym("tel:1234"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("ignores phone numbers that are not a named node", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        lit("1234"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("ignores phone numbers that are not a tel: URI", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        sym("https://bob.phone.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([]);
+    });
+
+    it("returns a single plain phone number without tel prefix", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        sym("tel:1234"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([
+        {
+          uri: "https://pod.test/alice/contact/1/index.ttl#phone",
+          value: "1234",
+        },
+      ]);
+    });
+
+    it("returns all available phone numbers", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasTelephone"),
+        sym("https://pod.test/alice/contact/1/index.ttl#phone2"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone"),
+        vcard("value"),
+        sym("tel:1234"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#phone2"),
+        vcard("value"),
+        sym("tel:5678"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryPhoneNumbers();
+      expect(result).toEqual([
+        {
+          uri: "https://pod.test/alice/contact/1/index.ttl#phone",
+          value: "1234",
+        },
+        {
+          uri: "https://pod.test/alice/contact/1/index.ttl#phone2",
+          value: "5678",
+        },
+      ]);
+    });
+  });
 });

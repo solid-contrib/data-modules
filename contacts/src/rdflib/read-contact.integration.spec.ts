@@ -109,7 +109,7 @@ describe("read contact", () => {
   
     <#this> a vcard:Individual;
         vcard:fn "Bob" ;
-        vcard:hasEmail <#phone>, <#phone2> .
+        vcard:hasTelephone <#phone>, <#phone2> .
     <#phone> vcard:value <tel:1234> .
     <#phone2> vcard:value <tel:5678> .
 `,
@@ -120,7 +120,16 @@ describe("read contact", () => {
     );
 
     expect(result).toMatchObject({
-      phoneNumbers: [],
+      phoneNumbers: [
+        {
+          uri: "https://pod.test/alice/contacts/Person/1/index.ttl#phone",
+          value: "1234",
+        },
+        {
+          uri: "https://pod.test/alice/contacts/Person/1/index.ttl#phone2",
+          value: "5678",
+        },
+      ],
     });
   });
 });

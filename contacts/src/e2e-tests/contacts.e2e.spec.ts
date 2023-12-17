@@ -56,7 +56,16 @@ describe("contacts module", () => {
           value: "molly.braaten@home.test",
         },
       ],
-      phoneNumbers: [],
+      phoneNumbers: [
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497210116",
+          value: "+1234567890",
+        },
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702500092868",
+          value: "+0987654321",
+        },
+      ],
     });
   });
 });
