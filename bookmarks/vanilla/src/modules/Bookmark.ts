@@ -26,7 +26,7 @@ import {
 } from "@inrupt/vocab-common-rdf";
 import { namedNode } from '@rdfjs/data-model';
 import { __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt, __crdt_resource } from "../constants";
-import { TypeIndexHelper } from "solid-typeindex-support";
+import { TypeIndexHelper } from "@rezasoltani/solid-typeindex-support";
 import { isValidUrl } from "../utils";
 
 

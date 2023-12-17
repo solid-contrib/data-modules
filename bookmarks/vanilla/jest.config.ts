@@ -8,7 +8,7 @@ const jestConfig: JestConfigWithTsJest = {
     "^.+\\.[tj]s$": "ts-jest"
   },
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!solid-typeindex-support)"
+    "<rootDir>/node_modules/(?!@rezasoltani/solid-typeindex-support)"
   ],
 };
 
