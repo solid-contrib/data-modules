@@ -1,21 +1,17 @@
 import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
-import { AddressBook, ContactsModule, FullContact, NewContact } from "..";
+import {
+  AddressBook,
+  ContactsModule,
+  CreateAddressBookCommand,
+  CreateNewContactCommand,
+  FullContact,
+} from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { createAddressBook } from "./createAddressBook";
 import { executeUpdate } from "./web-operations/executeUpdate";
 import { createNewContact } from "./createNewContact";
 import { fetchNode } from "./web-operations/fetchNode";
 import { ContactQuery } from "./ContactQuery";
-
-interface CreateAddressBookCommand {
-  container: string;
-  name: string;
-}
-
-interface CreateNewContactCommand {
-  addressBook: string;
-  contact: NewContact;
-}
 
 interface ModuleConfig {
   store: IndexedFormula;

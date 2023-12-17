@@ -67,6 +67,10 @@ node ./examples/read-address-book.mjs
 
 The [development server](#development-server) needs to be running for this.
 
+### Available features
+
+For a description of all features available please take a look at the [module interface](./src/index.ts), and it's documentation.
+
 ## Development
 
 ### Run tests
