@@ -29,8 +29,16 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm test
+      - run: npm run test:e2e
+      - name: Save e2e test data
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-data
+          path: |
+            contacts/src/e2e-tests/.test-data/
+          retention-days: 1
       - name: Save build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: |
