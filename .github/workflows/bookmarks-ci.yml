@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - bookmarks/**
+      - .github/workflows/bookmarks-ci.yml
 jobs:
   test-bookmarks-vanilla:
     runs-on: ubuntu-latest

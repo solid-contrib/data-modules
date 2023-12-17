@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - contacts/**
+      - .github/workflows/contacts-ci-cd.yml
   pull_request:
     paths:
       - contacts/**
