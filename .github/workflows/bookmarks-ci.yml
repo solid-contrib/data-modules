@@ -1,19 +1,10 @@
-name: jest
+name: Bookmarks CI
 run-name: ${{ github.actor }} is running jest
-on: [push]
+on:
+  push:
+    paths:
+      - bookmarks/**
 jobs:
-  test-contacts:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./contacts/
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - run: npm ci
-      - run: npm test
   test-bookmarks-vanilla:
     runs-on: ubuntu-latest
     defaults:
