@@ -57,11 +57,12 @@ jobs:
           echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
         id: prerelease
       - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v3
         name: Publish @solid-data-modules/contacts-rdflib
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
+          access: public
 
   npm-release-latest:
     if: github.ref == 'refs/heads/main'
@@ -74,8 +75,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v3
         name: Release @solid-data-modules/contacts-rdflib
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
+          access: public
