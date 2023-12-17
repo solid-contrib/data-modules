@@ -18,9 +18,15 @@ export interface FullContact {
   uri: string;
   name: string;
   emails: Email[];
+  phoneNumbers: PhoneNumber[];
 }
 
 export interface Email {
+  uri: string;
+  value: string;
+}
+
+export interface PhoneNumber {
   uri: string;
   value: string;
 }

@@ -56,6 +56,7 @@ describe("contacts module", () => {
           value: "molly.braaten@home.test",
         },
       ],
+      phoneNumbers: [],
     });
   });
 });

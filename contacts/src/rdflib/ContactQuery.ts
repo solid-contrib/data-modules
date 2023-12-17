@@ -55,6 +55,10 @@ export class ContactQuery {
       })
       .filter((value: Email | undefined): value is Email => !!value);
   }
+
+  queryPhoneNumbers() {
+    return [];
+  }
 }
 
 function isMailtoNode(valueNode: Node | null): valueNode is NamedNode {

@@ -85,10 +85,12 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const query = new ContactQuery(this.store, contactNode);
     const name = query.queryName();
     const emails = query.queryEmails();
+    const phoneNumbers = query.queryPhoneNumbers();
     return {
       uri,
       name,
       emails,
+      phoneNumbers,
     };
   }
 }
