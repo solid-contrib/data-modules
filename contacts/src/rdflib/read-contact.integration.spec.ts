@@ -41,7 +41,7 @@ describe("read contact", () => {
     });
   });
 
-  it("returns the contact's email", async () => {
+  it("returns the contact's emails", async () => {
     const authenticatedFetch = jest.fn();
 
     const store = graph();
@@ -63,8 +63,9 @@ describe("read contact", () => {
   
     <#this> a vcard:Individual;
         vcard:fn "Bob" ;
-        vcard:hasEmail <#email> .
+        vcard:hasEmail <#email>, <#email2> .
     <#email> vcard:value <mailto:bob@mail.test> .
+    <#email2> vcard:value <mailto:bob@provider.test> .
 `,
     );
 
@@ -77,6 +78,10 @@ describe("read contact", () => {
         {
           uri: "https://pod.test/alice/contacts/Person/1/index.ttl#email",
           value: "bob@mail.test",
+        },
+        {
+          uri: "https://pod.test/alice/contacts/Person/1/index.ttl#email2",
+          value: "bob@provider.test",
         },
       ],
     });

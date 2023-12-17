@@ -1,4 +1,4 @@
-import { IndexedFormula, isNamedNode, NamedNode, sym, Node } from "rdflib";
+import { IndexedFormula, isNamedNode, NamedNode, Node, sym } from "rdflib";
 import { vcard } from "./namespaces";
 import { Email } from "../index";
 
@@ -25,32 +25,35 @@ export class ContactQuery {
   }
 
   queryEmails(): Email[] {
-    const uri = this.store.anyValue(
-      this.contactNode,
-      vcard("hasEmail"),
-      undefined,
-      this.contactDoc,
-    );
-    if (!uri) {
-      return [];
-    }
-    const valueNode = this.store.any(
-      sym(uri),
-      vcard("value"),
-      undefined,
-      this.contactDoc,
-    );
+    const uris = this.store
+      .statementsMatching(
+        this.contactNode,
+        vcard("hasEmail"),
+        undefined,
+        this.contactDoc,
+      )
+      .map((it) => it.object.value);
 
-    if (!isMailtoNode(valueNode)) {
+    if (uris.length === 0) {
       return [];
     }
 
-    return [
-      {
-        uri,
-        value: valueNode.value.split(MAILTO_URI_SCHEME)[1],
-      },
-    ];
+    return uris
+      .map((uri) => {
+        const valueNode = this.store.any(
+          sym(uri),
+          vcard("value"),
+          undefined,
+          this.contactDoc,
+        );
+        if (isMailtoNode(valueNode)) {
+          return {
+            uri,
+            value: valueNode.value.split(MAILTO_URI_SCHEME)[1],
+          };
+        }
+      })
+      .filter((value: Email | undefined): value is Email => !!value);
   }
 }
 

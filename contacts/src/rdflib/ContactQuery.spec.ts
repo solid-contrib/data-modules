@@ -233,5 +233,48 @@ describe("ContactQuery", () => {
         },
       ]);
     });
+
+    it("returns all available emails", () => {
+      const store = graph();
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+        vcard("hasEmail"),
+        sym("https://pod.test/alice/contact/1/index.ttl#email2"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email"),
+        vcard("value"),
+        sym("mailto:bob@mail.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      store.add(
+        sym("https://pod.test/alice/contact/1/index.ttl#email2"),
+        vcard("value"),
+        sym("mailto:bob@provider.test"),
+        sym("https://pod.test/alice/contact/1/index.ttl"),
+      );
+      const query = new ContactQuery(
+        store,
+        sym("https://pod.test/alice/contact/1/index.ttl#this"),
+      );
+      const result = query.queryEmails();
+      expect(result).toEqual([
+        {
+          uri: "https://pod.test/alice/contact/1/index.ttl#email",
+          value: "bob@mail.test",
+        },
+        {
+          uri: "https://pod.test/alice/contact/1/index.ttl#email2",
+          value: "bob@provider.test",
+        },
+      ]);
+    });
   });
 });
