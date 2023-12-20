@@ -58,14 +58,14 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return fetchNode(this.fetcher, node);
   }
 
-  async createAddressBook({ container, name }: CreateAddressBookCommand) {
-    const operation = createAddressBook(container, name);
+  async createAddressBook({ containerUri, name }: CreateAddressBookCommand) {
+    const operation = createAddressBook(containerUri, name);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
 
-  async createNewContact({ addressBook, contact }: CreateNewContactCommand) {
-    const addressBookNode = sym(addressBook);
+  async createNewContact({ addressBookUri, contact }: CreateNewContactCommand) {
+    const addressBookNode = sym(addressBookUri);
     await this.fetchNode(addressBookNode);
     const operation = createNewContact(
       new AddressBookQuery(this.store, addressBookNode),

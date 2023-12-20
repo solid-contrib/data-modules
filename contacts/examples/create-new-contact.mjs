@@ -7,7 +7,7 @@ const fetcher = new Fetcher(store);
 const updater = new UpdateManager(store);
 const contacts = new ContactsModule({ store, fetcher, updater });
 
-let addressBook =
+let addressBookUri =
   "http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/index.ttl#this";
 
 const firstName = faker.person.firstName();
@@ -20,10 +20,10 @@ const contact = {
   ),
 };
 const uri = await contacts.createNewContact({
-  addressBook: addressBook,
+  addressBookUri,
   contact,
 });
 console.log("created contact:", contact, "at", uri);
 
-const result = await contacts.readAddressBook(addressBook);
+const result = await contacts.readAddressBook(addressBookUri);
 console.log("the updated address book:", result);

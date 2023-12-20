@@ -43,7 +43,7 @@ describe("create address book", () => {
     );
 
     const createdUri = await contacts.createAddressBook({
-      container: "https://pod.test/alice/",
+      containerUri: "https://pod.test/alice/",
       name: "My Contacts",
     });
 

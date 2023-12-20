@@ -1,12 +1,11 @@
 export interface ContactsModule {
   /**
    * Creates a new address book in the given container
-   * @param container - The URI of the target container
-   * @param name - The human-readable title for the address book
+   * @param command
    * @return The URI of the newly created address book
    */
   createAddressBook({
-    container,
+    containerUri,
     name,
   }: CreateAddressBookCommand): Promise<string>;
 
@@ -19,12 +18,11 @@ export interface ContactsModule {
 
   /**
    * Creates a new contact within a given address book
-   * @param addressBook - The URI of an existing address book the new contact should be added to
-   * @param contact - The data of the contact to create
+   * @param command
    * @return The URI of the newly created contact
    */
   createNewContact({
-    addressBook,
+    addressBookUri,
     contact,
   }: CreateNewContactCommand): Promise<string>;
 
@@ -40,7 +38,13 @@ export interface ContactsModule {
  * Data needed to create a new address book
  */
 export interface CreateAddressBookCommand {
-  container: string;
+  /**
+   * The URI of the target container
+   */
+  containerUri: string;
+  /**
+   * The human-readable title for the address book
+   */
   name: string;
 }
 
@@ -48,7 +52,13 @@ export interface CreateAddressBookCommand {
  * Data needed to create a new contact within an address book
  */
 export interface CreateNewContactCommand {
-  addressBook: string;
+  /**
+   * The URI of an existing address book the new contact should be added to
+   */
+  addressBookUri: string;
+  /**
+   * The data of the contact to create
+   */
   contact: NewContact;
 }
 

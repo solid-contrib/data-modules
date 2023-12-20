@@ -7,7 +7,7 @@ const updater = new UpdateManager(store)
 const contacts = new ContactsModule({store, fetcher, updater})
 
 const uri = await contacts.createAddressBook({
-    container: "http://localhost:3000/alice/public-write/",
+    containerUri: "http://localhost:3000/alice/public-write/",
     name: "new address book"
 })
 
