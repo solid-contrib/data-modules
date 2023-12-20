@@ -22,7 +22,7 @@ npm install rdflib @solid-data-modules/contacts-rdflib
 
 ```typescript
 import {Fetcher, graph, UpdateManager} from "rdflib";
-import {ContactsModule} from "@solid-data-module/contacts-rdflib";
+import {ContactsModuleRdfLib as ContactsModule} from "@solid-data-module/contacts-rdflib";
 
 // 1️⃣ create rdflib store, fetcher and updater as usual
 const store = graph();

@@ -1,3 +1,5 @@
+export { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib";
+
 export interface ContactsModule {
   /**
    * Creates a new address book in the given container
