@@ -19,13 +19,13 @@ npm test
 
 ### End-to-end tests
 
-Those tests need the development server running and initialized, please follow the instruction in the section "Development server" before running the tests.
-
-After that you can start the tests via
+The tests will start and stop their own solid server on port `3456`. This port needs to be available.
 
 ```shell
 npm run test:e2e
 ```
+
+The server is seeded with data from `src/e2e-tests/test-data` initially. After a test run you can investigate the pod file system at `src/e2e-tests/.test-data/<test-id>` where `<test-id>` is a random id generated for each run.
 
 ## Build
 
