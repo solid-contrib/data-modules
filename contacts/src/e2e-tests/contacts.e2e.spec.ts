@@ -18,7 +18,7 @@ describe("contacts module", () => {
   it("can create a new address book", async () => {
     const contacts = setupModule();
     const uri = await contacts.createAddressBook({
-      container: "http://localhost:3456/",
+      containerUri: "http://localhost:3456/",
       name: "Personal contacts",
     });
     expect(uri).toMatch(
@@ -47,18 +47,18 @@ describe("contacts module", () => {
   it("can create a new contact within an existing address book", async () => {
     const contacts = setupModule();
 
-    const addressBook =
+    const addressBookUri =
       "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this";
 
     const name = faker.person.fullName();
     const uri = await contacts.createNewContact({
-      addressBook,
+      addressBookUri,
       contact: {
         name: name,
       },
     });
 
-    const result = await contacts.readAddressBook(addressBook);
+    const result = await contacts.readAddressBook(addressBookUri);
 
     expect(result.contacts).toContainEqual({
       uri,

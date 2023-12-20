@@ -57,7 +57,7 @@ describe("create new contact", () => {
     );
 
     const createdUri = await contacts.createNewContact({
-      addressBook: "https://pod.test/alice/contacts/index.ttl#this",
+      addressBookUri: "https://pod.test/alice/contacts/index.ttl#this",
       contact: {
         name: "Bob",
       },

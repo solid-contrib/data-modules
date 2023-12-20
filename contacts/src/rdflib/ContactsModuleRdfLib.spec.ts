@@ -36,7 +36,7 @@ describe("ContactsModuleRdfLib", () => {
 
       // when
       result = await module.createAddressBook({
-        container: "https://pod.test/alice/",
+        containerUri: "https://pod.test/alice/",
         name: "My Contacts",
       });
     });
@@ -85,7 +85,7 @@ describe("ContactsModuleRdfLib", () => {
 
       // when
       result = await module.createNewContact({
-        addressBook: "https://pod.test/alice/contacts/index.ttl#this",
+        addressBookUri: "https://pod.test/alice/contacts/index.ttl#this",
         contact: {
           name: "Zinnia Lisa",
         },
