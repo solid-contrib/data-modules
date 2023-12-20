@@ -1,3 +1,24 @@
-<#this> <http://www.w3.org/2006/vcard/ns#fn> "Molly Braaten";
-    a <http://www.w3.org/2006/vcard/ns#Individual>.
-<http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl> <http://purl.org/dc/terms/created> "2023-10-11T19:40:36Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<#this>
+    <http://www.w3.org/2006/vcard/ns#fn>           "Molly Braaten" ;
+    a                                              <http://www.w3.org/2006/vcard/ns#Individual> ;
+    <http://www.w3.org/2006/vcard/ns#hasEmail>     <#id1702497197769>, <#id1702500031124> ;
+    <http://www.w3.org/2006/vcard/ns#hasTelephone> <#id1702497210116>, <#id1702500092868> .
+
+<#id1702497197769>
+    a                                       <http://www.w3.org/2006/vcard/ns#Work> ;
+    <http://www.w3.org/2006/vcard/ns#value> <mailto:molly.braaten@gov.test> .
+
+<#id1702500031124>
+    a                                       <http://www.w3.org/2006/vcard/ns#Home> ;
+    <http://www.w3.org/2006/vcard/ns#value> <mailto:molly.braaten@home.test> .
+
+<#id1702497210116>
+    a                                       <http://www.w3.org/2006/vcard/ns#Work> ;
+    <http://www.w3.org/2006/vcard/ns#value> <tel:+1234567890> .
+
+<#id1702500092868>
+    a                                       <http://www.w3.org/2006/vcard/ns#Cell> ;
+    <http://www.w3.org/2006/vcard/ns#value> <tel:+0987654321> .
+
+<http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl>
+    <http://purl.org/dc/terms/created> "2023-10-11T19:40:36Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

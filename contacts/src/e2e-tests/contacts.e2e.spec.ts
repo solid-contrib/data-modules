@@ -31,4 +31,41 @@ describe("contacts module", () => {
       name,
     });
   });
+
+  it("can read a existing contact", async () => {
+    const store = graph();
+    const fetcher = new Fetcher(store);
+    const updater = new UpdateManager(store);
+    const contacts = new ContactsModule({ store, fetcher, updater });
+
+    const contactUri =
+      "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+    const result = await contacts.readContact(contactUri);
+
+    expect(result).toEqual({
+      uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this",
+      name: "Molly Braaten",
+      emails: [
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497197769",
+          value: "molly.braaten@gov.test",
+        },
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702500031124",
+          value: "molly.braaten@home.test",
+        },
+      ],
+      phoneNumbers: [
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497210116",
+          value: "+1234567890",
+        },
+        {
+          uri: "http://localhost:3000/alice/public-contacts/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702500092868",
+          value: "+0987654321",
+        },
+      ],
+    });
+  });
 });

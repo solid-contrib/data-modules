@@ -1,10 +1,11 @@
 import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
-import { AddressBook, ContactsModule, NewContact } from "..";
+import { AddressBook, ContactsModule, FullContact, NewContact } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
 import { createAddressBook } from "./createAddressBook";
 import { executeUpdate } from "./web-operations/executeUpdate";
 import { createNewContact } from "./createNewContact";
 import { fetchNode } from "./web-operations/fetchNode";
+import { ContactQuery } from "./ContactQuery";
 
 interface CreateAddressBookCommand {
   container: string;
@@ -76,5 +77,20 @@ export class ContactsModuleRdfLib implements ContactsModule {
     );
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
+  }
+
+  async readContact(uri: string): Promise<FullContact> {
+    const contactNode = sym(uri);
+    await this.fetchNode(contactNode);
+    const query = new ContactQuery(this.store, contactNode);
+    const name = query.queryName();
+    const emails = query.queryEmails();
+    const phoneNumbers = query.queryPhoneNumbers();
+    return {
+      uri,
+      name,
+      emails,
+      phoneNumbers,
+    };
   }
 }
