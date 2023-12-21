@@ -1,5 +1,6 @@
 # Bookmarks Data Module using vanilla JavaScript
 
+See [Docs](https://solid-contrib.github.io/data-modules/bookmarks-vanilla/index.html) for more information about this module.
 # How to use this module
 
 install it as a dependency to you application
