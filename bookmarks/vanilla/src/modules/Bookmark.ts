@@ -29,43 +29,58 @@ import { __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt, __crdt_resource } fro
 import { TypeIndexHelper } from "@rezasoltani/solid-typeindex-support";
 import { isValidUrl } from "../utils";
 
-
-
-type IFetch = {
-    (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-    (input: RequestInfo, init?: RequestInit | undefined): Promise<any>;
+/**
+ * Interface for the shape of a bookmark object that can be created.
+ * Contains title, topic, link, and creator fields.
+ * 
+ */
+export type ICreateBookmark = {
+  title: string;
+  topic?: string;
+  link: string;
+  creator?: string;
 };
 
-export type ICreateBookmark = {
-    title: string
-    topic?: string
-    link: string
-    creator?: string,
-}
-
+/**
+ * Interface for the shape of a bookmark object that can be updated.
+ * Contains title, topic, link, and creator fields.
+ */
 export type IUpdateBookmark = {
-    title: string
-    topic?: string
-    link: string
-    creator?: string,
-}
+  title: string;
+  topic?: string;
+  link: string;
+  creator?: string;
+};
 
+/**
+ * Interface defining the shape of a bookmark object.
+ * Extends ICreateBookmark and adds url, created, and updated fields.
+ */
 export type IBookmark = ICreateBookmark & {
-    url: string
-    created?: string
-    updated?: string
-}
+  url: string;
+  created?: string;
+  updated?: string;
+};
+
+/**
+ * The Bookmark class provides methods for CRUD over Bookmark resources in Solid.
+ * @public
+ */
 export class Bookmark {
 
 
-
     /**
-     * Retrieves the index URLs for the session.
+     * Gets the registry URLs for the bookmarks for the given webId.
      *
-     * @param {Session} session - The session object.
-     * @return {Promise<string[]>} An array of index URLs.
+     * @param fetch - The fetch function to use for network requests
+     * @param webId - The webId of the user to get bookmark registries for
+     * @returns A promise resolving to an array of registry URL strings
+     * @internal
      */
-    public static async getIndexUrls(fetch: typeof globalThis.fetch, webId: string): Promise<string[]> {
+    public static async getRegisteryUrls(
+        fetch: typeof globalThis.fetch,
+        webId: string
+    ): Promise<string[]> {
         const registeries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
 
         if (!!registeries?.length) {
@@ -89,15 +104,18 @@ export class Bookmark {
         }
     }
 
-
     /**
-     * Retrieves all bookmarks from the session.
+     * Gets all bookmarks for the given user's webId.
      *
-     * @param {Session} session - The session object.
-     * @return {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks.
+     * @param fetch - The fetch function to use for network requests.
+     * @param webId - The user's webId.
+     * @returns A promise resolving to an array of the user's bookmarks.
      */
-    public static async getAll(fetch: typeof globalThis.fetch, webId: string): Promise<IBookmark[]> {
-        const indexUrls = await this.getIndexUrls(fetch, webId);
+    public static async getAll(
+        fetch: typeof globalThis.fetch,
+        webId: string
+    ): Promise<IBookmark[]> {
+        const indexUrls = await this.getRegisteryUrls(fetch, webId);
         try {
             const all = indexUrls.map(async (indexUrl) => {
                 const ds = await getSolidDataset(indexUrl, { fetch: fetch });
@@ -130,15 +148,17 @@ export class Bookmark {
 
     }
 
-
     /**
-     * Retrieves a bookmark from the specified URL using the provided session.
+     * Gets a bookmark by URL.
      *
-     * @param {string} url - The URL of the bookmark to retrieve.
-     * @param {Session} session - The session object used for fetching the bookmark.
-     * @return {Promise<IBookmark | undefined>} A promise that resolves to the retrieved bookmark, or undefined if no bookmark was found.
+     * @param url - The URL of the bookmark to get.
+     * @param fetch - The fetch function to use for network requests.
+     * @returns A promise resolving to the bookmark, if found, or undefined.
      */
-    public static async get(url: string, fetch: typeof globalThis.fetch): Promise<IBookmark | undefined> {
+    public static async get(
+        url: string,
+        fetch: typeof globalThis.fetch
+    ): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: fetch });
 
         const thing = getThing(ds, url)
@@ -155,13 +175,16 @@ export class Bookmark {
     }
 
     /**
-     * Deletes a resource from the specified URL using the provided session.
+     * Deletes the bookmark at the given URL.
      *
-     * @param {string} url - The URL of the resource to be deleted.
-     * @param {Session} session - The session object used for authentication and fetching.
-     * @returns {Promise<boolean>} - A Promise that resolves to true if the resource was successfully deleted, otherwise false.
+     * @param url - The URL of the bookmark to delete.
+     * @param fetch - The fetch function to use for network requests.
+     * @returns A promise resolving to true if the bookmark was deleted, false otherwise.
      */
-    public static async delete(url: string, fetch: typeof globalThis.fetch): Promise<boolean> {
+    public static async delete(
+        url: string,
+        fetch: typeof globalThis.fetch
+    ): Promise<boolean> {
         const ds = await getSolidDataset(url, { fetch: fetch });
 
         const thing = getThing(ds, url);
@@ -178,99 +201,145 @@ export class Bookmark {
         }
     };
 
-
     /**
-     * Creates a new bookmark with the given payload and session.
+     * Creates a new bookmark.
      *
-     * @param {ICreateBookmark} payload - The payload object containing the bookmark details.
-     * @param {Session} session - The session object for authentication.
-     * @return {Promise<boolean>} A promise that resolves to a boolean value indicating whether the bookmark was created successfully.
+     * @param payload - The bookmark data.
+     * @param fetch - The fetch function.
+     * @param webId - The user's WebID.
+     * @returns A promise resolving to true if the bookmark was created, false otherwise.
      */
-    public static async create(payload: ICreateBookmark, fetch: typeof globalThis.fetch, webId: string): Promise<boolean> {
+    public static async create(
+        payload: ICreateBookmark,
+        fetch: typeof globalThis.fetch,
+        webId: string
+    ): Promise<boolean> {
+        const { title, link, creator, topic } = payload;
 
-        const { title, link, creator, topic } = payload
+        if (!isValidUrl(link)) throw new Error("link is not a valid URL");
+        if (creator && !isValidUrl(creator))
+            throw new Error("creator is not a valid URL");
 
-        if (!isValidUrl(link)) throw new Error("link is not a valid URL")
-        if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL")
-
-        const [indexUrl] = await this.getIndexUrls(fetch, webId);
+        const [indexUrl] = await this.getRegisteryUrls(fetch, webId);
 
         const ds = await getSolidDataset(indexUrl, { fetch: fetch });
 
-        let newBookmarkThing = createThing()
+        let newBookmarkThing = createThing();
 
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.title, title)
-        newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.recalls, namedNode(link))
-        if (creator) newBookmarkThing = addNamedNode(newBookmarkThing, DCTERMS.creator, namedNode(creator))
+        newBookmarkThing = addStringNoLocale(
+            newBookmarkThing,
+            DCTERMS.title,
+            title
+        );
+        newBookmarkThing = addNamedNode(
+            newBookmarkThing,
+            BOOKMARK.recalls,
+            namedNode(link)
+        );
+        if (creator)
+            newBookmarkThing = addNamedNode(
+                newBookmarkThing,
+                DCTERMS.creator,
+                namedNode(creator)
+            );
 
-        if (topic && isValidUrl(topic)) newBookmarkThing = addNamedNode(newBookmarkThing, BOOKMARK.hasTopic, namedNode(topic))
-        if (topic && !isValidUrl(topic)) newBookmarkThing = addStringNoLocale(newBookmarkThing, BOOKMARK.hasTopic, topic)
+        if (topic && isValidUrl(topic))
+            newBookmarkThing = addNamedNode(
+                newBookmarkThing,
+                BOOKMARK.hasTopic,
+                namedNode(topic)
+            );
+        if (topic && !isValidUrl(topic))
+            newBookmarkThing = addStringNoLocale(
+                newBookmarkThing,
+                BOOKMARK.hasTopic,
+                topic
+            );
 
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, DCTERMS.created, new Date().toISOString())
-        newBookmarkThing = addStringNoLocale(newBookmarkThing, __DC_UPDATED, new Date().toISOString())
+        newBookmarkThing = addStringNoLocale(
+            newBookmarkThing,
+            DCTERMS.created,
+            new Date().toISOString()
+        );
+        newBookmarkThing = addStringNoLocale(
+            newBookmarkThing,
+            __DC_UPDATED,
+            new Date().toISOString()
+        );
 
-        newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark)
+        newBookmarkThing = addUrl(newBookmarkThing, RDF.type, BOOKMARK.Bookmark);
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
-        const updatedDataset = await saveSolidDatasetAt(indexUrl, updatedBookmarkList, { fetch: fetch });
+        const updatedDataset = await saveSolidDatasetAt(
+            indexUrl,
+            updatedBookmarkList,
+            { fetch: fetch }
+        );
 
-        return updatedDataset ? true : false
-    };
-
+        return updatedDataset ? true : false;
+    }
 
     /**
-     * Updates a bookmark with the given payload in the specified URL.
+     * Updates a bookmark resource in a Solid pod by replacing its metadata
+     * with the provided payload.
      *
-     * @param {string} url - The URL of the bookmark to update.
-     * @param {IUpdateBookmark} payload - The payload containing the updated bookmark data.
-     * @param {Session} session - The session object containing the fetch function for making HTTP requests.
-     * @return {Promise<IBookmark | undefined>} A promise that resolves to the updated bookmark or undefined if the bookmark does not exist.
+     * @param url - The URL of the bookmark resource to update
+     * @param payload - The updated bookmark metadata
+     * @param fetch - The fetch function to use for network requests
+     * @returns The updated bookmark object if successful, else undefined
      */
-    public static async update(url: string, payload: IUpdateBookmark, fetch: typeof globalThis.fetch): Promise<IBookmark | undefined> {
+    public static async update(
+        url: string,
+        payload: IUpdateBookmark,
+        fetch: typeof globalThis.fetch
+    ): Promise<IBookmark | undefined> {
         const ds = await getSolidDataset(url, { fetch: fetch });
-        let thing = getThing(ds, url)
+        let thing = getThing(ds, url);
 
         if (thing) {
-            const { title, link, creator, topic } = payload
+            const { title, link, creator, topic } = payload;
 
-            if (!isValidUrl(link)) throw new Error("link is not a valid URL")
-            if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL")
+            if (!isValidUrl(link)) throw new Error("link is not a valid URL");
+            if (creator && !isValidUrl(creator))
+                throw new Error("creator is not a valid URL");
 
-            thing = setStringNoLocale(thing, DCTERMS.title, title)
-            thing = setNamedNode(thing, BOOKMARK.recalls, namedNode(link))
-            if (creator) thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator))
+            thing = setStringNoLocale(thing, DCTERMS.title, title);
+            thing = setNamedNode(thing, BOOKMARK.recalls, namedNode(link));
+            if (creator)
+                thing = setNamedNode(thing, DCTERMS.creator, namedNode(creator));
 
-            if (topic && isValidUrl(topic)) thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic))
-            if (topic && !isValidUrl(topic)) thing = setStringNoLocale(thing, BOOKMARK.hasTopic, topic)
+            if (topic && isValidUrl(topic))
+                thing = setNamedNode(thing, BOOKMARK.hasTopic, namedNode(topic));
+            if (topic && !isValidUrl(topic))
+                thing = setStringNoLocale(thing, BOOKMARK.hasTopic, topic);
 
-            thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString())
+            thing = setStringNoLocale(thing, __DC_UPDATED, new Date().toISOString());
 
-            thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark)
+            thing = setUrl(thing, RDF.type, BOOKMARK.Bookmark);
 
             const updatedBookmarkList = setThing(ds, thing);
             await saveSolidDatasetAt(url, updatedBookmarkList, { fetch: fetch });
 
-            return this.mapBookmark(thing)
+            return this.mapBookmark(thing);
         }
-
-    };
-
+    }
 
     /**
-     * Maps a ThingPersisted object to an IBookmark object.
+     * Maps a Solid dataset Thing to a Bookmark interface.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to be mapped.
-     * @return {IBookmark} - The mapped IBookmark object.
+     * @param thing - The Thing to map
+     * @returns The mapped Bookmark interface
+     * @internal
      */
     private static mapBookmark(thing: ThingPersisted): IBookmark {
-        const url = thing.url
-        const title = this.mapTitle(thing)
-        const link = this.mapLink(thing)
-        const topic = this.mapTopic(thing)
-        const created = this.mapCreated(thing)
-        const updated = this.mapUpdated(thing)
-        const creator = this.mapCreator(thing)
-        const resource = getNamedNode(thing, __crdt_resource)?.value
+        const url = thing.url;
+        const title = this.mapTitle(thing);
+        const link = this.mapLink(thing);
+        const topic = this.mapTopic(thing);
+        const created = this.mapCreated(thing);
+        const updated = this.mapUpdated(thing);
+        const creator = this.mapCreator(thing);
+        const resource = getNamedNode(thing, __crdt_resource)?.value;
         return {
             url,
             title,
@@ -280,59 +349,73 @@ export class Bookmark {
             ...(updated && { updated }),
             ...(creator && { creator }),
             ...(resource && { resource }),
-        }
+        };
     }
+
     /**
-     * Maps the title of a ThingPersisted object.
+     * Maps the title from a Solid dataset Thing.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to map the title from.
-     * @return {string} The mapped title of the ThingPersisted object, or an empty string if no title is found.
+     * @param thing - The Thing to map
+     * @returns The title as a string
+     * @internal
      */
     private static mapTitle(thing: ThingPersisted): string {
         return (
             getLiteral(thing, DCTERMS.title)?.value ??
-            getLiteral(thing, RDFS.label)?.value ?? ""
+            getLiteral(thing, RDFS.label)?.value ??
+            ""
         );
     }
+
     /**
-     * Maps a link from a ThingPersisted object.
+     * Maps the link URL from a Solid dataset Thing.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to map the link from.
-     * @return {string} The mapped link.
+     * @param thing - The Thing to map
+     * @returns The link URL as a string
+     * @internal
      */
     private static mapLink(thing: ThingPersisted): string {
-        // TODO: validate url
-        // issue: https://github.com/solid-contrib/data-modules/issues/32
         return (
             getLiteral(thing, BOOKMARK.recalls)?.value ??
-            getNamedNode(thing, BOOKMARK.recalls)?.value ?? ""
+            getNamedNode(thing, BOOKMARK.recalls)?.value ??
+            ""
         );
     }
+
     /**
-     * Maps the created date of a ThingPersisted object.
+     * Maps the creation date from a Solid dataset Thing.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to map.
-     * @return {string | undefined} The created date value, or undefined if not found.
+     * @param thing - The Thing to map
+     * @returns The creation date as a string, if available
+     * @internal
      */
     private static mapCreated(thing: ThingPersisted): string | undefined {
-        return getLiteral(thing, DCTERMS.created)?.value ?? getLiteral(thing, __crdt_createdAt)?.value
+        return (
+            getLiteral(thing, DCTERMS.created)?.value ??
+            getLiteral(thing, __crdt_createdAt)?.value
+        );
     }
+
     /**
-     * Maps the updated value of a ThingPersisted object.
+     * Maps the update date from a Solid dataset Thing.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to map.
-     * @return {string | undefined} The updated value of the ThingPersisted object, or undefined if not found.
+     * @param thing - The Thing to map
+     * @returns The update date as a string, if available
+     * @internal
      */
     private static mapUpdated(thing: ThingPersisted): string | undefined {
         return (
-            getLiteral(thing, __DC_UPDATED)?.value ?? getLiteral(thing, __crdt_updatedAt)?.value
+            getLiteral(thing, __DC_UPDATED)?.value ??
+            getLiteral(thing, __crdt_updatedAt)?.value
         );
     }
+
     /**
-     * Maps the creator of a ThingPersisted object.
+     * Maps the creator from a Solid dataset Thing.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to map.
-     * @return {string | undefined} - The creator value if found, otherwise undefined.
+     * @param thing - The Thing to map
+     * @returns The creator as a string, if available
+     * @internal
      */
     private static mapCreator(thing: ThingPersisted): string | undefined {
         return (
@@ -340,16 +423,15 @@ export class Bookmark {
             getNamedNode(thing, FOAF.maker)?.value
         );
     }
+
     /**
-     * Maps the topic of a ThingPersisted.
+     * Maps the topic from a Solid dataset Thing.
      *
-     * @param {ThingPersisted} thing - The ThingPersisted object to map the topic from.
-     * @return {string | undefined} The mapped topic value, or undefined if it doesn't exist.
+     * @param thing - The Thing to map
+     * @returns The topic as a string, if available
+     * @internal
      */
     private static mapTopic(thing: ThingPersisted): string | undefined {
-        return (
-            getNamedNode(thing, BOOKMARK.hasTopic)?.value
-        );
+        return getNamedNode(thing, BOOKMARK.hasTopic)?.value;
     }
-
 }
