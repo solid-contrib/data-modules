@@ -38,6 +38,17 @@ jobs:
         run: npm run build:doc
 
 ######################
+###################### bookmarks/vanilla module
+
+      - name: Install bookmarks/vanilla dev dependencies
+        working-directory: ./bookmarks/vanilla
+        run: npm ci --only=dev
+
+      - name: Build bookmarks/vanilla doc
+        working-directory: ./bookmarks/vanilla
+        run: npm run build:doc
+
+######################
 
       - name: Upload pages
         uses: actions/upload-pages-artifact@v1
