@@ -4,9 +4,9 @@ import { bootModels, setEngine } from "soukai";
 import { SolidEngine } from "soukai-solid";
 import { Bookmark } from "../src/modules/Bookmarks";
 import StubFetcher from "../src/utils/StubFetcher";
-import RDFDocument from "../src/utils/solid/RDFDocument";
-import RDFResourceProperty from "../src/utils/solid/RDFResourceProperty";
-
+// import RDFDocument from "../src/utils/solid/RDFDocument";
+// import RDFResourceProperty from "../src/utils/solid/RDFResourceProperty";
+import { RDFDocument, RDFResourceProperty } from 'soukai-solid-utils'
 export function loadFixture<T = string>(name: string): T {
   const raw = readFileSync(`${__dirname}/fixtures/${name}`).toString();
 
