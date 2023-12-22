@@ -1,6 +1,10 @@
 import { EventEmitter } from 'events';
 import StubResponse from './StubResponse';
 
+/**
+ * StubFetcher class that extends EventEmitter.
+ * Used for stubbing fetch requests in tests.
+ */
 class StubFetcher extends EventEmitter {
 
     public fetchSpy!: jest.SpyInstance<Promise<Response>, [RequestInfo, RequestInit?]>;

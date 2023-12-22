@@ -14,19 +14,25 @@ import {
 import { v4 } from "uuid";
 
 
+/**
+ * Interface for the required fields to create a new Bookmark instance.
+ */
 export type ICreateBookmark = {
   topic: string;
   label: string;
   link: string;
 };
 
-
-
-export const sayHello = () => {
-  alert("Hello")
-}
+/**
+ * Interface for a Bookmark object that extends ISoukaiDocumentBase and includes the required fields to create a new Bookmark instance from ICreateBookmark.
+ */
 export type IBookmark = ISoukaiDocumentBase & ICreateBookmark;
 
+/**
+ * Defines the Solid Model schema for Bookmarks.
+ * Includes fields for topic, label, link, createdAt, and updatedAt.
+ * Sets the rdf contexts and rdfs classes.
+ */
 export const BookmarkSchema = defineSolidModelSchema({
   rdfContexts: {
     bk: "http://www.w3.org/2002/01/bookmark#",
@@ -50,17 +56,18 @@ export const BookmarkSchema = defineSolidModelSchema({
       rdfProperty: "bk:recalls",
     },
   },
-
 });
 
+/**
+ * Exports the Bookmark class which extends the BookmarkSchema interface.
+ * This allows creating Bookmark instances with the required fields defined in BookmarkSchema.
+ */
 export class Bookmark extends BookmarkSchema {
-  // protected initialize(attributes: Attributes, exists: boolean): void {
-  // }
-  // newInstance({ url: "url" }, true)
-  // newInstance<T extends Model>(this: T, attributes?: Attributes | undefined, exists?: boolean | undefined): T {
-  // }
 }
 
+/**
+ * BookmarkFactory class that provides factory methods for creating and managing Bookmark instances.
+ */
 export class BookmarkFactory {
   private static instance: BookmarkFactory;
 
@@ -69,6 +76,23 @@ export class BookmarkFactory {
     private instancesUrls: string[] = []
   ) { }
 
+  /**
+   * Gets an instance of the BookmarkFactory class, which provides methods
+   * for creating and managing Bookmark instances.
+   *
+   * Checks if an instance already exists and returns it. If not, it creates
+   * a new instance by:
+   *
+   * - Getting the base URL from the user's WebID
+   * - Setting the default container URL
+   * - Getting the type index URL from the user's profile
+   * - Checking for existing containers and instances in the type index
+   * - Creating new containers and registering them if none exist
+   * - Creating a new type index if one doesn't exist
+   * - Creating the BookmarkFactory instance with the container and instance URLs
+   *
+   * Returns a Promise resolving to the BookmarkFactory instance.
+   */
   public static async getInstance(
     args?: GetInstanceArgs,
     defaultContainerUrl?: string
@@ -77,7 +101,9 @@ export class BookmarkFactory {
       try {
         const baseURL = args?.webId.split("profile")[0]; // https://example.solidcommunity.net/
 
-        defaultContainerUrl = `${baseURL}${defaultContainerUrl ?? "bookmarks/"}`;
+        defaultContainerUrl = `${baseURL}${
+          defaultContainerUrl ?? "bookmarks/"
+        }`;
 
         let _containerUrls: string[] = [];
         let _instancesUrls: string[] = [];
@@ -152,6 +178,14 @@ export class BookmarkFactory {
     return BookmarkFactory.instance;
   }
 
+  /**
+   * Retrieves all Bookmark instances from the configured containerUrls and instancesUrls.
+   *
+   * Makes a request to each configured containerUrl and instancesUrl to get all Bookmark instances.
+   * Combines and flattens the results into a single array.
+   *
+   * Returns the array of Bookmark instances.
+   */
   async getAll() {
     const containerPromises = this.containerUrls.map((c) =>
       Bookmark.from(c).all()
@@ -171,26 +205,26 @@ export class BookmarkFactory {
     }
   }
 
+  /**
+   * Retrieves a Bookmark instance by its primary key.
+   *
+   * @param pk - The primary key of the Bookmark to retrieve.
+   * @returns The Bookmark instance if found, otherwise throws error.
+   */
   async get(pk: string) {
     const res = await Bookmark.findOrFail(pk);
 
     return res;
-
-    // const containerPromises = this.containerUrls.map(c => Bookmark.from(c).find(id))
-    // const instancePromises = this.instancesUrls.map(i => Bookmark.all({ $in: [i] }))
-
-    // const allPromise = Promise.all([...containerPromises, ...instancePromises]);
-    // try {
-    //     const values = (await allPromise).flat();
-
-    //     return values[0]
-
-    // } catch (error) {
-    //     console.log(error);
-    //     return undefined
-    // }
   }
 
+  /**
+   * Creates a new Bookmark instance with the given payload.
+   * Generates a UUID for the id, sets the url to the first configured containerUrl + id,
+   * and saves the new Bookmark instance.
+   *
+   * @param payload - The data for the new Bookmark.
+   * @returns The saved Bookmark instance.
+   */
   async create(payload: ICreateBookmark) {
     const id = v4();
 
@@ -205,6 +239,13 @@ export class BookmarkFactory {
     return await bookmark.save();
   }
 
+  /**
+   * Updates an existing Bookmark instance identified by its primary key.
+   *
+   * @param pk - The primary key of the Bookmark to update.
+   * @param payload - The data to update the Bookmark with.
+   * @returns The updated Bookmark instance if successful, otherwise undefined.
+   */
   async update(pk: string, payload: IBookmark) {
     try {
       const res = await Bookmark.findOrFail(pk);
@@ -213,20 +254,14 @@ export class BookmarkFactory {
       console.log(error);
       return undefined;
     }
-
-    // const promises = this.containerUrls.map(c => Bookmark.from(c).find(id))
-    // const allPromise = Promise.all(promises);
-    // try {
-    //     const values = (await allPromise).flat();
-
-    //     return values.map(v => v?.update(payload))
-
-    // } catch (error) {
-    //     console.log(error);
-    //     return undefined
-    // }
   }
 
+  /**
+   * Removes a Bookmark instance identified by its primary key.
+   *
+   * @param pk - The primary key of the Bookmark to remove.
+   * @returns A Promise resolving to the deleted Bookmark instance if successful, otherwise undefined.
+   */
   async remove(pk: string) {
     try {
       const res = await Bookmark.findOrFail(pk);
@@ -235,17 +270,5 @@ export class BookmarkFactory {
       console.error(error);
       return undefined;
     }
-
-    // const promises = this.containerUrls.map(c => Bookmark.from(c).find(id))
-    // const allPromise = Promise.all(promises);
-    // try {
-    //     const values = (await allPromise).flat();
-
-    //     return values.map(async (v) => await v?.delete())
-
-    // } catch (error) {
-    //     console.log(error);
-    //     return undefined
-    // }
   }
 }

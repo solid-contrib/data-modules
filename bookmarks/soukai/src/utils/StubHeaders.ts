@@ -1,3 +1,7 @@
+/**
+ * StubHeaders implements the Headers interface to provide a mock headers object for testing.
+ * It allows setting and getting header values by name.
+ */
 export default class StubHeaders implements Headers {
   public static make(data: Record<string, string>): StubHeaders {
     return new StubHeaders(data);
@@ -12,7 +16,7 @@ export default class StubHeaders implements Headers {
       this.set(name, value);
     }
   }
-  // TODO: to make ts compiler happy
+
   public getSetCookie(): string[] {
     throw new Error("Method not implemented.");
   }

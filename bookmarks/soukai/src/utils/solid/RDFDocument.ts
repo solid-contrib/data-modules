@@ -6,25 +6,45 @@ import type { Quad } from 'rdf-js';
 import RDFResource from './RDFResource';
 import RDFResourceProperty from './RDFResourceProperty';
 
-// import RDFResource from '@/solid/RDFResource';
-// import type RDFResourceProperty from '@/solid/RDFResourceProperty';
-
+/**
+ * Interface for options to parse Turtle text into an RDF graph.
+ *
+ * - baseIRI: Base IRI to resolve relative IRIs in the Turtle text.
+ * - headers: HTTP headers associated with the Turtle text.
+ */
 export interface TurtleParsingOptions {
-    baseIRI: string;
-    headers: Headers;
+  baseIRI: string;
+  headers: Headers;
 }
 
+/**
+ * Interface for options to clone an RDF document.
+ *
+ * changeUrl: Base URL to change IRIs when cloning. IRIs with this base will be changed.
+ * removeResourceUrls: IRIs of resources to remove when cloning.
+ */
 export interface CloneOptions {
-    changeUrl: string;
-    removeResourceUrls: string[];
+  changeUrl: string;
+  removeResourceUrls: string[];
 }
 
+/**
+ * Interface for metadata about an RDF document.
+ *
+ * containsRelativeIRIs: Whether the document contains relative IRIs.
+ * describedBy: The IRI that describes the document format.
+ * headers: HTTP headers associated with the document.
+ */
 export interface RDFDocumentMetadata {
-    containsRelativeIRIs?: boolean;
-    describedBy?: string;
-    headers?: Headers;
+  containsRelativeIRIs?: boolean;
+  describedBy?: string;
+  headers?: Headers;
 }
 
+/**
+ * Default export for the RDFDocument class.
+ * This class represents an RDF document and contains methods for working with RDF graphs and resources.
+ */
 export default class RDFDocument {
 
     private static documentsCache: WeakMap<JsonLD, RDFDocument> = new WeakMap();
@@ -170,14 +190,24 @@ export default class RDFDocument {
 
 }
 
-function getDescribedBy(options: Partial<TurtleParsingOptions> = {}): string | undefined {
-    if (!options.headers?.has('Link'))
-        return undefined;
+/**
+ * Parses the Link header from the given parsing options to extract the IRI
+ * specified by the "describedBy" relation. This can be used to find the IRI
+ * of a metadata document that describes the parsed RDF.
+ *
+ * @param options - The parsing options which should contain the Link header.
+ * @returns The IRI described by the Link header, if found.
+ */
+function getDescribedBy(
+  options: Partial<TurtleParsingOptions> = {}
+): string | undefined {
+  if (!options.headers?.has("Link")) return undefined;
 
-    const matches = options.headers.get('Link')?.match(/<([^>]+)>;\s*rel="describedBy"/i);
+  const matches = options.headers
+    .get("Link")
+    ?.match(/<([^>]+)>;\s*rel="describedBy"/i);
 
-    if (!matches)
-        return undefined;
+  if (!matches) return undefined;
 
-    return urlResolve(options.baseIRI || '', matches[1] as string);
+  return urlResolve(options.baseIRI || "", matches[1] as string);
 }

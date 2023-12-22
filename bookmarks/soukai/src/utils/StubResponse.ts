@@ -1,5 +1,9 @@
 import StubHeaders from "./StubHeaders";
 
+/**
+ * StubResponse implements the Response interface to allow
+ * creating stub responses for testing fetch requests.
+ */
 export default class StubResponse implements Response {
 
     public static make(

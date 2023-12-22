@@ -14,6 +14,12 @@ import {
 import { v4 } from "uuid";
 import { urlParentDirectory } from "./urlHelpers";
 
+/**
+ * Fetches the public or private type index URL from a profile document.
+ *
+ * @param args - Arguments object with webId, fetch, and typePredicate
+ * @returns The URL of the type index for the given predicate
+ */
 export async function getTypeIndexFromProfile(args: {
   webId: string;
   fetch?: Fetch;
@@ -31,6 +37,14 @@ export async function getTypeIndexFromProfile(args: {
     ?.object.value;
 }
 
+/**
+ * Registers a given instance container in the provided type index.
+ *
+ * @param args - Arguments object containing:
+ * - instanceContainer: The URL of the instance container to register
+ * - forClass: The class name that this instance container contains
+ * - typeIndexUrl: The URL of the type index to register in
+ */
 export const registerInTypeIndex = async (args: {
   instanceContainer: string;
   forClass: string;
@@ -48,6 +62,14 @@ export const registerInTypeIndex = async (args: {
   );
 };
 
+/**
+ * Creates a public or private type index for the given WebID.
+ *
+ * @param webId - The WebID to create the type index for
+ * @param type - Either "public" or "private"
+ * @param fetch - Optional fetch function
+ * @returns The URL of the created type index
+ */
 export async function createTypeIndex(
   webId: string,
   type: "public" | "private",
@@ -86,6 +108,15 @@ export async function createTypeIndex(
   return typeIndexUrl;
 }
 
+/**
+ * Finds registrations of a given type and predicate in a type index.
+ *
+ * @param typeIndexUrl - The URL of the type index
+ * @param type - The type or types to find registrations for
+ * @param predicate - The predicate to find registrations of
+ * @param fetch - Optional fetch function
+ * @returns Promise resolving to an array of registration URLs
+ */
 async function findRegistrations(
   typeIndexUrl: string,
   type: string | string[],
@@ -112,6 +143,14 @@ async function findRegistrations(
     .flat();
 }
 
+/**
+ * Finds container registrations for a type in a type index.
+ *
+ * @param typeIndexUrl - The URL of the type index
+ * @param type - The type or types to find container registrations for
+ * @param fetch - Optional fetch function
+ * @returns Promise resolving to an array of container registration URLs
+ */
 export async function findContainerRegistrations(
   typeIndexUrl: string,
   type: string | string[],
@@ -125,6 +164,14 @@ export async function findContainerRegistrations(
   );
 }
 
+/**
+ * Finds instance registrations for a type in a type index.
+ *
+ * @param typeIndexUrl - The URL of the type index
+ * @param type - The type or types to find instance registrations for
+ * @param fetch - Optional fetch function
+ * @returns Promise resolving to an array of instance registration URLs
+ */
 export async function findInstanceRegistrations(
   typeIndexUrl: string,
   type: string | string[],
@@ -133,6 +180,17 @@ export async function findInstanceRegistrations(
   return findRegistrations(typeIndexUrl, type, "solid:instance", fetch);
 }
 
+/**
+ * Retrieves Solid containers and instances of a given model class from a type index.
+ *
+ * Fetches container and instance registrations from the type index for the
+ * provided model class's RDF types. Creates SolidContainer instances for the
+ * found URLs and returns them.
+ *
+ * @param typeIndexUrl - URL of the type index to search
+ * @param childrenModelClass - The Solid model class to find containers/instances of
+ * @returns Promise resolving to an array of SolidContainer instances
+ */
 export const fromTypeIndex = async (
   typeIndexUrl: string,
   childrenModelClass: typeof SolidModel
