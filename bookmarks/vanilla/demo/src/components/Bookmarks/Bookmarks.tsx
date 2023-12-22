@@ -146,7 +146,10 @@ const Bookmarks: FC<IProps> = ({ }) => {
                       scope="row"
                     >
                       <IconButton
-                        onClick={async () => console.log(await Bookmark.delete(row.url, session.fetch))}
+                        onClick={async () => {
+                          console.log(await Bookmark.delete(row.url, session.fetch))
+                          loadBookmarks()
+                        }}
                       >
                         DEL
                       </IconButton>
@@ -154,7 +157,6 @@ const Bookmarks: FC<IProps> = ({ }) => {
 
                         onClick={async () => {
                           setBookmarkToUpdate(row)
-
                         }}
                       >
                         UPD
