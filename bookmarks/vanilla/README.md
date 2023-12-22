@@ -20,11 +20,11 @@ const result: IBookmark[] = await Bookmark.getAll(session.fetch, session.info.we
 ```
 the `getAll` method will return an array of IBookmark, in case there are no bookmarks it will return an empty array.
 ```typescript
-const result: IBookmark | undefined  = await Bookmark.get("<pk>", session.fetch);
+const result: IBookmark | undefined  = await Bookmark.get("url", session.fetch);
 ```
 the `get` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
 ```typescript
-const result: boolean  = await Bookmark.delete("<pk>", session.fetch);
+const result: boolean  = await Bookmark.delete("url", session.fetch);
 ```
 the `delete` method will return a boolean indicating if the bookmark was deleted.
 ```typescript
@@ -32,11 +32,11 @@ const result: boolean  = await Bookmark.create(payload: ICreateBookmark, session
 ```
 the `create` method will return a boolean indicating if the bookmark was created.
 ```typescript
-const result: IBookmark | undefined = await Bookmark.update("<pk>", payload: IUpdateBookmark, session.fetch);
+const result: IBookmark | undefined = await Bookmark.update("url", payload: IUpdateBookmark, session.fetch);
 ```
 the `update` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
 
-- pk indicates the primary key of the bookmark, in this case its the url of the bookmark
+- `url` indicates the primary key of the bookmark, (IRI in the RDF)
 - payload is an object containing the fields of the bookmark
 - you need to pass the authenticated fetch and a webId to the methods, these values is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts) in the demo app.
 - session object can be obtained from:
