@@ -28,15 +28,12 @@ import {
 type IProps = {};
 
 const Bookmarks: FC<IProps> = ({ }) => {
+  const [bookmarkToUpdate, setBookmarkToUpdate] = useState<undefined | IBookmark>(undefined);
   const { session } = useSession();
-  const {
-    info: { isLoggedIn },
-  } = session;
+  const { info: { isLoggedIn } } = session;
 
   const [bookmarkTitle, setbookmarkTitle] = useState("");
   const [bookmarkLink, setbookmarkLink] = useState("");
-
-  // const { bookmarks, setBookmarks } = usebookmarks();
 
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
@@ -50,17 +47,42 @@ const Bookmarks: FC<IProps> = ({ }) => {
   }, [session, isLoggedIn]);
 
   const handleSubmit = async () => {
-    const updatedDataset = await Bookmark.create(
-      {
+    if (bookmarkToUpdate) {
+      // TODO: Update
+      const payload = {
         title: bookmarkTitle,
         link: bookmarkLink,
-      },
-      session.fetch,
-      session.info.webId!
-    );
-    setbookmarkTitle("");
-    setbookmarkLink("");
+      }
+      const res = await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
+      console.log(res)
+
+
+      loadBookmarks()
+
+      setbookmarkTitle("");
+      setbookmarkLink("");
+
+      setBookmarkToUpdate(undefined);
+    } else {
+      // TODO: Create
+      const updatedDataset = await Bookmark.create(
+        {
+          title: bookmarkTitle,
+          link: bookmarkLink,
+        },
+        session.fetch,
+        session.info.webId!
+      );
+      setbookmarkTitle("");
+      setbookmarkLink("");
+    }
   };
+
+  useEffect(() => {
+    bookmarkToUpdate && setbookmarkLink(bookmarkToUpdate?.link)
+    bookmarkToUpdate && setbookmarkTitle(bookmarkToUpdate?.title)
+  }, [bookmarkToUpdate])
+
 
   return (
     <Box>
@@ -86,7 +108,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
               size="medium"
               onClick={handleSubmit}
             >
-              ADD
+              {bookmarkToUpdate ? "Update" : "Add"}
             </Button>
           </AppFlex>
           <TableContainer component={Paper}>
@@ -131,15 +153,8 @@ const Bookmarks: FC<IProps> = ({ }) => {
                       <IconButton
 
                         onClick={async () => {
-                          const randStr = `${(Math.random() + 1).toString(36).substring(7)}`
-                          const payload = {
-                            title: `${randStr} - UPDATED`,
-                            link: `http://${randStr}.com`,
-                          }
-                          const res = await Bookmark.update(row.url, payload, session.fetch)
-                          console.log(res)
+                          setBookmarkToUpdate(row)
 
-                          loadBookmarks()
                         }}
                       >
                         UPD
