@@ -86,9 +86,9 @@ export class Bookmark {
         if (!!registeries?.length) {
             return registeries
         } else {
-            const pods = (await getPodUrlAll(webId!, { fetch: fetch }))[0];
+            const pod = (await getPodUrlAll(webId!, { fetch: fetch }))[0];
 
-            const baseURL = pods ? pods : webId?.split("/profile")[0]
+            const baseURL = pod ? pod : webId?.split("/profile")[0]
 
             const defaultIndexUrl = `${baseURL}/bookmarks/index.ttl`;
 
