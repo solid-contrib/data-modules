@@ -326,7 +326,7 @@ describe("Bookmark", () => {
             expect(e.message).toBe("link is not a valid URL");
         }
     });
-    it("should throw and Error if link is not a valid URL", async () => {
+    it("should throw and Error if creator is not a valid URL", async () => {
         const payload: ICreateBookmark = {
             title: "new",
             link: "http://test.com",
