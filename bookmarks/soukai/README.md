@@ -1,5 +1,7 @@
 # Bookmarks Data Module for Soukai
 
+See [Docs](https://solid-contrib.github.io/data-modules/bookmarks-soukai/index.html) for more information about this module.
+
 ## Development
 Make sure you have node v. 20.10.0 installed. 
 ```
