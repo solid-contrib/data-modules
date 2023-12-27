@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { bootModels, setEngine } from "soukai";
 import { SolidEngine } from "soukai-solid";
 import { Bookmark } from "../src/modules/Bookmarks";
-import StubFetcher from "../src/utils/StubFetcher";
+import stubFetcher from 'soukai-solid-utils/dist/StubFetcher'
 import { RDFDocument, RDFResourceProperty } from 'soukai-solid-utils'
 
 
@@ -13,13 +13,12 @@ export function loadFixture<T = string>(name: string): T {
   return /\.json(ld)$/.test(name) ? JSON.parse(raw) : raw;
 }
 
-const fixture = (name: string) => loadFixture(name);
 
 describe("Bookmark CRUD", () => {
   let fetch: jest.Mock<Promise<Response>, [RequestInfo, RequestInit?]>;
 
   beforeEach(() => {
-    fetch = jest.fn((...args) => StubFetcher.fetch(...args));
+    fetch = jest.fn((...args) => stubFetcher.fetch(...args));
     Bookmark.collection = "https://fake-pod.com/bookmarks/";
 
     setEngine(new SolidEngine(fetch));
@@ -36,8 +35,8 @@ describe("Bookmark CRUD", () => {
 
     const date = new Date("2023-01-01:00:00Z");
 
-    StubFetcher.addFetchResponse();
-    StubFetcher.addFetchResponse();
+    stubFetcher.addFetchResponse();
+    stubFetcher.addFetchResponse();
 
     // Act
     const bookmark = new Bookmark({ label, topic, link });
@@ -76,7 +75,7 @@ describe("Bookmark CRUD", () => {
     const link = "https://google.com";
 
     // Arrange
-    StubFetcher.addFetchResponse(fixture("google.ttl"), {
+    stubFetcher.addFetchResponse(loadFixture("google.ttl"), {
       "WAC-Allow": 'public="read"',
     });
 
@@ -110,7 +109,7 @@ describe("Bookmark CRUD", () => {
 
     const bookmark = new Bookmark(stub.getAttributes(), true);
 
-    StubFetcher.addFetchResponse();
+    stubFetcher.addFetchResponse();
 
     // // Act
     bookmark.setAttribute("label", label);
@@ -155,6 +154,6 @@ async function createStub(attributes: {
       document.url
     );
 
-    StubFetcher.addFetchResponse(turtle);
+    stubFetcher.addFetchResponse(turtle);
   });
 }
