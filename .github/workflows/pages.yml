@@ -49,6 +49,17 @@ jobs:
         run: npm run build:doc
 
 ######################
+###################### bookmarks/soukai module
+
+      - name: Install bookmarks/soukai dev dependencies
+        working-directory: ./bookmarks/soukai
+        run: npm ci --only=dev
+
+      - name: Build bookmarks/soukai doc
+        working-directory: ./bookmarks/soukai
+        run: npm run build:doc
+
+######################
 
       - name: Upload pages
         uses: actions/upload-pages-artifact@v1
