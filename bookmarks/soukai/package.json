@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "npm run clean && tsc",
-    "build:doc": "typedoc src/index.ts --out ../../gh-pages/bookmarks-vanilla --tsconfig ./tsconfig.json",
+    "build:doc": "typedoc src/index.ts --out ../../gh-pages/bookmarks-soukai --tsconfig ./tsconfig.json",
     "test": "jest"
   },
   "files": [
