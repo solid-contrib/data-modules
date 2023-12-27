@@ -62,8 +62,7 @@ export const BookmarkSchema = defineSolidModelSchema({
  * Exports the Bookmark class which extends the BookmarkSchema interface.
  * This allows creating Bookmark instances with the required fields defined in BookmarkSchema.
  */
-export class Bookmark extends BookmarkSchema {
-}
+export class Bookmark extends BookmarkSchema { }
 
 /**
  * BookmarkFactory class that provides factory methods for creating and managing Bookmark instances.
@@ -76,6 +75,7 @@ export class BookmarkFactory {
     private instancesUrls: string[] = []
   ) { }
 
+
   /**
    * Gets an instance of the BookmarkFactory class, which provides methods
    * for creating and managing Bookmark instances.
@@ -83,27 +83,21 @@ export class BookmarkFactory {
    * Checks if an instance already exists and returns it. If not, it creates
    * a new instance by:
    *
-   * - Getting the base URL from the user's WebID
-   * - Setting the default container URL
-   * - Getting the type index URL from the user's profile
-   * - Checking for existing containers and instances in the type index
-   * - Creating new containers and registering them if none exist
-   * - Creating a new type index if one doesn't exist
-   * - Creating the BookmarkFactory instance with the container and instance URLs
-   *
-   * Returns a Promise resolving to the BookmarkFactory instance.
-   */
+   * @param webId - The webId of the user.
+   * @param fetch - The fetch function to use for requests.
+   * @param isPrivate - Whether the user's type index is private or public.
+   * @param defaultContainerUrl - The default container url to use if none exist.
+   * @returns a Promise resolving to the BookmarkFactory instance.
+  */
   public static async getInstance(
     args?: GetInstanceArgs,
     defaultContainerUrl?: string
   ): Promise<BookmarkFactory> {
     if (!BookmarkFactory.instance) {
       try {
-        const baseURL = args?.webId.split("profile")[0]; // https://example.solidcommunity.net/
+        const baseURL = args?.webId.split("profile")[0];
 
-        defaultContainerUrl = `${baseURL}${
-          defaultContainerUrl ?? "bookmarks/"
-        }`;
+        defaultContainerUrl = `${baseURL}${defaultContainerUrl ?? "bookmarks/"}`;
 
         let _containerUrls: string[] = [];
         let _instancesUrls: string[] = [];
@@ -117,8 +111,6 @@ export class BookmarkFactory {
         });
 
         if (typeIndexUrl) {
-          // const res = await fromTypeIndex(typeIndexUrl, Bookmark)
-
           const _containers = await SolidContainer.fromTypeIndex(
             typeIndexUrl,
             Bookmark
@@ -206,13 +198,13 @@ export class BookmarkFactory {
   }
 
   /**
-   * Retrieves a Bookmark instance by its primary key.
+   * Retrieves a Bookmark instance by its url.
    *
-   * @param pk - The primary key of the Bookmark to retrieve.
+   * @param url - The url of the Bookmark to retrieve.
    * @returns The Bookmark instance if found, otherwise throws error.
    */
-  async get(pk: string) {
-    const res = await Bookmark.findOrFail(pk);
+  async get(url: string) {
+    const res = await Bookmark.findOrFail(url);
 
     return res;
   }
@@ -240,15 +232,15 @@ export class BookmarkFactory {
   }
 
   /**
-   * Updates an existing Bookmark instance identified by its primary key.
+   * Updates an existing Bookmark instance identified by its url.
    *
-   * @param pk - The primary key of the Bookmark to update.
+   * @param url - The url of the Bookmark to update.
    * @param payload - The data to update the Bookmark with.
    * @returns The updated Bookmark instance if successful, otherwise undefined.
    */
-  async update(pk: string, payload: IBookmark) {
+  async update(url: string, payload: IBookmark) {
     try {
-      const res = await Bookmark.findOrFail(pk);
+      const res = await Bookmark.findOrFail(url);
       return await res.update(payload);
     } catch (error) {
       console.log(error);
@@ -257,14 +249,14 @@ export class BookmarkFactory {
   }
 
   /**
-   * Removes a Bookmark instance identified by its primary key.
+   * Removes a Bookmark instance identified by its url.
    *
-   * @param pk - The primary key of the Bookmark to remove.
+   * @param url - The url of the Bookmark to remove.
    * @returns A Promise resolving to the deleted Bookmark instance if successful, otherwise undefined.
    */
-  async remove(pk: string) {
+  async remove(url: string) {
     try {
-      const res = await Bookmark.findOrFail(pk);
+      const res = await Bookmark.findOrFail(url);
       return await res.delete();
     } catch (error) {
       console.error(error);
