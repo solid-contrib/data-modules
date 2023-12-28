@@ -105,16 +105,11 @@ export class BookmarkFactory {
         const typeIndexUrl = await getTypeIndexFromProfile({
           webId: args?.webId ?? "",
           fetch: args?.fetch,
-          typePredicate: args?.isPrivate
-            ? "solid:privateTypeIndex"
-            : "solid:publicTypeIndex",
+          typePredicate: args?.isPrivate ? "solid:privateTypeIndex" : "solid:publicTypeIndex",
         });
 
         if (typeIndexUrl) {
-          const _containers = await SolidContainer.fromTypeIndex(
-            typeIndexUrl,
-            Bookmark
-          );
+          const _containers = await SolidContainer.fromTypeIndex(typeIndexUrl, Bookmark);
 
           if (!_containers || !_containers.length) {
             _containerUrls.push(defaultContainerUrl);
@@ -124,6 +119,7 @@ export class BookmarkFactory {
               instanceContainer: _containerUrls[0],
               typeIndexUrl: typeIndexUrl,
             });
+
           } else {
             _containerUrls = [
               ..._containerUrls,
@@ -131,10 +127,7 @@ export class BookmarkFactory {
             ];
           }
 
-          const _instances = await SolidDocument.fromTypeIndex(
-            typeIndexUrl,
-            Bookmark
-          );
+          const _instances = await SolidDocument.fromTypeIndex(typeIndexUrl, Bookmark);
 
           if (_instances.length) {
             _instancesUrls = [
@@ -164,7 +157,8 @@ export class BookmarkFactory {
           _instancesUrls
         );
       } catch (error: any) {
-        console.log(error.message);
+        console.log(error);
+        throw error;
       }
     }
     return BookmarkFactory.instance;
