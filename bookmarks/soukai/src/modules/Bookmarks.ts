@@ -1,59 +1,96 @@
-import { FieldType, TimestampField } from "soukai";
+import { BOOKMARK, DCTERMS, FOAF, RDFS } from "@inrupt/vocab-common-rdf";
+import { TypeIndexHelper } from "@rezasoltani/solid-typeindex-support";
+import { FieldType } from "soukai";
 import {
-  SolidContainer,
-  SolidDocument,
   SolidModel,
   defineSolidModelSchema
 } from "soukai-solid";
 import {
   GetInstanceArgs, ISoukaiDocumentBase,
-  getTypeIndexFromProfile,
-  createTypeIndex,
-  registerInTypeIndex,
+  urlParentDirectory
 } from "soukai-solid-utils";
-import { v4 } from "uuid";
+import { __Bookmark, __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt } from "../constants";
 
 
-/**
- * Interface for the required fields to create a new Bookmark instance.
- */
+// /**
+//  * Interface for the required fields to create a new Bookmark instance.
+//  */
 export type ICreateBookmark = {
-  topic: string;
-  label: string;
+  title: string;
+  topic?: string;
   link: string;
+  creator?: string;
 };
 
 /**
- * Interface for a Bookmark object that extends ISoukaiDocumentBase and includes the required fields to create a new Bookmark instance from ICreateBookmark.
+ * Interface for the shape of a bookmark object that can be updated.
+ * Contains title, topic, link, and creator fields.
  */
-export type IBookmark = ISoukaiDocumentBase & ICreateBookmark;
+export type IUpdateBookmark = {
+  title: string;
+  topic?: string;
+  link: string;
+  creator?: string;
+};
+
+/**
+ * Interface for a Bookmark object that extends ISoukaiDocumentBase
+ * and includes the required fields to create a new Bookmark instance
+ * from ICreateBookmark.
+ */
+export type IBookmark = ISoukaiDocumentBase & ICreateBookmark & {
+  created?: string;
+  updated?: string;
+};
 
 /**
  * Defines the Solid Model schema for Bookmarks.
  * Includes fields for topic, label, link, createdAt, and updatedAt.
  * Sets the rdf contexts and rdfs classes.
  */
+
 export const BookmarkSchema = defineSolidModelSchema({
   rdfContexts: {
-    bk: "http://www.w3.org/2002/01/bookmark#",
+    "bk": BOOKMARK.NAMESPACE,
+    "rdfs": RDFS.NAMESPACE,
+    "dcterms": DCTERMS.NAMESPACE,
+    "foaf": FOAF.NAMESPACE,
   },
 
-  rdfsClasses: ["bk:Bookmark"],
+  rdfsClasses: [BOOKMARK.Bookmark],
 
-  timestamps: [TimestampField.CreatedAt, TimestampField.UpdatedAt],
+  timestamps: false,
 
   fields: {
-    topic: {
+    title: {
+      required: true,
       type: FieldType.String,
-      rdfProperty: "bk:hasTopic",
-    },
-    label: {
-      type: FieldType.String,
-      rdfProperty: "rdfs:label",
+      rdfProperty: DCTERMS.title,
+      rdfPropertyAliases: [RDFS.label],
     },
     link: {
+      required: true,
       type: FieldType.Key,
-      rdfProperty: "bk:recalls",
+      rdfProperty: BOOKMARK.recalls,
+    },
+    topic: {
+      type: FieldType.Key,
+      rdfProperty: BOOKMARK.hasTopic,
+    },
+    creator: {
+      type: FieldType.Key,
+      rdfProperty: DCTERMS.creator,
+      rdfPropertyAliases: [FOAF.maker],
+    },
+    created: {
+      type: FieldType.Date,
+      rdfProperty: DCTERMS.created,
+      rdfPropertyAliases: [__crdt_createdAt],
+    },
+    updated: {
+      type: FieldType.Date,
+      rdfProperty: __DC_UPDATED,
+      rdfPropertyAliases: [__crdt_updatedAt],
     },
   },
 });
@@ -94,71 +131,25 @@ export class BookmarkFactory {
     defaultContainerUrl?: string
   ): Promise<BookmarkFactory> {
     if (!BookmarkFactory.instance) {
-      try {
-        const baseURL = args?.webId.split("profile")[0];
+
+      const { instanceContainers, instances } = await TypeIndexHelper.getFromTypeIndex(args?.webId!, __Bookmark, fetch, true)
+
+      if (!!instances.length || !!instanceContainers.length) {
+        const instanceParents = instances.map(x => urlParentDirectory(x)) as string[]
+
+        const _containers = [...new Set([...instanceContainers, ...instanceParents])]
+
+        BookmarkFactory.instance = new BookmarkFactory(_containers, []);
+      } else {
+        const podToUse = args?.webId.split("profile")[0];
+
+        const baseURL = podToUse ? podToUse : args?.webId?.split("/profile")[0]
 
         defaultContainerUrl = `${baseURL}${defaultContainerUrl ?? "bookmarks/"}`;
 
-        let _containerUrls: string[] = [];
-        let _instancesUrls: string[] = [];
+        await TypeIndexHelper.registerInTypeIndex(args?.webId!, "bookmarks_registery", Bookmark.rdfsClasses[0], fetch, defaultContainerUrl, true, true)
 
-        const typeIndexUrl = await getTypeIndexFromProfile({
-          webId: args?.webId ?? "",
-          fetch: args?.fetch,
-          typePredicate: args?.isPrivate ? "solid:privateTypeIndex" : "solid:publicTypeIndex",
-        });
-
-        if (typeIndexUrl) {
-          const _containers = await SolidContainer.fromTypeIndex(typeIndexUrl, Bookmark);
-
-          if (!_containers || !_containers.length) {
-            _containerUrls.push(defaultContainerUrl);
-
-            await registerInTypeIndex({
-              forClass: Bookmark.rdfsClasses[0],
-              instanceContainer: _containerUrls[0],
-              typeIndexUrl: typeIndexUrl,
-            });
-
-          } else {
-            _containerUrls = [
-              ..._containerUrls,
-              ..._containers.map((c) => c.url),
-            ];
-          }
-
-          const _instances = await SolidDocument.fromTypeIndex(typeIndexUrl, Bookmark);
-
-          if (_instances.length) {
-            _instancesUrls = [
-              ..._instancesUrls,
-              ..._instances.map((c) => c.url),
-            ];
-          }
-        } else {
-          // Create TypeIndex
-          const typeIndexDocument = await createTypeIndex(
-            args?.webId ?? "",
-            args?.isPrivate ? "private" : "public",
-            args?.fetch
-          );
-          _containerUrls.push(defaultContainerUrl);
-
-          // TODO: it inserts two instances
-          await registerInTypeIndex({
-            forClass: Bookmark.rdfsClasses[0],
-            instanceContainer: _containerUrls[0],
-            typeIndexUrl: typeIndexDocument?.url || "",
-          });
-        }
-
-        BookmarkFactory.instance = new BookmarkFactory(
-          _containerUrls,
-          _instancesUrls
-        );
-      } catch (error: any) {
-        console.log(error);
-        throw error;
+        BookmarkFactory.instance = new BookmarkFactory([defaultContainerUrl], []);
       }
     }
     return BookmarkFactory.instance;
@@ -176,11 +167,10 @@ export class BookmarkFactory {
     const containerPromises = this.containerUrls.map((c) =>
       Bookmark.from(c).all()
     );
-    const instancePromises = this.instancesUrls.map((i) =>
-      Bookmark.all({ $in: [i] })
-    );
 
-    const allPromise = Promise.all([...containerPromises, ...instancePromises]);
+    const allPromise = Promise.all([
+      ...containerPromises,
+    ]);
 
     try {
       const values = (await allPromise).flat();
@@ -212,17 +202,13 @@ export class BookmarkFactory {
    * @returns The saved Bookmark instance.
    */
   async create(payload: ICreateBookmark) {
-    const id = v4();
-
     const bookmark = new Bookmark({
       ...payload,
-      id: id,
-      url: `${this.containerUrls[0]}${id}`,
+      created: new Date(),
+      updated: new Date(),
     });
 
-    // bookmark.url = `${this.containerUrls[0]}${id}#it`
-
-    return await bookmark.save();
+    return await bookmark.save(this.containerUrls[0]);
   }
 
   /**
@@ -235,7 +221,10 @@ export class BookmarkFactory {
   async update(url: string, payload: IBookmark) {
     try {
       const res = await Bookmark.findOrFail(url);
-      return await res.update(payload);
+      return await res.update({
+        ...payload,
+        updated: new Date(),
+      });
     } catch (error) {
       console.log(error);
       return undefined;

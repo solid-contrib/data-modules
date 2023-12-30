@@ -29,25 +29,23 @@ describe("Bookmark CRUD", () => {
 
   it("Create", async () => {
     // Arrange
-    const label = "Google";
+    const title = "Google";
     const topic = "Search Engine";
     const link = "https://google.com";
+    const creator = "https://solid-dm.solidcommunity.net/profile/card#me";
 
-    const date = new Date("2023-01-01:00:00Z");
+    // const date = new Date("2023-01-01:00:00Z");
 
     stubFetcher.addFetchResponse();
     stubFetcher.addFetchResponse();
 
     // Act
-    const bookmark = new Bookmark({ label, topic, link });
-
-    bookmark.metadata.createdAt = date;
-    bookmark.metadata.updatedAt = date;
+    const bookmark = new Bookmark({ title, topic, link, creator });
 
     const res = await bookmark.save();
 
     // Assert
-    expect(res.label).toEqual(label);
+    expect(res.title).toEqual(title);
     expect(res.topic).toEqual(topic);
     expect(res.link).toEqual(link);
 
@@ -55,22 +53,17 @@ describe("Bookmark CRUD", () => {
     // console.log("🚀 ~ file: Bookmark.test.ts:64 ~ it ~ fetch.mock.calls[1]?.[1]?.body:", fetch.mock.calls[1]?.[1]?.body)
 
     expect(fetch.mock.calls[1]?.[1]?.body).toEqualSparql(`
-      INSERT DATA {
+      INSERT DATA { 
         <#it> a <http://www.w3.org/2002/01/bookmark#Bookmark> .
-        <#it> <http://www.w3.org/2000/01/rdf-schema#label> "Google" .
-        <#it> <http://www.w3.org/2002/01/bookmark#hasTopic> "Search Engine" .
-        <#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://google.com> .
-        <#it-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/createdAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/resource> <#it> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/updatedAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-    }
-    
+        <#it> <http://purl.org/dc/terms/creator> <https://solid-dm.solidcommunity.net/profile/card#me> .
+        <#it> <http://purl.org/dc/terms/title> "Google" .
+        <#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://google.com> . 
+      }
     `);
   });
 
   it("Read", async () => {
-    const label = "Google";
+    const title = "Google";
     const topic = "Search Engine";
     const link = "https://google.com";
 
@@ -83,26 +76,23 @@ describe("Bookmark CRUD", () => {
     const bookmark = (await Bookmark.find(
       "solid://bookmarks/google#it"
     )) as Bookmark;
-    // console.log(bookmark.link);
 
     // Assert
     expect(bookmark).toBeInstanceOf(Bookmark);
     expect(bookmark.url).toEqual("solid://bookmarks/google#it");
-    expect(bookmark.label).toEqual(label);
+    expect(bookmark.title).toEqual(title);
     expect(bookmark.topic).toEqual(topic);
     expect(bookmark.link).toEqual(link);
   });
 
   it("Update", async () => {
-    const label = "Google";
+    const title = "Google";
     const topic = "Search Engine";
     const link = "https://google.com";
 
-    const date = new Date("2023-01-01:00:00Z");
-
     // Arrange
     const stub = await createStub({
-      label,
+      title,
       link,
       topic,
     });
@@ -112,35 +102,34 @@ describe("Bookmark CRUD", () => {
     stubFetcher.addFetchResponse();
 
     // // Act
-    bookmark.setAttribute("label", label);
+    bookmark.setAttribute("title", title);
     bookmark.setAttribute("link", link);
     bookmark.setAttribute("topic", topic);
 
-    bookmark.metadata.createdAt = date;
-    bookmark.metadata.updatedAt = date;
-
     await bookmark.save();
 
+
+    await bookmark.update({
+      ...bookmark.getAttributes(),
+      title: "updated"
+    });
+
     // // Assert
-    expect(bookmark.label).toBe(label);
     expect(fetch).toHaveBeenCalledTimes(2);
 
     expect(fetch.mock.calls[1]?.[1]?.body).toEqualSparql(`
       DELETE DATA { 
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/resource> <#it> . 
-      };
+        <#it> <http://purl.org/dc/terms/title> "Google" .
+      } ; 
       INSERT DATA { 
-        <#it-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/createdAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/resource> <#it> .
-        <#it-metadata> <https://vocab.noeldemartin.com/crdt/updatedAt> "2023-01-01T00:00:00.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> . 
+        <#it> <http://purl.org/dc/terms/title> "updated" .
       }
     `);
   });
 });
 
 async function createStub(attributes: {
-  label: string;
+  title: string;
   link: string;
   topic: string;
 }): Promise<Bookmark> {

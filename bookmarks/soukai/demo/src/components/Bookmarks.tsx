@@ -24,7 +24,7 @@ import { useUserSession } from "../atoms/userSession.atom";
 
 const Bookmarks: FC = () => {
   const { userSession } = useUserSession();
-  const [form, setForm] = useState({ label: "", link: "", topic: "" });
+  const [form, setForm] = useState({ title: "", link: "", topic: "" });
   const [bookmarks, setBookmarks] = useState<(Bookmark & SolidModel)[]>([]);
 
   useEffect(() => {
@@ -49,10 +49,10 @@ const Bookmarks: FC = () => {
     <>
       <Flex gap={2}>
         <Input
-          value={form?.label}
-          placeholder="label"
+          value={form?.title}
+          placeholder="title"
           onChange={(e) =>
-            setForm((prev: any) => ({ ...prev, label: e.target.value }))
+            setForm((prev: any) => ({ ...prev, title: e.target.value }))
           }
         />
         <Input
@@ -87,7 +87,7 @@ const Bookmarks: FC = () => {
 
 
 
-            setForm({ label: "", link: "", topic: "" });
+            setForm({ title: "", link: "", topic: "" });
 
             const bookmarks = await factory.getAll();
             console.log("🚀 ~ file: Bookmarks.tsx:112 ~ bookmarks:", bookmarks)
@@ -105,7 +105,7 @@ const Bookmarks: FC = () => {
         >
           <Thead>
             <Tr>
-              <Th>label</Th>
+              <Th>title</Th>
               <Th>topic</Th>
               <Th>Link</Th>
               <Th>actions</Th>
@@ -114,7 +114,7 @@ const Bookmarks: FC = () => {
           <Tbody>
             {bookmarks?.map((b, i) => (
               <Tr key={i}>
-                <Td>{b.label}</Td>
+                <Td>{b.title}</Td>
                 <Td>{b.topic}</Td>
                 <Td><a>{b.link}</a></Td>
                 <Td>
