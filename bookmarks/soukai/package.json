@@ -41,6 +41,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@rezasoltani/solid-typeindex-support": "^0.0.4",
     "soukai-solid": "^0.5.2",
     "soukai-solid-utils": "^0.0.2",
     "ts-node": "^10.9.1",
