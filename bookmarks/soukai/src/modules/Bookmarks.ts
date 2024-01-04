@@ -10,6 +10,7 @@ import {
   urlParentDirectory
 } from "soukai-solid-utils";
 import { __Bookmark, __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt } from "../constants";
+import { isValidUrl } from "../utils";
 
 
 // /**
@@ -188,9 +189,11 @@ export class BookmarkFactory {
    * @returns The Bookmark instance if found, otherwise throws error.
    */
   async get(url: string) {
-    const res = await Bookmark.findOrFail(url);
-
-    return res;
+    try {
+      return await Bookmark.findOrFail(url);
+    } catch (error) {
+      return undefined;
+    }
   }
 
   /**
@@ -199,16 +202,24 @@ export class BookmarkFactory {
    * and saves the new Bookmark instance.
    *
    * @param payload - The data for the new Bookmark.
-   * @returns The saved Bookmark instance.
+   * @returns The saved Bookmark instance .
    */
   async create(payload: ICreateBookmark) {
+    const { link, creator } = payload;
+    if (!isValidUrl(link)) throw new Error("link is not a valid URL");
+    if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL");
+
     const bookmark = new Bookmark({
       ...payload,
       created: new Date(),
       updated: new Date(),
     });
-
-    return await bookmark.save(this.containerUrls[0]);
+    try {
+      return await bookmark.save(this.containerUrls[0]);
+    } catch (error) {
+      console.log(error);
+      return undefined;
+    }
   }
 
   /**
@@ -219,6 +230,10 @@ export class BookmarkFactory {
    * @returns The updated Bookmark instance if successful, otherwise undefined.
    */
   async update(url: string, payload: IBookmark) {
+    const { link, creator } = payload;
+    if (!isValidUrl(link)) throw new Error("link is not a valid URL");
+    if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL");
+
     try {
       const res = await Bookmark.findOrFail(url);
       return await res.update({
