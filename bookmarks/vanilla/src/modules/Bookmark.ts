@@ -35,10 +35,10 @@ import { isValidUrl } from "../utils";
  * 
  */
 export type ICreateBookmark = {
-  title: string;
-  topic?: string;
-  link: string;
-  creator?: string;
+    title: string;
+    topic?: string;
+    link: string;
+    creator?: string;
 };
 
 /**
@@ -46,10 +46,10 @@ export type ICreateBookmark = {
  * Contains title, topic, link, and creator fields.
  */
 export type IUpdateBookmark = {
-  title: string;
-  topic?: string;
-  link: string;
-  creator?: string;
+    title: string;
+    topic?: string;
+    link: string;
+    creator?: string;
 };
 
 /**
@@ -57,9 +57,9 @@ export type IUpdateBookmark = {
  * Extends ICreateBookmark and adds url, created, and updated fields.
  */
 export type IBookmark = ICreateBookmark & {
-  url: string;
-  created?: string;
-  updated?: string;
+    url: string;
+    created?: string;
+    updated?: string;
 };
 
 /**
@@ -74,12 +74,14 @@ export class Bookmark {
      *
      * @param fetch - The fetch function to use for network requests
      * @param webId - The webId of the user to get bookmark registries for
+     * @param defaultRegisteryUrl - The default container url
      * @returns A promise resolving to an array of registry URL strings
      * @internal
      */
     public static async getRegisteryUrls(
         fetch: typeof globalThis.fetch,
-        webId: string
+        webId: string,
+        defaultRegisteryUrl?: string
     ): Promise<string[]> {
         const registeries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
 
@@ -90,17 +92,17 @@ export class Bookmark {
 
             const baseURL = podToUse ? podToUse : webId?.split("/profile")[0]
 
-            const defaultIndexUrl = `${baseURL}/bookmarks/index.ttl`;
+            defaultRegisteryUrl = `${baseURL}${defaultRegisteryUrl ?? '/bookmarks/index.ttl'}`;
 
-            const defaultIndexDataset = await getSolidDataset(defaultIndexUrl, { fetch: fetch });
+            const defaultIndexDataset = await getSolidDataset(defaultRegisteryUrl, { fetch: fetch });
 
             if (!defaultIndexDataset) {
-                await saveSolidDatasetAt(defaultIndexUrl, createSolidDataset(), { fetch: fetch });
+                await saveSolidDatasetAt(defaultRegisteryUrl, createSolidDataset(), { fetch: fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registery", BOOKMARK.Bookmark, fetch, defaultIndexUrl, true)
+            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registery", BOOKMARK.Bookmark, fetch, defaultRegisteryUrl, true)
 
-            return [defaultIndexUrl];
+            return [defaultRegisteryUrl];
         }
     }
 
@@ -109,13 +111,15 @@ export class Bookmark {
      *
      * @param fetch - The fetch function to use for network requests.
      * @param webId - The user's webId.
+     * @param defaultRegisteryUrl - The default container url
      * @returns A promise resolving to an array of the user's bookmarks.
      */
     public static async getAll(
         fetch: typeof globalThis.fetch,
-        webId: string
+        webId: string,
+        defaultRegisteryUrl?: string,
     ): Promise<IBookmark[]> {
-        const indexUrls = await this.getRegisteryUrls(fetch, webId);
+        const indexUrls = await this.getRegisteryUrls(fetch, webId, defaultRegisteryUrl);
         try {
             const all = indexUrls.map(async (indexUrl) => {
                 const ds = await getSolidDataset(indexUrl, { fetch: fetch });
@@ -207,12 +211,14 @@ export class Bookmark {
      * @param payload - The bookmark data.
      * @param fetch - The fetch function.
      * @param webId - The user's WebID.
+     * @param defaultRegisteryUrl - The default container url
      * @returns A promise resolving to true if the bookmark was created, false otherwise.
      */
     public static async create(
         payload: ICreateBookmark,
         fetch: typeof globalThis.fetch,
-        webId: string
+        webId: string,
+        defaultRegisteryUrl?: string,
     ): Promise<boolean> {
         const { title, link, creator, topic } = payload;
 
@@ -220,7 +226,7 @@ export class Bookmark {
         if (creator && !isValidUrl(creator))
             throw new Error("creator is not a valid URL");
 
-        const [indexUrl] = await this.getRegisteryUrls(fetch, webId);
+        const [indexUrl] = await this.getRegisteryUrls(fetch, webId, defaultRegisteryUrl);
 
         const ds = await getSolidDataset(indexUrl, { fetch: fetch });
 
