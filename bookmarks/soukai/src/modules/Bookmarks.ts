@@ -13,9 +13,9 @@ import { __Bookmark, __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt } from "..
 import { isValidUrl } from "../utils";
 
 
-// /**
-//  * Interface for the required fields to create a new Bookmark instance.
-//  */
+/**
+ * Interface for the required fields to create a new Bookmark instance.
+ */
 export type ICreateBookmark = {
   title: string;
   topic?: string;
