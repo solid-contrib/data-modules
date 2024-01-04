@@ -48,11 +48,6 @@ describe('getInstance', () => {
 
 
 
-describe('getAll', () => {
-
-});
-
-
 describe('get', () => {
     it('should get one bookmark given the url', async () => {
         // Arrange
