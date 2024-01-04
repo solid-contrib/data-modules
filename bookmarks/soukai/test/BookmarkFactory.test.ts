@@ -14,6 +14,14 @@ const google_bookmark = {
     link: "https://google.com",
     creator: "https://solid-dm.solidcommunity.net/profile/card#me",
 }
+const google_bookmark_with_invalid_link = {
+    ...google_bookmark,
+    link: "invalid link",
+}
+const google_bookmark_with_invalid_creator = {
+    ...google_bookmark,
+    creator: "invalid creator",
+}
 
 let fetch: jest.Mock<Promise<Response>, [RequestInfo, RequestInit?]>;
 
@@ -55,12 +63,26 @@ describe('get', () => {
         const factory = await BookmarkFactory.getInstance({ webId: WEB_ID, fetch: fetch, isPrivate: true });
 
         // Act
-        const res = await factory.get('solid://bookmarks/google#it')
+        const res = await factory.get('https://fake-pod.net/bookmarks/google#it')
 
         // Assert
-        expect(res.title).toEqual(google_bookmark.title);
-        expect(res.topic).toEqual(google_bookmark.topic);
-        expect(res.link).toEqual(google_bookmark.link);
+        expect(res?.title).toEqual(google_bookmark.title);
+        expect(res?.topic).toEqual(google_bookmark.topic);
+        expect(res?.link).toEqual(google_bookmark.link);
+    });
+    it('should return undefined if could not find the resource', async () => {
+        // Arrange
+        stubFetcher.addFetchNotFoundResponse()
+
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockResolvedValue({ instanceContainers: [DEFAULT_CONTAINER_URL], instances: [] });
+
+        const factory = await BookmarkFactory.getInstance({ webId: WEB_ID, fetch: fetch, isPrivate: true });
+
+        // Act
+        const res = await factory.get('https://fake-pod.net/bookmarks/google#it').catch(() => { })
+
+        // Assert
+        expect(res).toBeUndefined();
     });
 });
 
@@ -78,10 +100,40 @@ describe('create', () => {
         const res = await factory.create(google_bookmark)
 
         // Assert
-        expect(res.title).toEqual(google_bookmark.title);
-        expect(res.topic).toEqual(google_bookmark.topic);
-        expect(res.link).toEqual(google_bookmark.link);
+        expect(res?.title).toEqual(google_bookmark.title);
+        expect(res?.topic).toEqual(google_bookmark.topic);
+        expect(res?.link).toEqual(google_bookmark.link);
     });
+    it('should throw and Error if link is not a valid URL', async () => {
+        // Arrange
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockResolvedValue({ instanceContainers: [DEFAULT_CONTAINER_URL], instances: [] });
+
+        const factory = await BookmarkFactory.getInstance({ webId: WEB_ID, fetch: fetch, isPrivate: true });
+
+        // Act
+        try {
+            await factory.create(google_bookmark_with_invalid_link)
+        } catch (e: any) {
+            // Assert
+            expect(e.message).toBe("link is not a valid URL");
+        }
+
+    });
+    it('should throw and Error if creator is not a valid URL', async () => {
+        // Arrange
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockResolvedValue({ instanceContainers: [DEFAULT_CONTAINER_URL], instances: [] });
+
+        const factory = await BookmarkFactory.getInstance({ webId: WEB_ID, fetch: fetch, isPrivate: true });
+
+        // Act
+        try {
+            await factory.create(google_bookmark_with_invalid_creator)
+        } catch (e: any) {
+            // Assert
+            expect(e.message).toBe("creator is not a valid URL");
+        }
+    });
+
 });
 describe('update', () => {
     it('should update a bookmark', async () => {
@@ -97,15 +149,44 @@ describe('update', () => {
 
         stubFetcher.addFetchResponse();
         stubFetcher.addFetchResponse();
-        const updated = await res.update({
+        const updated = await res?.update({
             ...res.getAttributes(),
             title: "UPDATED"
         })
 
         // Assert
-        expect(updated.title).toEqual("UPDATED");
-        expect(updated.topic).toEqual(google_bookmark.topic);
-        expect(updated.link).toEqual(google_bookmark.link);
+        expect(updated?.title).toEqual("UPDATED");
+        expect(updated?.topic).toEqual(google_bookmark.topic);
+        expect(updated?.link).toEqual(google_bookmark.link);
+    });
+    it('should throw and Error if link is not a valid URL', async () => {
+        // Arrange
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockResolvedValue({ instanceContainers: [DEFAULT_CONTAINER_URL], instances: [] });
+
+        const factory = await BookmarkFactory.getInstance({ webId: WEB_ID, fetch: fetch, isPrivate: true });
+
+        // Act
+        try {
+            await factory.update("", { url: "", ...google_bookmark_with_invalid_link })
+        } catch (e: any) {
+            // Assert
+            expect(e.message).toBe("link is not a valid URL");
+        }
+
+    });
+    it('should throw and Error if creator is not a valid URL', async () => {
+        // Arrange
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockResolvedValue({ instanceContainers: [DEFAULT_CONTAINER_URL], instances: [] });
+
+        const factory = await BookmarkFactory.getInstance({ webId: WEB_ID, fetch: fetch, isPrivate: true });
+
+        // Act
+        try {
+            await factory.update("", { url: "", ...google_bookmark_with_invalid_creator })
+        } catch (e: any) {
+            // Assert
+            expect(e.message).toBe("creator is not a valid URL");
+        }
     });
 });
 describe('remove', () => {
@@ -124,7 +205,7 @@ describe('remove', () => {
         stubFetcher.addFetchResponse();
         stubFetcher.addFetchResponse();
         stubFetcher.addFetchResponse();
-        const deleted = await res.delete()
+        const deleted = await res?.delete()
 
         // Assert
         expect(deleted).toBeDefined();
