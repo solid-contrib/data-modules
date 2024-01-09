@@ -128,10 +128,7 @@ const Bookmarks: FC = () => {
                         });
 
                         const bookmark = await factory.get(b.url);
-                        console.log(
-                          "🚀 ~ file: Bookmarks.tsx:122 ~ <ButtononClick={ ~ bookmark:",
-                          bookmark.getAttributes()
-                        );
+                        console.log("🚀 ~ file: Bookmarks.tsx:122 ~ <ButtononClick={ ~ bookmark:", bookmark?.getAttributes());
                       }}
                     >
                       GET
