@@ -14,10 +14,17 @@ export class AddressBookQuery {
   }
 
   proposeNewContactNode(): NamedNode {
+    return this.proposeNewNode("Person");
+  }
+
+  proposeNewGroupNode(): NamedNode {
+    return this.proposeNewNode("Group");
+  }
+
+  private proposeNewNode(containerPath: string) {
     const id = uuid();
     const baseUri = this.addressBookNode.dir()?.uri;
-    const personDir = "Person";
-    return sym(`${baseUri}${personDir}/${id}/index.ttl#this`);
+    return sym(`${baseUri}${containerPath}/${id}/index.ttl#this`);
   }
 
   queryTitle() {
