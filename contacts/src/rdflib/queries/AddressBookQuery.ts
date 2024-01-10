@@ -72,13 +72,18 @@ export class AddressBookQuery {
       : [];
   }
 
-  queryGroupIndex() {
-    return this.store.any(
+  queryGroupIndex(): NamedNode | null {
+    const index = this.store.any(
       this.addressBookNode,
       vcard("groupIndex"),
       undefined,
       this.addressBookDoc,
     );
+    if (isNamedNode(index)) {
+      return index as NamedNode;
+    } else {
+      return null;
+    }
   }
 
   queryGroups(): Group[] {

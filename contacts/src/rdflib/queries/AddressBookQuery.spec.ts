@@ -366,6 +366,25 @@ describe("AddressBookQuery", () => {
       expect(result).toBe(null);
     });
 
+    it("returns null if index is not a named node", () => {
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      store.add(
+        addressBookNode,
+        vcard("groupIndex"),
+        lit("invalid index"),
+        addressBookNode.doc(),
+      );
+      const query = new AddressBookQuery(
+        store,
+        sym("http://pod.test/alice/contacts/index.ttl#this"),
+      );
+      const result = query.queryGroupIndex();
+      expect(result).toBe(null);
+    });
+
     it("returns the node found in store", () => {
       const store = graph();
       const addressBookNode = sym(
