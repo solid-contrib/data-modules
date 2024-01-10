@@ -121,3 +121,8 @@ export interface PhoneNumber {
  * Partial group data listed when reading an address book
  */
 export interface Group {}
+
+export interface CreateNewGroupCommand {
+  addressBookUri: string;
+  groupName: string;
+}

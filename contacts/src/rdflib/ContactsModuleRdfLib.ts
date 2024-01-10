@@ -4,6 +4,7 @@ import {
   ContactsModule,
   CreateAddressBookCommand,
   CreateNewContactCommand,
+  CreateNewGroupCommand,
   FullContact,
 } from "..";
 import { AddressBookQuery } from "./AddressBookQuery";
@@ -89,4 +90,6 @@ export class ContactsModuleRdfLib implements ContactsModule {
       phoneNumbers,
     };
   }
+
+  async createNewGroup(command: CreateNewGroupCommand) {}
 }

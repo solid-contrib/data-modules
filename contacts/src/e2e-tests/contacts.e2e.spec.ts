@@ -99,6 +99,26 @@ describe("contacts module", () => {
       ],
     });
   });
+
+  it("can create a new group within an existing address book", async () => {
+    const contacts = setupModule();
+
+    const addressBookUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this";
+
+    const groupName = faker.company.name();
+    const uri = await contacts.createNewGroup({
+      addressBookUri,
+      groupName,
+    });
+
+    const result = await contacts.readAddressBook(addressBookUri);
+
+    expect(result.groups).toContainEqual({
+      uri,
+      name: groupName,
+    });
+  });
 });
 
 function setupModule() {
