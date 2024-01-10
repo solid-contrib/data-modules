@@ -34,6 +34,16 @@ export interface ContactsModule {
    * @return Contact name, email addresses and phone numbers
    */
   readContact(uri: string): Promise<FullContact>;
+
+  /**
+   * Creates a new group within a given address book
+   * @param command
+   * @return The URI of the newly created group
+   */
+  createNewGroup({
+    addressBookUri,
+    groupName,
+  }: CreateNewGroupCommand): Promise<string>;
 }
 
 /**
@@ -122,7 +132,16 @@ export interface PhoneNumber {
  */
 export interface Group {}
 
+/**
+ * Data needed to create a new group within an address book
+ */
 export interface CreateNewGroupCommand {
+  /**
+   * The URI of an existing address book the new group should be added to
+   */
   addressBookUri: string;
+  /**
+   * The name of the group to create
+   */
   groupName: string;
 }
