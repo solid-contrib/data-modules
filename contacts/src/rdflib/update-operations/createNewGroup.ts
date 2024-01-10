@@ -19,6 +19,12 @@ export function createNewGroup(
       st(groupNode, vcard("fn"), lit(groupName), groupIndex),
       st(groupNode, vcard("fn"), lit(groupName), groupDoc),
       st(groupNode, rdf("type"), vcard("Group"), groupDoc),
+      st(
+        addressBook.addressBookNode,
+        vcard("includesGroup"),
+        groupNode,
+        groupIndex,
+      ),
     ],
     deletions: [],
     filesToCreate: [],

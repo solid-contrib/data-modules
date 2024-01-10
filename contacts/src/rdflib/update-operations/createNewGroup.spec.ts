@@ -93,5 +93,17 @@ describe("createNewGroup", () => {
         st(newGroupNode, rdf("type"), vcard("Group"), newGroupNode.doc()),
       );
     });
+
+    it("adds the group to the address book", () => {
+      const result = createNewGroup(addressBookQuery, "anything");
+      expect(result.insertions).toContainEqual(
+        st(
+          addressBookQuery.addressBookNode,
+          vcard("includesGroup"),
+          newGroupNode,
+          sym("https://pod.test/contacts/groups.ttl"),
+        ),
+      );
+    });
   });
 });
