@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "build:doc": "typedoc src/index.ts --out ../gh-pages/contacts-rdflib-api",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest",
     "lint": "eslint",
-    "test:e2e": "jest --config jest.e2e.config.js --detectOpenHandles --forceExit",
+    "test:e2e": "jest --config jest.e2e.config.js",
     "pod": "community-solid-server --config ./dev-server/config/config-mashlib.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
     "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
     "pod:clean": "rm -rf ./dev-server/data"
