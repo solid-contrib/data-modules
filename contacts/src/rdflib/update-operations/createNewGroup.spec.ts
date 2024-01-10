@@ -1,6 +1,8 @@
-import { sym } from "rdflib";
+import { lit, st, sym } from "rdflib";
 import { AddressBookQuery } from "../queries";
 import { createNewGroup } from "./createNewGroup";
+import { vcard } from "../namespaces";
+import { createNewContact } from "./createNewContact";
 
 describe("createNewGroup", () => {
   it("returns the uri of the new group", () => {
@@ -52,5 +54,38 @@ describe("createNewGroup", () => {
     expect(() => createNewGroup(addressBookQuery, "anything")).toThrow(
       new Error("group index is missing or invalid"),
     );
+  });
+
+  describe("insertions", () => {
+    let addressBookQuery: AddressBookQuery;
+    const newGroupNode = sym(
+      "https://pod.test/contacts/Group/a426de26-b51c-4540-8068-10d0ac175cd7/index.ttl#this",
+    );
+    beforeEach(() => {
+      addressBookQuery = {
+        addressBookNode: sym("https://pod.test/contacts/index.ttl#this"),
+        proposeNewGroupNode: () => newGroupNode,
+        queryGroupIndex: () => sym("https://pod.test/contacts/groups.ttl"),
+      } as unknown as AddressBookQuery;
+    });
+
+    it("inserts the group name to the groupIndex", () => {
+      const result = createNewGroup(addressBookQuery, "best friends");
+      expect(result.insertions).toContainEqual(
+        st(
+          newGroupNode,
+          vcard("fn"),
+          lit("best friends"),
+          sym("https://pod.test/contacts/groups.ttl"),
+        ),
+      );
+    });
+
+    it("inserts the group name to the group document", () => {
+      const result = createNewGroup(addressBookQuery, "best friends");
+      expect(result.insertions).toContainEqual(
+        st(newGroupNode, vcard("fn"), lit("best friends"), newGroupNode.doc()),
+      );
+    });
   });
 });
