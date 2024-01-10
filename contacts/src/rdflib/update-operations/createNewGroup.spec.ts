@@ -1,8 +1,7 @@
 import { lit, st, sym } from "rdflib";
 import { AddressBookQuery } from "../queries";
 import { createNewGroup } from "./createNewGroup";
-import { vcard } from "../namespaces";
-import { createNewContact } from "./createNewContact";
+import { rdf, vcard } from "../namespaces";
 
 describe("createNewGroup", () => {
   it("returns the uri of the new group", () => {
@@ -85,6 +84,13 @@ describe("createNewGroup", () => {
       const result = createNewGroup(addressBookQuery, "best friends");
       expect(result.insertions).toContainEqual(
         st(newGroupNode, vcard("fn"), lit("best friends"), newGroupNode.doc()),
+      );
+    });
+
+    it("adds a type to the new group", () => {
+      const result = createNewGroup(addressBookQuery, "anything");
+      expect(result.insertions).toContainEqual(
+        st(newGroupNode, rdf("type"), vcard("Group"), newGroupNode.doc()),
       );
     });
   });
