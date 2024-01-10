@@ -7,12 +7,10 @@ import {
   CreateNewGroupCommand,
   FullContact,
 } from "..";
-import { AddressBookQuery } from "./AddressBookQuery";
-import { createAddressBook } from "./createAddressBook";
+import { AddressBookQuery, ContactQuery } from "./queries";
+import { createAddressBook, createNewContact } from "./update-operations";
 import { executeUpdate } from "./web-operations/executeUpdate";
-import { createNewContact } from "./createNewContact";
 import { fetchNode } from "./web-operations/fetchNode";
-import { ContactQuery } from "./ContactQuery";
 
 interface ModuleConfig {
   store: IndexedFormula;

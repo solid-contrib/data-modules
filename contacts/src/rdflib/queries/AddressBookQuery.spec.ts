@@ -1,6 +1,6 @@
 import { AddressBookQuery } from "./AddressBookQuery";
 import { graph, lit, sym } from "rdflib";
-import { dc, vcard } from "./namespaces";
+import { dc, vcard } from "../namespaces";
 
 import { v4 as uuid } from "uuid";
 

@@ -1,15 +1,5 @@
-import { Fetcher, Statement, UpdateManager } from "rdflib";
-
-export interface UpdateOperation {
-  uri: string;
-  insertions: Statement[];
-  deletions: Statement[];
-  filesToCreate: FileToCreate[];
-}
-
-export interface FileToCreate {
-  uri: string;
-}
+import { Fetcher, UpdateManager } from "rdflib";
+import { UpdateOperation } from "../update-operations";
 
 export async function executeUpdate(
   fetcher: Fetcher,

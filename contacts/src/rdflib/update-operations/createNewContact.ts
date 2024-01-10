@@ -1,9 +1,9 @@
-import { UpdateOperation } from "./web-operations/executeUpdate";
-import { AddressBookQuery } from "./AddressBookQuery";
+import { AddressBookQuery } from "../queries/AddressBookQuery";
 import { lit, st, sym } from "rdflib";
-import { rdf, vcard } from "./namespaces";
+import { rdf, vcard } from "../namespaces";
 
-import { NewContact } from "../index";
+import { NewContact } from "../../index";
+import { UpdateOperation } from "./index";
 
 export function createNewContact(
   addressBook: AddressBookQuery,
