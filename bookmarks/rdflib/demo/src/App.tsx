@@ -6,8 +6,13 @@ import {
   logout,
 } from "@inrupt/solid-client-authn-browser";
 import { useEffect, useState } from "react";
-import { Fetcher, graph } from 'rdflib'
-const bookmarksURL = "https://solid-dm.solidcommunity.net/bookmarks/bookmark-formats.ttl"
+import { Fetcher, Namespace, graph } from 'rdflib'
+import { Bookmark } from '../../src/index'
+
+const dct = Namespace("http://purl.org/dc/terms/");
+
+const bookmarksURL = "https://solid-dm.solidcommunity.net/bookmarks/"
+const bookmarkURL = "https://solid-dm.solidcommunity.net/bookmarks/35e05e67-e1f3-4b85-89cf-e1dbfe07546c"
 
 async function startLogin() {
   // Start the Login Process if not already logged in.
@@ -56,17 +61,9 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
     var store = graph()
     var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
 
-    fetcher.nowOrWhenFetched(bookmarksURL, function (ok: boolean, message: string, response?: any) {
-      if (!ok) {
-        console.log("Oops, something happened and couldn't fetch data " + message);
-      } else if (response.onErrorWasCalled || response.status !== 200) {
-        console.log('    Non-HTTP error reloading data! onErrorWasCalled=' + response.onErrorWasCalled + ' status: ' + response.status)
-      } else {
-        console.log("---data loaded---")
-        console.log("🚀 ~ response:", response.responseText)
-      }
-    })
-    // await session?.fetch(bookmarksURL);
+    const bookmark = new Bookmark({ fetcher, store })
+    const data = await bookmark.getAll(bookmarksURL)
+    console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
   return (
     <div>
