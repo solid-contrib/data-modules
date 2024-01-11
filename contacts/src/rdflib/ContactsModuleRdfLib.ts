@@ -4,14 +4,14 @@ import {
   ContactsModule,
   CreateAddressBookCommand,
   CreateNewContactCommand,
+  CreateNewGroupCommand,
   FullContact,
 } from "..";
-import { AddressBookQuery } from "./AddressBookQuery";
-import { createAddressBook } from "./createAddressBook";
+import { AddressBookQuery, ContactQuery } from "./queries";
+import { createAddressBook, createNewContact } from "./update-operations";
 import { executeUpdate } from "./web-operations/executeUpdate";
-import { createNewContact } from "./createNewContact";
 import { fetchNode } from "./web-operations/fetchNode";
-import { ContactQuery } from "./ContactQuery";
+import { createNewGroup } from "./update-operations/createNewGroup";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -88,5 +88,15 @@ export class ContactsModuleRdfLib implements ContactsModule {
       emails,
       phoneNumbers,
     };
+  }
+
+  async createNewGroup({ addressBookUri, groupName }: CreateNewGroupCommand) {
+    const addressBookNode = sym(addressBookUri);
+    await this.fetchNode(addressBookNode);
+
+    const query = new AddressBookQuery(this.store, addressBookNode);
+    const operation = createNewGroup(query, groupName);
+    await executeUpdate(this.fetcher, this.updater, operation);
+    return operation.uri;
   }
 }

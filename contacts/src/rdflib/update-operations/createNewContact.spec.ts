@@ -1,7 +1,7 @@
 import { createNewContact } from "./createNewContact";
-import { AddressBookQuery } from "./AddressBookQuery";
+import { AddressBookQuery } from "../queries";
 import { lit, st, sym } from "rdflib";
-import { rdf, vcard } from "./namespaces";
+import { rdf, vcard } from "../namespaces";
 
 describe("createNewContact", () => {
   it("returns the uri of the new contact", () => {

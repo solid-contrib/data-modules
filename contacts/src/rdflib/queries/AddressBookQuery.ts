@@ -1,6 +1,6 @@
 import { IndexedFormula, isNamedNode, NamedNode, sym } from "rdflib";
-import { dc, vcard } from "./namespaces";
-import { Contact, Group } from "../index";
+import { dc, vcard } from "../namespaces";
+import { Contact, Group } from "../../index";
 import { v4 as uuid } from "uuid";
 
 export class AddressBookQuery {
@@ -14,10 +14,17 @@ export class AddressBookQuery {
   }
 
   proposeNewContactNode(): NamedNode {
+    return this.proposeNewNode("Person");
+  }
+
+  proposeNewGroupNode(): NamedNode {
+    return this.proposeNewNode("Group");
+  }
+
+  private proposeNewNode(containerPath: string) {
     const id = uuid();
     const baseUri = this.addressBookNode.dir()?.uri;
-    const personDir = "Person";
-    return sym(`${baseUri}${personDir}/${id}/index.ttl#this`);
+    return sym(`${baseUri}${containerPath}/${id}/index.ttl#this`);
   }
 
   queryTitle() {
@@ -65,13 +72,18 @@ export class AddressBookQuery {
       : [];
   }
 
-  queryGroupIndex() {
-    return this.store.any(
+  queryGroupIndex(): NamedNode | null {
+    const index = this.store.any(
       this.addressBookNode,
       vcard("groupIndex"),
       undefined,
       this.addressBookDoc,
     );
+    if (isNamedNode(index)) {
+      return index as NamedNode;
+    } else {
+      return null;
+    }
   }
 
   queryGroups(): Group[] {

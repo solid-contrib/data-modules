@@ -1,6 +1,6 @@
 import { AddressBookQuery } from "./AddressBookQuery";
 import { graph, lit, sym } from "rdflib";
-import { dc, vcard } from "./namespaces";
+import { dc, vcard } from "../namespaces";
 
 import { v4 as uuid } from "uuid";
 
@@ -366,6 +366,25 @@ describe("AddressBookQuery", () => {
       expect(result).toBe(null);
     });
 
+    it("returns null if index is not a named node", () => {
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      store.add(
+        addressBookNode,
+        vcard("groupIndex"),
+        lit("invalid index"),
+        addressBookNode.doc(),
+      );
+      const query = new AddressBookQuery(
+        store,
+        sym("http://pod.test/alice/contacts/index.ttl#this"),
+      );
+      const result = query.queryGroupIndex();
+      expect(result).toBe(null);
+    });
+
     it("returns the node found in store", () => {
       const store = graph();
       const addressBookNode = sym(
@@ -644,6 +663,25 @@ describe("AddressBookQuery", () => {
       expect(contactNode).toEqual(
         sym(
           "http://pod.test/alice/contacts/Person/44a5fc88-fc3c-4f69-83ab-78d49764881c/index.ttl#this",
+        ),
+      );
+    });
+  });
+
+  describe("propose new group node", () => {
+    it("mints a new URI based on the address book container", () => {
+      (uuid as jest.Mock).mockReturnValueOnce(
+        "367da26e-460c-4ab8-b6ca-a32edc88df51",
+      );
+      const store = graph();
+      const addressBookNode = sym(
+        "http://pod.test/alice/contacts/index.ttl#this",
+      );
+      const query = new AddressBookQuery(store, addressBookNode);
+      const contactNode = query.proposeNewGroupNode();
+      expect(contactNode).toEqual(
+        sym(
+          "http://pod.test/alice/contacts/Group/367da26e-460c-4ab8-b6ca-a32edc88df51/index.ttl#this",
         ),
       );
     });

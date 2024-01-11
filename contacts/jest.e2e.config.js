@@ -4,4 +4,6 @@ module.exports = {
   testEnvironment: "node",
   rootDir: "src/e2e-tests",
   testTimeout: 60000,
+  detectOpenHandles: true,
+  forceExit: true,
 };
