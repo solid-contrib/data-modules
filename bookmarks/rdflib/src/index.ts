@@ -18,6 +18,41 @@ const BOOKMARK = Namespace("http://www.w3.org/2002/01/bookmark#");
 // const VCARD = Namespace("http://www.w3.org/2006/vcard/ns#");
 // const DC = Namespace("http://purl.org/dc/elements/1.1/");
 
+
+
+/**
+ * Interface for the shape of a bookmark object that can be created.
+ * Contains title, topic, link, and creator fields.
+ * 
+ */
+export type ICreateBookmark = {
+    title: string;
+    topic?: string;
+    link: string;
+    creator?: string;
+};
+
+/**
+ * Interface for the shape of a bookmark object that can be updated.
+ * Contains title, topic, link, and creator fields.
+ */
+export type IUpdateBookmark = {
+    title: string;
+    topic?: string;
+    link: string;
+    creator?: string;
+};
+
+/**
+ * Interface defining the shape of a bookmark object.
+ * Extends ICreateBookmark and adds url, created, and updated fields.
+ */
+export type IBookmark = ICreateBookmark & {
+    url: string;
+    created?: string;
+    updated?: string;
+};
+
 type Args = {
     store?: IndexedFormula;
     fetcher: Fetcher;
@@ -62,18 +97,20 @@ export class Bookmark {
         };
     }
 
-    async create(containerUri: string, { title, link, topic, creator, recalls }: any) {
+    async create(containerUri: string, { title, link, topic, creator }: ICreateBookmark) {
+
+        if (!isValidUrl(link)) throw new Error("link is not a valid URL");
+        if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL");
+
         const id = uuid();
         const uri = `${containerUri}${id}/index.ttl#this`;
-        // const nameEmailIndexUri = `${containerUri}${id}/people.ttl`;
-        // const groupIndexUri = `${containerUri}${id}/groups.ttl`;
 
         const insertions = [
-            st(sym(uri), sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), BOOKMARK("Bookmark"), sym(uri).doc()),
+            st(sym(uri), sym(__RdfType), BOOKMARK("Bookmark"), sym(uri).doc()),
             st(sym(uri), DCT("title"), lit(title), sym(uri).doc()),
-            st(sym(uri), DCT("hasTopic"), namedNode(topic), sym(uri).doc()),
+            ...(topic ? [st(sym(uri), DCT("hasTopic"), namedNode(topic), sym(uri).doc())] : []),
             st(sym(uri), DCT("recalls"), namedNode(link), sym(uri).doc()),
-            st(sym(uri), DCT("creator"), namedNode(creator), sym(uri).doc()),
+            ...(creator ? [st(sym(uri), DCT("creator"), namedNode(creator), sym(uri).doc())] : []),
             st(sym(uri), DCT("created"), lit((new Date().toISOString())), sym(uri).doc()),
             st(sym(uri), DCT("updated"), lit((new Date().toISOString())), sym(uri).doc()),
         ];
@@ -94,23 +131,20 @@ export class Bookmark {
     // }
 }
 
-// export const __forClass = "http://www.w3.org/ns/solid/terms#forClass"
-// export const __Bookmark = 'http://www.w3.org/2002/01/bookmark#Bookmark'
+export const __RdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
-// export const __privateTypeIndex = "http://www.w3.org/ns/solid/terms#privateTypeIndex"
-// export const __publicTypeIndex = "http://www.w3.org/ns/solid/terms#publicTypeIndex"
-
-// export const __solidTypeRegistration = "http://www.w3.org/ns/solid/terms#TypeRegistration"
-// export const __solidTypeIndex = "http://www.w3.org/ns/solid/terms#TypeIndex"
-// export const __solidUnlistedDocument = "http://www.w3.org/ns/solid/terms#UnlistedDocument"
-
-// export const __solid_instance = "http://www.w3.org/ns/solid/terms#instance"
-// export const __solid_instance_container = "http://www.w3.org/ns/solid/terms#instanceContainer"
-// export const __DC_UPDATED = "http://purl.org/dc/terms/updated"
-
-// export const __crdt_resource = "http://soukai-solid.com/crdt/resource"
-// export const __crdt_createdAt = "http://soukai-solid.com/crdt/createdAt"
-// export const __crdt_updatedAt = "http://soukai-solid.com/crdt/updatedAt"
-
-// export const __schemaPerson = "http://schema.org/Person";
-// export const __foafPerson = "http://xmlns.com/foaf/0.1/Person";
+/**
+ * Checks if a given string is a valid URL.
+ *
+ * @param str - The string to check.
+ * @returns True if str is a valid URL, false otherwise.
+ * @internal
+ */
+export const isValidUrl = (str: string) => {
+    try {
+        new URL(str);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
