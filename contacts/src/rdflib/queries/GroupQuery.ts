@@ -1,4 +1,4 @@
-import { IndexedFormula, NamedNode } from "rdflib";
+import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
 import { vcard } from "../namespaces";
 
 export class GroupQuery {
@@ -19,5 +19,15 @@ export class GroupQuery {
         this.groupDoc,
       ) ?? ""
     );
+  }
+
+  queryMembers() {
+    return this.store
+      .each(this.groupNode, vcard("hasMember"))
+      .filter((it): it is NamedNode => isNamedNode(it))
+      .map((node) => ({
+        uri: node.value,
+        name: this.store.anyValue(node, vcard("fn")),
+      }));
   }
 }
