@@ -160,5 +160,52 @@ describe(GroupQuery.name, () => {
       const result = query.queryMembers();
       expect(result).toEqual([]);
     });
+
+    it("does not return a member from wrong group", () => {
+      const store = graph();
+      const groupNode = sym(
+        "http://pod.test/alice/contacts/1/group/1/index.ttl#this",
+      );
+      const wrongGroup = sym(
+        "http://pod.test/alice/contacts/1/group/wrong/index.ttl#this",
+      );
+      store.add(
+        wrongGroup,
+        vcard("hasMember"),
+        sym("http://pod.test/alice/contacts/Person/1#this"),
+        groupNode.doc(),
+      );
+      store.add(
+        sym("http://pod.test/alice/contacts/Person/1#this"),
+        vcard("fn"),
+        lit("Bob"),
+        groupNode.doc(),
+      );
+      const query = new GroupQuery(store, groupNode);
+      const result = query.queryMembers();
+      expect(result).toEqual([]);
+    });
+
+    it("does not return a member from wrong group document", () => {
+      const store = graph();
+      const groupNode = sym(
+        "http://pod.test/alice/contacts/1/group/1/index.ttl#this",
+      );
+      store.add(
+        groupNode,
+        vcard("hasMember"),
+        sym("http://pod.test/alice/contacts/Person/1#this"),
+        sym("http://pod.test/wrong/contacts/Person/1#this"),
+      );
+      store.add(
+        sym("http://pod.test/alice/contacts/Person/1#this"),
+        vcard("fn"),
+        lit("Bob"),
+        groupNode.doc(),
+      );
+      const query = new GroupQuery(store, groupNode);
+      const result = query.queryMembers();
+      expect(result).toEqual([]);
+    });
   });
 });

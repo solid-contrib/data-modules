@@ -23,7 +23,7 @@ export class GroupQuery {
 
   queryMembers() {
     return this.store
-      .each(this.groupNode, vcard("hasMember"))
+      .each(this.groupNode, vcard("hasMember"), null, this.groupDoc)
       .filter((it): it is NamedNode => isNamedNode(it))
       .map((node) => ({
         uri: node.value,
