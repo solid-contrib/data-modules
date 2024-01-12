@@ -63,8 +63,8 @@ export class Bookmark {
     async create({ containerUri, title }: any) {
         const id = uuid();
         const uri = `${containerUri}${id}/index.ttl#this`;
-        const nameEmailIndexUri = `${containerUri}${id}/people.ttl`;
-        const groupIndexUri = `${containerUri}${id}/groups.ttl`;
+        // const nameEmailIndexUri = `${containerUri}${id}/people.ttl`;
+        // const groupIndexUri = `${containerUri}${id}/groups.ttl`;
         
         const insertions = [
             st(sym(uri), sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), VCARD("AddressBook"), sym(uri).doc()),
@@ -75,14 +75,14 @@ export class Bookmark {
             uri,
             deletions: [],
             insertions,
-            filesToCreate: [{ uri: nameEmailIndexUri }, { uri: groupIndexUri }],
+            // filesToCreate: [{ uri: nameEmailIndexUri }, { uri: groupIndexUri }],
         };
         await this.updater.updateMany(operation.deletions, operation.insertions);
-        operation.filesToCreate.map((file) => this.createEmptyTurtleFile(file.uri));
+        // operation.filesToCreate.map((file) => this.createEmptyTurtleFile(file.uri));
         return operation.uri;
     }
 
-    private async createEmptyTurtleFile(uri: string) {
-        this.fetcher.webOperation("PUT", uri, { contentType: "text/turtle" });
-    }
+    // private async createEmptyTurtleFile(uri: string) {
+    //     this.fetcher.webOperation("PUT", uri, { contentType: "text/turtle" });
+    // }
 }
