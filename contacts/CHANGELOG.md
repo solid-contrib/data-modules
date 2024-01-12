@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - [createNewGroup](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#createNewGroup)
+- [readGroup](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#readGroup)
 
 ## 0.2.1
 
