@@ -2,12 +2,19 @@ import {
     Fetcher,
     IndexedFormula,
     Namespace,
+    Statement,
     UpdateManager,
-    graph
+    graph,
+    lit, st, sym
 } from "rdflib";
+import { v4 as uuid } from 'uuid';
 
+// Namespaces
 const DCT = Namespace("http://purl.org/dc/terms/");
 const BOOKMARK = Namespace("http://www.w3.org/2002/01/bookmark#");
+const RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+const VCARD = Namespace("http://www.w3.org/2006/vcard/ns#");
+const DC = Namespace("http://purl.org/dc/elements/1.1/");
 
 type Args = {
     store?: IndexedFormula;
@@ -27,15 +34,12 @@ export class Bookmark {
     }
 
 
-    async getAll(containerUri: string): Promise<any> {
-        const container = this.store.sym(`${containerUri}#it`);
-
-        const res = await this.fetcher.load(container);
-        console.log("🚀 ~ Bookmark ~ getAll ~ res:", res)
-    }
+    // async getAll(containerUri: string): Promise<any> {
+    //     const container = this.store.sym(`${containerUri}#it`);
+    //     const res = await this.fetcher.load(container);
+    // }
 
     async get(uri: string): Promise<any> {
-
         const doc = this.store.sym(`${uri}#it`);
 
         await this.fetcher.load(doc);
@@ -54,5 +58,31 @@ export class Bookmark {
             hasTopic,
             recalls,
         };
+    }
+
+    async create({ containerUri, title }: any) {
+        const id = uuid();
+        const uri = `${containerUri}${id}/index.ttl#this`;
+        const nameEmailIndexUri = `${containerUri}${id}/people.ttl`;
+        const groupIndexUri = `${containerUri}${id}/groups.ttl`;
+        
+        const insertions = [
+            st(sym(uri), sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), VCARD("AddressBook"), sym(uri).doc()),
+            st(sym(uri), DCT("title"), lit(title), sym(uri).doc()),
+        ];
+
+        const operation = {
+            uri,
+            deletions: [],
+            insertions,
+            filesToCreate: [{ uri: nameEmailIndexUri }, { uri: groupIndexUri }],
+        };
+        await this.updater.updateMany(operation.deletions, operation.insertions);
+        operation.filesToCreate.map((file) => this.createEmptyTurtleFile(file.uri));
+        return operation.uri;
+    }
+
+    private async createEmptyTurtleFile(uri: string) {
+        this.fetcher.webOperation("PUT", uri, { contentType: "text/turtle" });
     }
 }
