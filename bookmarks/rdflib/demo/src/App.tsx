@@ -57,6 +57,14 @@ const GuestView = () => {
 const AuthenticatedView = ({ session }: { session?: Session }) => {
 
 
+  const handleGetBookmark = async () => {
+    var store = graph()
+    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+
+    const bookmark = new Bookmark({ fetcher, store })
+    const data = await bookmark.getAll(bookmarksURL)
+    console.log("🚀 ~ handleGetBookmarks ~ data:", data)
+  }
   const handleGetBookmarks = async () => {
     var store = graph()
     var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
@@ -65,10 +73,20 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
     const data = await bookmark.getAll(bookmarksURL)
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
+  const handleCreateBookmark = async () => {
+    var store = graph()
+    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+
+    const bookmark = new Bookmark({ fetcher, store })
+    const data = await bookmark.create(bookmarksURL, { title: "some value", link: "http://somelik.com", topic: "http://sometopicuri.com", creator: "http://someone.cpm", recalls: "http://somewhere.com" })
+    console.log("🚀 ~ handleGetBookmarks ~ data:", data)
+  }
   return (
     <div>
       <button onClick={() => logout()}>Logout</button>
-      <button onClick={handleGetBookmarks}>GET</button>
+      <button onClick={handleGetBookmarks}>GET ALL</button>
+      <button onClick={handleGetBookmark}>GET</button>
+      <button onClick={handleCreateBookmark}>CREATE</button>
     </div>
   )
 }
