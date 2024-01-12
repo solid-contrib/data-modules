@@ -27,7 +27,7 @@ export class GroupQuery {
       .filter((it): it is NamedNode => isNamedNode(it))
       .map((node) => ({
         uri: node.value,
-        name: this.store.anyValue(node, vcard("fn")),
+        name: this.store.anyValue(node, vcard("fn"), null, this.groupDoc) ?? "",
       }));
   }
 }

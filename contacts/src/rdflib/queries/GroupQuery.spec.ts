@@ -207,5 +207,32 @@ describe(GroupQuery.name, () => {
       const result = query.queryMembers();
       expect(result).toEqual([]);
     });
+
+    it("does not return a contact name from outside the group doc", () => {
+      const store = graph();
+      const groupNode = sym(
+        "http://pod.test/alice/contacts/1/group/1/index.ttl#this",
+      );
+      store.add(
+        groupNode,
+        vcard("hasMember"),
+        sym("http://pod.test/alice/contacts/Person/1#this"),
+        groupNode.doc(),
+      );
+      store.add(
+        sym("http://pod.test/alice/contacts/Person/1#this"),
+        vcard("fn"),
+        lit("Bob"),
+        sym("http://other.test/document"),
+      );
+      const query = new GroupQuery(store, groupNode);
+      const result = query.queryMembers();
+      expect(result).toEqual([
+        {
+          uri: "http://pod.test/alice/contacts/Person/1#this",
+          name: "",
+        },
+      ]);
+    });
   });
 });
