@@ -6,6 +6,7 @@ import {
   CreateNewContactCommand,
   CreateNewGroupCommand,
   FullContact,
+  FullGroup,
 } from "..";
 import { AddressBookQuery, ContactQuery } from "./queries";
 import { createAddressBook, createNewContact } from "./update-operations";
@@ -98,5 +99,18 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const operation = createNewGroup(query, groupName);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
+  }
+
+  async readGroup(uri: string): Promise<FullGroup> {
+    return {
+      uri,
+      name: "Officials",
+      members: [
+        {
+          name: "Molly Braaten",
+          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this",
+        },
+      ],
+    };
   }
 }
