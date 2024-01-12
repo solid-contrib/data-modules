@@ -107,15 +107,11 @@ export class ContactsModuleRdfLib implements ContactsModule {
     await this.fetchNode(groupNode);
     const query = new GroupQuery(this.store, groupNode);
     const name = query.queryName();
+    const members = query.queryMembers();
     return {
       uri,
       name,
-      members: [
-        {
-          name: "Molly Braaten",
-          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this",
-        },
-      ],
+      members,
     };
   }
 }

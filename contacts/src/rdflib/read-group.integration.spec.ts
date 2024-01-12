@@ -37,4 +37,51 @@ describe("read group", () => {
       name: "Officials",
     });
   });
+
+  it("returns the group's members", async () => {
+    const authenticatedFetch = jest.fn();
+
+    const store = graph();
+    const fetcher = new Fetcher(store, {
+      fetch: authenticatedFetch,
+    });
+    const updater = new UpdateManager(store);
+    const contacts = new ContactsModuleRdfLib({
+      store,
+      fetcher,
+      updater,
+    });
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Group/1/index.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+  
+    <#this> a vcard:Group;
+        vcard:hasMember <./Person/1/index.ttl#this>, <Person/2/index.ttl#this> .
+        
+    <Person/1/index.ttl#this> vcard:fn "Alice" .
+    <Person/2/index.ttl#this> vcard:fn "Bob" .
+`,
+    );
+
+    const result = await contacts.readGroup(
+      "https://pod.test/alice/contacts/Group/1/index.ttl#this",
+    );
+
+    expect(result).toMatchObject({
+      uri: "https://pod.test/alice/contacts/Group/1/index.ttl#this",
+      members: [
+        {
+          uri: "https://pod.test/alice/contacts/Group/1/Person/1/index.ttl#this",
+          name: "Alice",
+        },
+        {
+          uri: "https://pod.test/alice/contacts/Group/1/Person/2/index.ttl#this",
+          name: "Bob",
+        },
+      ],
+    });
+  });
 });
