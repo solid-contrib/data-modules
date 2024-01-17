@@ -15,6 +15,7 @@ import { executeUpdate } from "./web-operations/executeUpdate";
 import { fetchNode } from "./web-operations/fetchNode";
 import { createNewGroup } from "./update-operations/createNewGroup";
 import { GroupQuery } from "./queries/GroupQuery";
+import { addContactToGroup } from "./update-operations/addContactToGroup";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -116,5 +117,13 @@ export class ContactsModuleRdfLib implements ContactsModule {
     };
   }
 
-  async addContactToGroup({ contactUri, groupUri }: AddContactToGroupCommand) {}
+  async addContactToGroup({ contactUri, groupUri }: AddContactToGroupCommand) {
+    const contactNode = sym(contactUri);
+    const groupNode = sym(groupUri);
+    await this.fetchNode(contactNode);
+    const contactQuery = new ContactQuery(this.store, contactNode);
+    const groupQuery = new GroupQuery(this.store, groupNode);
+    const operation = addContactToGroup(contactQuery, groupQuery);
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
 }
