@@ -1,0 +1,4 @@
+<http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/Person/854486c1-504a-4e11-9fe4-6d6250f08dfe/index.ttl#this>
+    <http://www.w3.org/2006/vcard/ns#fn> "Dennis Cummings" ;
+    <http://www.w3.org/2006/vcard/ns#inAddressBook>
+                                         <http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/index.ttl#this> .

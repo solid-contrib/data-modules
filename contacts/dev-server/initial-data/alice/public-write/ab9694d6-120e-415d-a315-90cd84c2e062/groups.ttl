@@ -1,0 +1,10 @@
+<http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/index.ttl#this>
+    <http://www.w3.org/2006/vcard/ns#includesGroup>
+            <http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/Group/41faaf6f-37c3-437a-900d-e6a0e6c92463/index.ttl#this>,
+            <http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/Group/893dba2a-2bc7-49d6-a4d2-7b89d88874ca/index.ttl#this> .
+
+<http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/Group/41faaf6f-37c3-437a-900d-e6a0e6c92463/index.ttl#this>
+    <http://www.w3.org/2006/vcard/ns#fn> "Schamberger, Quitzon and Reynolds" .
+
+<http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/Group/893dba2a-2bc7-49d6-a4d2-7b89d88874ca/index.ttl#this>
+    <http://www.w3.org/2006/vcard/ns#fn> "Becker - Smitham" .
