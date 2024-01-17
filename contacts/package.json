@@ -11,7 +11,9 @@
     "test:e2e": "jest --config jest.e2e.config.js",
     "pod": "community-solid-server --config ./dev-server/config/config-mashlib.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
     "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
-    "pod:clean": "rm -rf ./dev-server/data"
+    "pod:clean": "rm -rf ./dev-server/data",
+    "serve:doc": "serve ../gh-pages",
+    "doc": "npm run build:doc && npm run serve:doc"
   },
   "repository": {
     "type": "git",
@@ -47,6 +49,7 @@
     "jest-when": "^3.6.0",
     "mashlib": "^1.8.9",
     "prettier": "^3.1.1",
+    "serve": "^14.2.1",
     "ts-jest": "^29.1.1",
     "typedoc": "^0.25.7",
     "typescript": "^5.3.3"
