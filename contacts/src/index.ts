@@ -51,6 +51,12 @@ export interface ContactsModule {
    * @return FullGroup name and list of group members
    */
   readGroup(uri: string): Promise<FullGroup>;
+
+  /**
+   * Adds an existing contact to an existing group
+   * @param command
+   */
+  addContactToGroup(command: AddContactToGroupCommand): Promise<void>;
 }
 
 /**
@@ -184,4 +190,18 @@ export interface CreateNewGroupCommand {
    * The name of the group to create
    */
   groupName: string;
+}
+
+/**
+ * Data needed to add an existing contact to an existing group
+ */
+export interface AddContactToGroupCommand {
+  /**
+   * The URI of an existing group, to that the contact should be added
+   */
+  contactUri: string;
+  /**
+   * The URI of an existing contact, that should be added to the group
+   */
+  groupUri: string;
 }

@@ -1,0 +1,13 @@
+@prefix :      <#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+
+<index.ttl#this>
+    vcard:includesGroup <Group/1f0d98b1-5eac-4c44-b6e2-29d9784c40cb/index.ttl#this>, <Group/88f4eb67-f510-49c8-8d52-9080cd3e489f/index.ttl#this> .
+
+<Group/1f0d98b1-5eac-4c44-b6e2-29d9784c40cb/index.ttl#this>
+    a        vcard:Group ;
+    vcard:fn "Officials" .
+
+<Group/88f4eb67-f510-49c8-8d52-9080cd3e489f/index.ttl#this>
+    a        vcard:Group ;
+    vcard:fn "Friends" .
