@@ -1,5 +1,6 @@
 import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
 import {
+  AddContactToGroupCommand,
   AddressBook,
   ContactsModule,
   CreateAddressBookCommand,
@@ -114,4 +115,6 @@ export class ContactsModuleRdfLib implements ContactsModule {
       members,
     };
   }
+
+  async addContactToGroup({ contactUri, groupUri }: AddContactToGroupCommand) {}
 }
