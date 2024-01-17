@@ -40,7 +40,16 @@ describe("contacts module", () => {
           name: "Molly Braaten",
         },
       ],
-      groups: [],
+      groups: [
+        {
+          name: "Officials",
+          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Group/1f0d98b1-5eac-4c44-b6e2-29d9784c40cb/index.ttl#this",
+        },
+        {
+          name: "Friends",
+          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Group/88f4eb67-f510-49c8-8d52-9080cd3e489f/index.ttl#this",
+        },
+      ],
     });
   });
 
