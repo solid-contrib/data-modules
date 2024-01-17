@@ -6,12 +6,14 @@ import {
   CreateNewContactCommand,
   CreateNewGroupCommand,
   FullContact,
+  FullGroup,
 } from "..";
 import { AddressBookQuery, ContactQuery } from "./queries";
 import { createAddressBook, createNewContact } from "./update-operations";
 import { executeUpdate } from "./web-operations/executeUpdate";
 import { fetchNode } from "./web-operations/fetchNode";
 import { createNewGroup } from "./update-operations/createNewGroup";
+import { GroupQuery } from "./queries/GroupQuery";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -98,5 +100,18 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const operation = createNewGroup(query, groupName);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
+  }
+
+  async readGroup(uri: string): Promise<FullGroup> {
+    const groupNode = sym(uri);
+    await this.fetchNode(groupNode);
+    const query = new GroupQuery(this.store, groupNode);
+    const name = query.queryName();
+    const members = query.queryMembers();
+    return {
+      uri,
+      name,
+      members,
+    };
   }
 }

@@ -1,0 +1,8 @@
+<#this>
+    <http://www.w3.org/2006/vcard/ns#fn>        "Officials" ;
+    a                                           <http://www.w3.org/2006/vcard/ns#Group> ;
+    <http://www.w3.org/2006/vcard/ns#hasMember> <../../Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this> ;
+.
+
+<../../Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this>
+    <http://www.w3.org/2006/vcard/ns#fn> "Molly Braaten" .
