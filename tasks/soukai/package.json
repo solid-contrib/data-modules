@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Solid Data Module for Tasks, targetting Soukai",
   "types": "lib/index.d.ts",
-   "scripts": {
+  "scripts": {
     "build": "tsc",
     "format": "prettier --write \"src/**/*.(js|ts)\"",
     "lint": "eslint src --ext .js,.ts",
@@ -42,5 +42,10 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+    "soukai": "^0.5.2",
+    "soukai-solid": "^0.5.2",
+    "vue": "^3.4.15"
+  }
 }
