@@ -1,0 +1,11 @@
+{
+  "name": "@solid-data-modules/tasks-soukai",
+  "version": "1.0.0",
+  "description": "Solid Data Module for Tasks, targetting Soukai",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
