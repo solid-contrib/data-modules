@@ -46,3 +46,7 @@ Budget: `3000-(20*80)=1400`
 # F2 (Solid backend for remoteStorage.js) 4k
 * Yashar worked on this for at least a day or 5-10 I think?
 * I worked on this for 2 hours today (16 January)
+
+# general work by Michiel (have to see if/how we can use this for milestone claims)
+* Friday 19 Jan: 6 hours on Tasks module
+* Monday 22 Jan: 6 hours on [Bookmarks/Contacts demo video?]
