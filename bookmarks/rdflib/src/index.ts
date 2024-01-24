@@ -7,18 +7,15 @@ import {
     lit,
     namedNode,
     st,
-    sym
+    sym,
 } from "rdflib";
 import { v4 as uuid } from 'uuid';
 
-// Namespaces
 const DCT = Namespace("http://purl.org/dc/terms/");
+const TUR = Namespace("http://www.w3.org/ns/iana/media-types/text/turtle#");
+const LDP = Namespace("http://www.w3.org/ns/ldp#");
 const BOOKMARK = Namespace("http://www.w3.org/2002/01/bookmark#");
-// const RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-// const VCARD = Namespace("http://www.w3.org/2006/vcard/ns#");
-// const DC = Namespace("http://purl.org/dc/elements/1.1/");
-
-
+const __RdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
 /**
  * Interface for the shape of a bookmark object that can be created.
@@ -71,10 +68,24 @@ export class Bookmark {
     }
 
 
-    async getAll(containerUri: string): Promise<any> {
-        const container = this.store.sym(`${containerUri}#it`);
-        const res = await this.fetcher.load(container);
-    }
+    // async getAll(containerUri: string): Promise<any> {
+    //     console.log("🚀 ~ Bookmark ~ getAll ~ containerUri:", containerUri)
+
+    //     const container = this.store.sym(`${containerUri}`);
+    //     // console.log("🚀 ~ Bookmark ~ getAll ~ container.doc():", container.)
+    //     console.log("🚀 ~ Bookmark ~ getAll ~ container:", container)
+    //     await this.fetcher.load(container);
+
+    //     // console.log("🚀 ~ Bookmark ~ getAll ~ res:", container)
+
+    //     var r = this.store.anyStatementMatching(container, LDP("contains"))
+    //     console.log("🚀 ~ Bookmark ~ getAll ~ r:", r)
+    //     let Resources = this.store.any(container, TUR("Resource"))?.value;
+    //     let BasicContainer = this.store.any(container, LDP("contains"));
+    //     console.log("🚀 ~ Bookmark ~ getAll ~ BasicContainer:", BasicContainer)
+    //     console.log("🚀 ~ Bookmark ~ getAll ~ Resources:", Resources)
+
+    // }
 
     async get(uri: string): Promise<any> {
         const doc = this.store.sym(`${uri}#it`);
@@ -103,7 +114,7 @@ export class Bookmark {
         if (creator && !isValidUrl(creator)) throw new Error("creator is not a valid URL");
 
         const id = uuid();
-        const uri = `${containerUri}${id}/index.ttl#this`;
+        const uri = `${containerUri}${id}#this`;
 
         const insertions = [
             st(sym(uri), sym(__RdfType), BOOKMARK("Bookmark"), sym(uri).doc()),
@@ -126,12 +137,29 @@ export class Bookmark {
         return operation.uri;
     }
 
+    async update(uri: string, { title, link, topic, creator }: IUpdateBookmark) {
+
+        const doc = this.store.sym(`${uri}#it`);
+        const insertions = [
+            ...(title ? [st(doc, DCT("title"), lit(title), doc)] : []),
+            ...(topic ? [st(doc, DCT("hasTopic"), namedNode(topic), doc)] : []),
+            ...(link ? [st(doc, DCT("recalls"), namedNode(link), doc)] : []),
+            ...(creator ? [st(doc, DCT("creator"), namedNode(creator), doc)] : []),
+            st(sym(uri), DCT("updated"), lit((new Date().toISOString())), sym(uri).doc()),
+        ];
+        const operation = {
+            uri,
+            deletions: [],
+            insertions,
+        };
+        await this.updater.updateMany(operation.deletions, operation.insertions);
+    }
+
     // private async createEmptyTurtleFile(uri: string) {
     //     this.fetcher.webOperation("PUT", uri, { contentType: "text/turtle" });
     // }
 }
 
-export const __RdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
 /**
  * Checks if a given string is a valid URL.
