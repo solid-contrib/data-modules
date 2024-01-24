@@ -53,4 +53,32 @@ describe("removeContactFromGroup", () => {
       st(contactNode, vcard("fn"), lit("Alice"), groupNode.doc()),
     );
   });
+
+  it("does not insert anything", () => {
+    const contactNode = sym("https://pod.test/contact#this");
+    const groupNode = sym("https://pod.test/group#this");
+
+    const result = removeContactFromGroup(
+      { contactNode } as ContactQuery,
+      {
+        groupNode,
+        queryMembers: () => [{ uri: "https://pod.test/contact#this" }],
+      } as GroupQuery,
+    );
+    expect(result.insertions).toEqual([]);
+  });
+
+  it("does not create any files", () => {
+    const contactNode = sym("https://pod.test/contact#this");
+    const groupNode = sym("https://pod.test/group#this");
+
+    const result = removeContactFromGroup(
+      { contactNode } as ContactQuery,
+      {
+        groupNode,
+        queryMembers: () => [{ uri: "https://pod.test/contact#this" }],
+      } as GroupQuery,
+    );
+    expect(result.filesToCreate).toEqual([]);
+  });
 });
