@@ -17,6 +17,7 @@ import { fetchNode } from "./web-operations/fetchNode";
 import { createNewGroup } from "./update-operations/createNewGroup";
 import { GroupQuery } from "./queries/GroupQuery";
 import { addContactToGroup } from "./update-operations/addContactToGroup";
+import { removeContactFromGroup } from "./update-operations/removeContactFromGroup";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -131,5 +132,13 @@ export class ContactsModuleRdfLib implements ContactsModule {
   async removeContactFromGroup({
     contactUri,
     groupUri,
-  }: RemoveContactFromGroupCommand) {}
+  }: RemoveContactFromGroupCommand) {
+    const contactNode = sym(contactUri);
+    const groupNode = sym(groupUri);
+    await this.fetchNode(groupNode);
+    const contactQuery = new ContactQuery(this.store, contactNode);
+    const groupQuery = new GroupQuery(this.store, groupNode);
+    const operation = removeContactFromGroup(contactQuery, groupQuery);
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
 }
