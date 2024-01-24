@@ -68,25 +68,6 @@ export class Bookmark {
     }
 
 
-    // async getAll(containerUri: string): Promise<any> {
-    //     console.log("🚀 ~ Bookmark ~ getAll ~ containerUri:", containerUri)
-
-    //     const container = this.store.sym(`${containerUri}`);
-    //     // console.log("🚀 ~ Bookmark ~ getAll ~ container.doc():", container.)
-    //     console.log("🚀 ~ Bookmark ~ getAll ~ container:", container)
-    //     await this.fetcher.load(container);
-
-    //     // console.log("🚀 ~ Bookmark ~ getAll ~ res:", container)
-
-    //     var r = this.store.anyStatementMatching(container, LDP("contains"))
-    //     console.log("🚀 ~ Bookmark ~ getAll ~ r:", r)
-    //     let Resources = this.store.any(container, TUR("Resource"))?.value;
-    //     let BasicContainer = this.store.any(container, LDP("contains"));
-    //     console.log("🚀 ~ Bookmark ~ getAll ~ BasicContainer:", BasicContainer)
-    //     console.log("🚀 ~ Bookmark ~ getAll ~ Resources:", Resources)
-
-    // }
-
     async get(uri: string): Promise<any> {
         const doc = this.store.sym(`${uri}#it`);
 
@@ -130,10 +111,8 @@ export class Bookmark {
             uri,
             deletions: [],
             insertions,
-            // filesToCreate: [{ uri: nameEmailIndexUri }, { uri: groupIndexUri }],
         };
         await this.updater.updateMany(operation.deletions, operation.insertions);
-        // operation.filesToCreate.map((file) => this.createEmptyTurtleFile(file.uri));
         return operation.uri;
     }
 
@@ -154,10 +133,6 @@ export class Bookmark {
         };
         await this.updater.updateMany(operation.deletions, operation.insertions);
     }
-
-    // private async createEmptyTurtleFile(uri: string) {
-    //     this.fetcher.webOperation("PUT", uri, { contentType: "text/turtle" });
-    // }
 }
 
 
