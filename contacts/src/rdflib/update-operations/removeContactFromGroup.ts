@@ -8,6 +8,11 @@ export function removeContactFromGroup(
   contactQuery: ContactQuery,
   groupQuery: GroupQuery,
 ): UpdateOperation {
+  const contactUri = contactQuery.contactNode.uri;
+  const member = groupQuery.queryMembers().find((it) => it.uri === contactUri);
+  if (!member) {
+    throw new Error("member not found in group");
+  }
   return {
     uri: "",
     insertions: [],
@@ -16,6 +21,12 @@ export function removeContactFromGroup(
         groupQuery.groupNode,
         vcard("hasMember"),
         contactQuery.contactNode,
+        groupQuery.groupNode.doc(),
+      ),
+      st(
+        contactQuery.contactNode,
+        vcard("fn"),
+        lit(member.name),
         groupQuery.groupNode.doc(),
       ),
     ],
