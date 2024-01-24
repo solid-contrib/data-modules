@@ -18,6 +18,7 @@ Data types for which we will produce Solid Data Modules:
 * chat
 * contacts
 * maps
+* tasks
 
 ## Paradigms covered
 ### _(coming soon)_

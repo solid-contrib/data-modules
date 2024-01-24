@@ -42,9 +42,9 @@ describe("Bookmark", () => {
         const podUrls = ["https://fake-pod.net/"];
         const expectedIndexUrl = ["https://fake-pod.net/bookmarks/index.ttl"];
 
-        const registeries = ["https://fake-pod.net/bookmarks/index.ttl"]
+        const instances = ["https://fake-pod.net/bookmarks/index.ttl"]
 
-        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockReturnValue(Promise.resolve(registeries));
+        jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockReturnValue(Promise.resolve({ instanceContainers: [], instances }));
         jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
         const res = await Bookmark.getRegisteryUrls(session.fetch, session.info.webId!);

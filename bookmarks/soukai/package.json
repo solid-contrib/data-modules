@@ -1,6 +1,6 @@
 {
   "name": "@solid-data-modules/bookmarks-soukai",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@inrupt/vocab-common-rdf": "^1.0.5",
-    "@rezasoltani/solid-typeindex-support": "^0.0.4",
+    "@rezasoltani/solid-typeindex-support": "^0.0.7",
     "soukai-solid": "^0.5.2",
     "soukai-solid-utils": "^0.0.2",
     "ts-node": "^10.9.1",

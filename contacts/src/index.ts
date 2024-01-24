@@ -31,9 +31,32 @@ export interface ContactsModule {
   /**
    * Fetches the given contact and returns available information
    * @param uri - The URI of the contact to read
-   * @return Contact name, email addresses and phone numbers
+   * @return FullContact name, email addresses and phone numbers
    */
   readContact(uri: string): Promise<FullContact>;
+
+  /**
+   * Creates a new group within a given address book
+   * @param command
+   * @return The URI of the newly created group
+   */
+  createNewGroup({
+    addressBookUri,
+    groupName,
+  }: CreateNewGroupCommand): Promise<string>;
+
+  /**
+   * Fetches the given group and returns available information
+   * @param uri - The URI of the contact to read
+   * @return FullGroup name and list of group members
+   */
+  readGroup(uri: string): Promise<FullGroup>;
+
+  /**
+   * Adds an existing contact to an existing group
+   * @param command
+   */
+  addContactToGroup(command: AddContactToGroupCommand): Promise<void>;
 }
 
 /**
@@ -84,10 +107,16 @@ export interface AddressBook {
 }
 
 /**
- * Partial contact data listed when reading an address book
+ * Partial contact data listed when reading an address book or a group
  */
 export interface Contact {
+  /**
+   * The URI identifying the contact
+   */
   uri: string;
+  /**
+   * The human-readable name of the contact
+   */
   name: string;
 }
 
@@ -120,4 +149,59 @@ export interface PhoneNumber {
 /**
  * Partial group data listed when reading an address book
  */
-export interface Group {}
+export interface Group {
+  /**
+   * The URI identifying the group
+   */
+  uri: string;
+  /**
+   * The human-readable name of the group
+   */
+  name: string;
+}
+
+/**
+ * Extensive contact data returned when reading a contact
+ */
+export interface FullGroup {
+  /**
+   * The URI identifying the group
+   */
+  uri: string;
+  /**
+   * The human-readable name of the group
+   */
+  name: string;
+  /**
+   * List of group members
+   */
+  members: Contact[];
+}
+
+/**
+ * Data needed to create a new group within an address book
+ */
+export interface CreateNewGroupCommand {
+  /**
+   * The URI of an existing address book the new group should be added to
+   */
+  addressBookUri: string;
+  /**
+   * The name of the group to create
+   */
+  groupName: string;
+}
+
+/**
+ * Data needed to add an existing contact to an existing group
+ */
+export interface AddContactToGroupCommand {
+  /**
+   * The URI of an existing group, to that the contact should be added
+   */
+  contactUri: string;
+  /**
+   * The URI of an existing contact, that should be added to the group
+   */
+  groupUri: string;
+}

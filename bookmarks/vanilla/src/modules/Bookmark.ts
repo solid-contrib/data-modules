@@ -83,10 +83,10 @@ export class Bookmark {
         webId: string,
         defaultRegisteryUrl?: string
     ): Promise<string[]> {
-        const registeries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
+        const { instanceContainers, instances } = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
 
-        if (!!registeries?.length) {
-            return registeries
+        if (!!instances.length) {
+            return instances
         } else {
             const podToUse = (await getPodUrlAll(webId!, { fetch: fetch }))[0];
 
@@ -100,7 +100,7 @@ export class Bookmark {
                 await saveSolidDatasetAt(defaultRegisteryUrl, createSolidDataset(), { fetch: fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registery", BOOKMARK.Bookmark, fetch, defaultRegisteryUrl, true)
+            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registery", BOOKMARK.Bookmark, fetch, defaultRegisteryUrl, false, true)
 
             return [defaultRegisteryUrl];
         }

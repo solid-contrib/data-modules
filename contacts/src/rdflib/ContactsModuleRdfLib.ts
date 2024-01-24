@@ -1,17 +1,21 @@
 import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
 import {
+  AddContactToGroupCommand,
   AddressBook,
   ContactsModule,
   CreateAddressBookCommand,
   CreateNewContactCommand,
+  CreateNewGroupCommand,
   FullContact,
+  FullGroup,
 } from "..";
-import { AddressBookQuery } from "./AddressBookQuery";
-import { createAddressBook } from "./createAddressBook";
+import { AddressBookQuery, ContactQuery } from "./queries";
+import { createAddressBook, createNewContact } from "./update-operations";
 import { executeUpdate } from "./web-operations/executeUpdate";
-import { createNewContact } from "./createNewContact";
 import { fetchNode } from "./web-operations/fetchNode";
-import { ContactQuery } from "./ContactQuery";
+import { createNewGroup } from "./update-operations/createNewGroup";
+import { GroupQuery } from "./queries/GroupQuery";
+import { addContactToGroup } from "./update-operations/addContactToGroup";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -88,5 +92,38 @@ export class ContactsModuleRdfLib implements ContactsModule {
       emails,
       phoneNumbers,
     };
+  }
+
+  async createNewGroup({ addressBookUri, groupName }: CreateNewGroupCommand) {
+    const addressBookNode = sym(addressBookUri);
+    await this.fetchNode(addressBookNode);
+
+    const query = new AddressBookQuery(this.store, addressBookNode);
+    const operation = createNewGroup(query, groupName);
+    await executeUpdate(this.fetcher, this.updater, operation);
+    return operation.uri;
+  }
+
+  async readGroup(uri: string): Promise<FullGroup> {
+    const groupNode = sym(uri);
+    await this.fetchNode(groupNode);
+    const query = new GroupQuery(this.store, groupNode);
+    const name = query.queryName();
+    const members = query.queryMembers();
+    return {
+      uri,
+      name,
+      members,
+    };
+  }
+
+  async addContactToGroup({ contactUri, groupUri }: AddContactToGroupCommand) {
+    const contactNode = sym(contactUri);
+    const groupNode = sym(groupUri);
+    await this.fetchNode(contactNode);
+    const contactQuery = new ContactQuery(this.store, contactNode);
+    const groupQuery = new GroupQuery(this.store, groupNode);
+    const operation = addContactToGroup(contactQuery, groupQuery);
+    await executeUpdate(this.fetcher, this.updater, operation);
   }
 }

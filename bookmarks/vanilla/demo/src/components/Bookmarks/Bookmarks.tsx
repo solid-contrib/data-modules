@@ -25,6 +25,11 @@ import {
   IBookmark,
 } from "../../../../src";
 
+declare global {
+  interface Window { Bookmark: Bookmark; }
+}
+window.Bookmark =  Bookmark || {};
+
 type IProps = {};
 
 const Bookmarks: FC<IProps> = ({ }) => {

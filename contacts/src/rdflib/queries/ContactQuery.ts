@@ -1,6 +1,6 @@
 import { IndexedFormula, isNamedNode, NamedNode, Node, sym } from "rdflib";
-import { vcard } from "./namespaces";
-import { Email, PhoneNumber } from "../index";
+import { vcard } from "../namespaces";
+import { Email, PhoneNumber } from "../../index";
 import { Namespace } from "rdflib/lib/factories/factory-types";
 
 const MAILTO_URI_SCHEME = "mailto:";
