@@ -57,6 +57,12 @@ export interface ContactsModule {
    * @param command
    */
   addContactToGroup(command: AddContactToGroupCommand): Promise<void>;
+
+  /**
+   * Removes an existing contact from an existing group
+   * @param command
+   */
+  removeContactFromGroup(command: RemoveContactFromGroupCommand): Promise<void>;
 }
 
 /**
@@ -202,6 +208,20 @@ export interface AddContactToGroupCommand {
   contactUri: string;
   /**
    * The URI of an existing contact, that should be added to the group
+   */
+  groupUri: string;
+}
+
+/**
+ * Data needed to remove an existing contact from an existing group
+ */
+export interface RemoveContactFromGroupCommand {
+  /**
+   * The URI of an existing group, from that the contact should be removed
+   */
+  contactUri: string;
+  /**
+   * The URI of an existing contact, that should be removed to the group
    */
   groupUri: string;
 }

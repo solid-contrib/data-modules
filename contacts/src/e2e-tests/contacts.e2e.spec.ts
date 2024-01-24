@@ -173,6 +173,33 @@ describe("contacts module", () => {
       name: "Molly Braaten",
     });
   });
+
+  it("can remove a contact from a group", async () => {
+    {
+      // given a group contains a contact
+      const contacts = setupModule();
+
+      const groupUri =
+        "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Group/1f0d98b1-5eac-4c44-b6e2-29d9784c40cb/index.ttl#this";
+
+      const contactUri =
+        "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+      const groupBefore = await contacts.readGroup(groupUri);
+      expect(
+        groupBefore.members.some((member) => member.uri == contactUri),
+      ).toBe(true);
+
+      // when the contact is removed
+      await contacts.removeContactFromGroup({ contactUri, groupUri });
+
+      // then it should no longer be found in the list of members
+      const groupAfter = await contacts.readGroup(groupUri);
+      expect(
+        groupAfter.members.some((member) => member.uri == contactUri),
+      ).toBe(false);
+    }
+  });
 });
 
 function setupModule() {

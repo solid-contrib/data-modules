@@ -8,6 +8,7 @@ import {
   CreateNewGroupCommand,
   FullContact,
   FullGroup,
+  RemoveContactFromGroupCommand,
 } from "..";
 import { AddressBookQuery, ContactQuery } from "./queries";
 import { createAddressBook, createNewContact } from "./update-operations";
@@ -126,4 +127,9 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const operation = addContactToGroup(contactQuery, groupQuery);
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  async removeContactFromGroup({
+    contactUri,
+    groupUri,
+  }: RemoveContactFromGroupCommand) {}
 }
