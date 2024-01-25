@@ -198,7 +198,6 @@ export class Bookmark {
             // this.store.any(doc, RDFS("label"))?.value
         );
     }
-
     private mapCreated(doc: NamedNode): string | undefined {
         return (
             this.store.any(doc, DCT("created"))?.value
