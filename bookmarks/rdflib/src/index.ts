@@ -77,23 +77,19 @@ export class Bookmark {
 
   async getAll(containerUrl: string): Promise<IBookmark[]> {
     try {
-      let folder = this.store.sym(containerUrl); // NOTE: Ends in a slash
+      const folder = this.store.sym(containerUrl); // NOTE: Ends in a slash
 
       await this.fetcher.load(folder);
 
-      let files = this.store.match(folder, LDP("contains"), undefined, folder);
+      const files = this.store.match(folder, LDP("contains"), undefined, folder);
 
       const urls = files.map((f) => f.object.value);
 
       const allPromise = Promise.all(urls.map((url) => this.get(url)));
 
-      try {
-        const values = (await allPromise).flat();
-        return values;
-      } catch (error) {
-        console.log(error);
-        return [];
-      }
+      const values = (await allPromise).flat();
+      return values;
+
     } catch (error) {
       let message = "Error Listing resource";
       if (error instanceof Error) message = error.message;
@@ -101,24 +97,26 @@ export class Bookmark {
     }
   }
 
-  async get(url: string): Promise<any> {
+  async get(url: string): Promise<IBookmark> {
     const doc = this.store.sym(`${url}#it`);
 
     await this.fetcher.load(doc);
 
-    let title = this.mapTitle(doc);
-    let created = this.mapCreated(doc);
-    let updated = this.mapUpdated(doc);
-    let hasTopic = this.mapTopic(doc);
-    let recalls = this.mapLink(doc);
+    const title = this.mapTitle(doc);
+    const created = this.mapCreated(doc);
+    const updated = this.mapUpdated(doc);
+    const topic = this.mapTopic(doc);
+    const creator = this.mapCreator(doc);
+    const link = this.mapLink(doc);
 
     return {
       url,
       title,
-      created,
-      updated,
-      hasTopic,
-      recalls,
+      link,
+      ...(topic && { topic }),
+      ...(created && { created }),
+      ...(updated && { updated }),
+      ...(creator && { creator }),
     };
   }
 
@@ -200,14 +198,14 @@ export class Bookmark {
     }
   }
 
-  private mapTitle(doc: NamedNode): string | undefined {
+  private mapTitle(doc: NamedNode): string {
     return (
       this.store.any(doc, DCT("title"))?.value ??
-      this.store.any(doc, RDFS("label"))?.value
+      this.store.any(doc, RDFS("label"))?.value ?? ""
     );
   }
-  private mapLink(doc: NamedNode): string | undefined {
-    return this.store.any(doc, BOOKMARK("recalls"))?.value;
+  private mapLink(doc: NamedNode): string {
+    return this.store.any(doc, BOOKMARK("recalls"))?.value ?? "";
     // ??
     // this.store.any(doc, RDFS("label"))?.value
   }
