@@ -8,14 +8,22 @@ import {
     namedNode,
     st,
     sym,
+    NamedNode
 } from "rdflib";
 import { v4 as uuid } from 'uuid';
 
 const DCT = Namespace("http://purl.org/dc/terms/");
+const RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#");
+const CRDT = Namespace("http://soukai-solid.com/crdt/");
 const TUR = Namespace("http://www.w3.org/ns/iana/media-types/text/turtle#");
 const LDP = Namespace("http://www.w3.org/ns/ldp#");
 const BOOKMARK = Namespace("http://www.w3.org/2002/01/bookmark#");
 const __RdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+
+const FOAF = Namespace("http://xmlns.com/foaf/0.1/");
+const rdf = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+const vcard = Namespace("http://www.w3.org/2006/vcard/ns#");
+const dc = Namespace("http://purl.org/dc/elements/1.1/");
 
 /**
  * Interface for the shape of a bookmark object that can be created.
@@ -67,7 +75,7 @@ export class Bookmark {
         this.updater = config.updater ?? new UpdateManager(this.store);
     }
 
-    async getAll(containerUrl: string) : Promise<IBookmark[]> {
+    async getAll(containerUrl: string): Promise<IBookmark[]> {
 
         try {
             let folder = this.store.sym(containerUrl);  // NOTE: Ends in a slash
@@ -99,11 +107,11 @@ export class Bookmark {
 
         await this.fetcher.load(doc);
 
-        let title = this.store.any(doc, DCT("title"))?.value;
-        let created = this.store.any(doc, DCT("created"))?.value;
-        let updated = this.store.any(doc, DCT("updated"))?.value;
-        let hasTopic = this.store.any(doc, BOOKMARK("hasTopic"))?.value;
-        let recalls = this.store.any(doc, BOOKMARK("recalls"))?.value;
+        let title = this.mapTitle(doc);
+        let created = this.mapCreated(doc);
+        let updated = this.mapUpdated(doc);
+        let hasTopic = this.mapTopic(doc);
+        let recalls = this.mapLink(doc);
 
         return {
             uri,
@@ -114,6 +122,8 @@ export class Bookmark {
             recalls,
         };
     }
+
+
 
     async create(containerUri: string, { title, link, topic, creator }: ICreateBookmark) {
 
@@ -172,8 +182,50 @@ export class Bookmark {
             throw new Error(message);
         }
     }
-}
 
+
+    private mapTitle(doc: NamedNode): string | undefined {
+        return (
+            this.store.any(doc, DCT("title"))?.value
+            ??
+            this.store.any(doc, RDFS("label"))?.value
+        );
+    }
+    private mapLink(doc: NamedNode): string | undefined {
+        return (
+            this.store.any(doc, BOOKMARK("recalls"))?.value
+            // ??
+            // this.store.any(doc, RDFS("label"))?.value
+        );
+    }
+
+    private mapCreated(doc: NamedNode): string | undefined {
+        return (
+            this.store.any(doc, DCT("created"))?.value
+            ??
+            this.store.any(doc, CRDT("createdAt"))?.value
+        );
+    }
+    private mapUpdated(doc: NamedNode): string | undefined {
+        return (
+            this.store.any(doc, DCT("updated"))?.value
+            ??
+            this.store.any(doc, CRDT("updatedAt"))?.value
+        );
+    }
+    private mapCreator(doc: NamedNode): string | undefined {
+        return (
+            this.store.any(doc, DCT("creator"))?.value
+            ??
+            this.store.any(doc, FOAF("maker"))?.value
+        );
+    }
+    private mapTopic(doc: NamedNode): string | undefined {
+        return (
+            this.store.any(doc, BOOKMARK("hasTopic"))?.value
+        );
+    }
+}
 
 /**
  * Checks if a given string is a valid URL.

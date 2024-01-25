@@ -104,7 +104,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
     const data = await bookmark.delete(bookmarkToDeleteURL)
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
-  // bookmarkToDeleteURL
+
   return (
     <>
       <div>
