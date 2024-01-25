@@ -142,42 +142,42 @@ export class Bookmark {
     return operation.uri;
   }
 
-  async update(uri: string, { title, link, topic, creator }: IUpdateBookmark) {
-    const doc = this.store.sym(`${uri}#it`);
+  // async update(uri: string, { title, link, topic, creator }: IUpdateBookmark) {
+  //   const doc = this.store.sym(`${uri}#it`);
 
-    // let del = this.store.statementsMatching(doc, DCT("title"), null, doc)
-    // let ins = st(doc, DCT("title"), lit(title), doc);
+  //   // let del = this.store.statementsMatching(doc, DCT("title"), null, doc)
+  //   // let ins = st(doc, DCT("title"), lit(title), doc);
 
-    // this.updater.update(del, [ins], (uri, ok, message, res) => {
-    //   if (ok) console.log('Name changed to ' + name)
-    //   else alert(message)
-    // })
+  //   // this.updater.update(del, [ins], (uri, ok, message, res) => {
+  //   //   if (ok) console.log('Name changed to ' + name)
+  //   //   else alert(message)
+  //   // })
 
-    const deletions = [
-      ...(title ? [st(doc, DCT("title"), DCT("title"), doc)] : []),
-      // ...(topic ? [st(doc, DCT("hasTopic"), doc)] : []),
-      // ...(link ? [st(doc, DCT("recalls"),  doc)] : []),
-      // ...(creator ? [st(doc, DCT("creator"),  doc)] : []),
-      // st(sym(uri), DCT("updated"), sym(uri).doc()),
-    ]
+  //   const deletions = [
+  //     ...(title ? [st(doc, DCT("title"), DCT("title"), doc)] : []),
+  //     // ...(topic ? [st(doc, DCT("hasTopic"), doc)] : []),
+  //     // ...(link ? [st(doc, DCT("recalls"),  doc)] : []),
+  //     // ...(creator ? [st(doc, DCT("creator"),  doc)] : []),
+  //     // st(sym(uri), DCT("updated"), sym(uri).doc()),
+  //   ]
 
-    const insertions = [
-      ...(title ? [st(doc, DCT("title"), lit(title), doc)] : []),
-      // ...(topic ? [st(doc, DCT("hasTopic"), namedNode(topic), doc)] : []),
-      // ...(link ? [st(doc, DCT("recalls"), namedNode(link), doc)] : []),
-      // ...(creator ? [st(doc, DCT("creator"), namedNode(creator), doc)] : []),
-      // st(sym(uri), DCT("updated"), lit(new Date().toISOString()), sym(uri).doc()),
-    ];
+  //   const insertions = [
+  //     ...(title ? [st(doc, DCT("title"), lit(title), doc)] : []),
+  //     // ...(topic ? [st(doc, DCT("hasTopic"), namedNode(topic), doc)] : []),
+  //     // ...(link ? [st(doc, DCT("recalls"), namedNode(link), doc)] : []),
+  //     // ...(creator ? [st(doc, DCT("creator"), namedNode(creator), doc)] : []),
+  //     // st(sym(uri), DCT("updated"), lit(new Date().toISOString()), sym(uri).doc()),
+  //   ];
 
-    const operation = {
-      uri,
-      deletions,
-      insertions,
-    };
+  //   const operation = {
+  //     uri,
+  //     deletions,
+  //     insertions,
+  //   };
 
-    await this.updater.update(operation.deletions, operation.insertions);
-    // await this.updater.update()
-  }
+  //   await this.updater.update(operation.deletions, operation.insertions);
+  //   // await this.updater.update()
+  // }
 
   async delete(uri: string) {
     const doc = this.store.sym(`${uri}#it`);

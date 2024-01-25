@@ -86,15 +86,15 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
     const data = await bookmark.create(bookmarksURL, { title: "some value", link: "http://somelik.com", topic: "http://sometopicuri.com", creator: "http://someone.cpm" })
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
-  const handleUpdateBookmark = async (url: string) => {
-    var store = graph()
-    var fetcher = new Fetcher(store, { fetch: session?.fetch })
+  // const handleUpdateBookmark = async (url: string) => {
+  //   var store = graph()
+  //   var fetcher = new Fetcher(store, { fetch: session?.fetch })
 
-    const bookmark = new Bookmark({ fetcher, store })
-    let randomStr = (Math.random() + 1).toString(36).substring(7);
-    const data = await bookmark.update(url, { title: randomStr, link: `http://${randomStr}.com`, topic: `http://${randomStr}.com`, creator: `http://${randomStr}.com` })
-    console.log("🚀 ~ handleGetBookmarks ~ data:", data)
-  }
+  //   const bookmark = new Bookmark({ fetcher, store })
+  //   let randomStr = (Math.random() + 1).toString(36).substring(7);
+  //   const data = await bookmark.update(url, { title: randomStr, link: `http://${randomStr}.com`, topic: `http://${randomStr}.com`, creator: `http://${randomStr}.com` })
+  //   console.log("🚀 ~ handleGetBookmarks ~ data:", data)
+  // }
   const handleDeleteBookmark = async (url: string) => {
     var store = graph()
     var fetcher = new Fetcher(store, { fetch: session?.fetch })
@@ -139,11 +139,11 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
                     GET
                   </button>
 
-                  <button
+                  {/* <button
                     onClick={async () => { handleUpdateBookmark(b.url) }}
                   >
                     UPD
-                  </button>
+                  </button> */}
 
                   <button
                     onClick={async () => { handleDeleteBookmark(b.url) }}
