@@ -133,6 +133,19 @@ export class Bookmark {
         };
         await this.updater.updateMany(operation.deletions, operation.insertions);
     }
+
+
+    async delete(uri: string) {
+        const doc = this.store.sym(`${uri}#it`);
+
+        try {
+            await this.fetcher.webOperation('DELETE', doc.uri)
+        } catch (error) {
+            let message = 'Unknown Error'
+            if (error instanceof Error) message = error.message
+            throw new Error(message ?? "Error Deleting resource");
+        }
+    }
 }
 
 
