@@ -67,6 +67,32 @@ export class Bookmark {
         this.updater = config.updater ?? new UpdateManager(this.store);
     }
 
+    async getAll(containerUrl: string) : Promise<IBookmark[]> {
+
+        try {
+            let folder = this.store.sym(containerUrl);  // NOTE: Ends in a slash
+
+            await this.fetcher.load(folder);
+
+            let files = this.store.match(folder, LDP("contains"), undefined, folder)
+
+            const urls = files.map(f => f.object.value)
+
+            const allPromise = Promise.all(urls.map((url) => this.get(url)));
+
+            try {
+                const values = (await allPromise).flat();
+                return values;
+            } catch (error) {
+                console.log(error);
+                return [];
+            }
+        } catch (error) {
+            let message = 'Error Listing resource'
+            if (error instanceof Error) message = error.message
+            throw new Error(message);
+        }
+    }
 
     async get(uri: string): Promise<any> {
         const doc = this.store.sym(`${uri}#it`);
@@ -141,9 +167,9 @@ export class Bookmark {
         try {
             await this.fetcher.webOperation('DELETE', doc.uri)
         } catch (error) {
-            let message = 'Unknown Error'
+            let message = 'Error Deleting resource'
             if (error instanceof Error) message = error.message
-            throw new Error(message ?? "Error Deleting resource");
+            throw new Error(message);
         }
     }
 }

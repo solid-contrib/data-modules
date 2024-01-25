@@ -57,7 +57,7 @@ const GuestView = () => {
 
 
 const AuthenticatedView = ({ session }: { session?: Session }) => {
-  // const [bookmarks, setBookmarks] = useState<(IBookmark)[]>([]);
+  const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
 
 
@@ -71,12 +71,12 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
   const handleGetBookmarks = async () => {
-    // var store = graph()
-    // var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
-    // setBookmarks()
-    // const bookmark = new Bookmark({ fetcher, store })
-    // const data = await bookmark.getAll(bookmarksURL)
-    // console.log("🚀 ~ handleGetBookmarks ~ data:", data)
+    var store = graph()
+    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+    const bookmark = new Bookmark({ fetcher, store })
+    const data = await bookmark.getAll(bookmarksURL)
+    setBookmarks(data)
+    console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
   const handleCreateBookmark = async () => {
     var store = graph()
@@ -115,7 +115,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
         <button onClick={handleUpdateBookmark}>UPDATE</button>
         <button onClick={handleDeleteBookmark}>DELETE</button>
       </div>
-      {/* <table>
+      <table>
         <thead>
           <tr>
             <th>title</th>
@@ -155,7 +155,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
             </tr>
           ))}
         </tbody>
-      </table> */}
+      </table>
     </>
   )
 }

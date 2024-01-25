@@ -109,3 +109,14 @@ button:focus-visible {
 .read-the-docs {
   color: #888;
 }
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
