@@ -86,13 +86,13 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
     const data = await bookmark.create(bookmarksURL, { title: "some value", link: "http://somelik.com", topic: "http://sometopicuri.com", creator: "http://someone.cpm" })
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
-  const handleUpdateBookmark = async () => {
+  const handleUpdateBookmark = async (url: string) => {
     var store = graph()
     var fetcher = new Fetcher(store, { fetch: session?.fetch })
 
     const bookmark = new Bookmark({ fetcher, store })
     let randomStr = (Math.random() + 1).toString(36).substring(7);
-    const data = await bookmark.update(bookmarkToUpdateURL, { title: randomStr, link: `http://${randomStr}.com`, topic: `http://${randomStr}.com`, creator: `http://${randomStr}.com` })
+    const data = await bookmark.update(url, { title: randomStr, link: `http://${randomStr}.com`, topic: `http://${randomStr}.com`, creator: `http://${randomStr}.com` })
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
   const handleDeleteBookmark = async (url: string) => {
@@ -112,7 +112,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
         <button onClick={handleGetBookmarks}>GET ALL</button>
         <button onClick={handleGetBookmark}>GET</button>
         <button onClick={handleCreateBookmark}>CREATE</button>
-        <button onClick={handleUpdateBookmark}>UPDATE</button>
+        {/* <button onClick={handleUpdateBookmark}>UPDATE</button> */}
         {/* <button onClick={handleDeleteBookmark}>DELETE</button> */}
       </div>
       <table>
@@ -140,7 +140,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
                   </button>
 
                   <button
-                    onClick={async () => { }}
+                    onClick={async () => { handleUpdateBookmark(b.url) }}
                   >
                     UPD
                   </button>

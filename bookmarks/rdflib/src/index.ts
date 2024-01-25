@@ -15,15 +15,11 @@ import { v4 as uuid } from "uuid";
 const DCT = Namespace("http://purl.org/dc/terms/");
 const RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#");
 const CRDT = Namespace("http://soukai-solid.com/crdt/");
-const TUR = Namespace("http://www.w3.org/ns/iana/media-types/text/turtle#");
 const LDP = Namespace("http://www.w3.org/ns/ldp#");
 const BOOKMARK = Namespace("http://www.w3.org/2002/01/bookmark#");
-const __RdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-
 const FOAF = Namespace("http://xmlns.com/foaf/0.1/");
-const rdf = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-const vcard = Namespace("http://www.w3.org/2006/vcard/ns#");
-const dc = Namespace("http://purl.org/dc/elements/1.1/");
+
+const __RdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
 /**
  * Interface for the shape of a bookmark object that can be created.
@@ -130,25 +126,11 @@ export class Bookmark {
     const insertions = [
       st(sym(uri), sym(__RdfType), BOOKMARK("Bookmark"), sym(uri).doc()),
       st(sym(uri), DCT("title"), lit(title), sym(uri).doc()),
-      ...(topic
-        ? [st(sym(uri), DCT("hasTopic"), namedNode(topic), sym(uri).doc())]
-        : []),
+      ...(topic ? [st(sym(uri), DCT("hasTopic"), namedNode(topic), sym(uri).doc())] : []),
       st(sym(uri), DCT("recalls"), namedNode(link), sym(uri).doc()),
-      ...(creator
-        ? [st(sym(uri), DCT("creator"), namedNode(creator), sym(uri).doc())]
-        : []),
-      st(
-        sym(uri),
-        DCT("created"),
-        lit(new Date().toISOString()),
-        sym(uri).doc()
-      ),
-      st(
-        sym(uri),
-        DCT("updated"),
-        lit(new Date().toISOString()),
-        sym(uri).doc()
-      ),
+      ...(creator ? [st(sym(uri), DCT("creator"), namedNode(creator), sym(uri).doc())] : []),
+      st(sym(uri), DCT("created"), lit(new Date().toISOString()), sym(uri).doc()),
+      st(sym(uri), DCT("updated"), lit(new Date().toISOString()), sym(uri).doc()),
     ];
 
     const operation = {
@@ -163,27 +145,38 @@ export class Bookmark {
   async update(uri: string, { title, link, topic, creator }: IUpdateBookmark) {
     const doc = this.store.sym(`${uri}#it`);
 
+    // let del = this.store.statementsMatching(doc, DCT("title"), null, doc)
+    // let ins = st(doc, DCT("title"), lit(title), doc);
+
+    // this.updater.update(del, [ins], (uri, ok, message, res) => {
+    //   if (ok) console.log('Name changed to ' + name)
+    //   else alert(message)
+    // })
+
     const deletions = [
-      ...(title ? [st(doc, DCT("title"), lit(title), doc)] : []),
-      ...(topic ? [st(doc, DCT("hasTopic"), namedNode(topic), doc)] : []),
-      ...(link ? [st(doc, DCT("recalls"), namedNode(link), doc)] : []),
-      ...(creator ? [st(doc, DCT("creator"), namedNode(creator), doc)] : []),
-      st(sym(uri), DCT("updated"), lit(new Date().toISOString()), sym(uri).doc()),
+      ...(title ? [st(doc, DCT("title"), DCT("title"), doc)] : []),
+      // ...(topic ? [st(doc, DCT("hasTopic"), doc)] : []),
+      // ...(link ? [st(doc, DCT("recalls"),  doc)] : []),
+      // ...(creator ? [st(doc, DCT("creator"),  doc)] : []),
+      // st(sym(uri), DCT("updated"), sym(uri).doc()),
     ]
 
     const insertions = [
       ...(title ? [st(doc, DCT("title"), lit(title), doc)] : []),
-      ...(topic ? [st(doc, DCT("hasTopic"), namedNode(topic), doc)] : []),
-      ...(link ? [st(doc, DCT("recalls"), namedNode(link), doc)] : []),
-      ...(creator ? [st(doc, DCT("creator"), namedNode(creator), doc)] : []),
-      st(sym(uri), DCT("updated"), lit(new Date().toISOString()), sym(uri).doc()),
+      // ...(topic ? [st(doc, DCT("hasTopic"), namedNode(topic), doc)] : []),
+      // ...(link ? [st(doc, DCT("recalls"), namedNode(link), doc)] : []),
+      // ...(creator ? [st(doc, DCT("creator"), namedNode(creator), doc)] : []),
+      // st(sym(uri), DCT("updated"), lit(new Date().toISOString()), sym(uri).doc()),
     ];
+
     const operation = {
       uri,
       deletions,
       insertions,
     };
-    await this.updater.updateMany(operation.deletions, operation.insertions);
+
+    await this.updater.update(operation.deletions, operation.insertions);
+    // await this.updater.update()
   }
 
   async delete(uri: string) {
