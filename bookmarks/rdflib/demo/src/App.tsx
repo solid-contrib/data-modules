@@ -14,7 +14,7 @@ const dct = Namespace("http://purl.org/dc/terms/");
 const bookmarksURL = "https://solid-dm.solidcommunity.net/bookmarks/"
 const bookmarkURL = "https://solid-dm.solidcommunity.net/bookmarks/90f33a54-34e5-4c64-aaa7-0c9fc0450357"
 const bookmarkToUpdateURL = "https://solid-dm.solidcommunity.net/bookmarks/bea593de-74dd-4f8b-8a50-caa0cf790077"
-const bookmarkToDeleteURL = "https://solid-dm.solidcommunity.net/bookmarks/db519a5a-6fdb-4137-9ac6-372d5ba07dc4/index.ttl"
+// const bookmarkToDeleteURL = "https://solid-dm.solidcommunity.net/bookmarks/db519a5a-6fdb-4137-9ac6-372d5ba07dc4/index.ttl"
 
 async function startLogin() {
   // Start the Login Process if not already logged in.
@@ -64,7 +64,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
 
   const handleGetBookmark = async () => {
     var store = graph()
-    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+    var fetcher = new Fetcher(store, { fetch: session?.fetch })
 
     const bookmark = new Bookmark({ fetcher, store })
     const data = await bookmark.get(bookmarksURL)
@@ -72,7 +72,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
   }
   const handleGetBookmarks = async () => {
     var store = graph()
-    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+    var fetcher = new Fetcher(store, { fetch: session?.fetch })
     const bookmark = new Bookmark({ fetcher, store })
     const data = await bookmark.getAll(bookmarksURL)
     setBookmarks(data)
@@ -80,7 +80,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
   }
   const handleCreateBookmark = async () => {
     var store = graph()
-    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+    var fetcher = new Fetcher(store, { fetch: session?.fetch })
 
     const bookmark = new Bookmark({ fetcher, store })
     const data = await bookmark.create(bookmarksURL, { title: "some value", link: "http://somelik.com", topic: "http://sometopicuri.com", creator: "http://someone.cpm" })
@@ -88,20 +88,20 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
   }
   const handleUpdateBookmark = async () => {
     var store = graph()
-    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+    var fetcher = new Fetcher(store, { fetch: session?.fetch })
 
     const bookmark = new Bookmark({ fetcher, store })
     let randomStr = (Math.random() + 1).toString(36).substring(7);
     const data = await bookmark.update(bookmarkToUpdateURL, { title: randomStr, link: `http://${randomStr}.com`, topic: `http://${randomStr}.com`, creator: `http://${randomStr}.com` })
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
-  const handleDeleteBookmark = async () => {
+  const handleDeleteBookmark = async (url: string) => {
     var store = graph()
-    var fetcher = new Fetcher(store, { timeout: 5000, fetch: session?.fetch })
+    var fetcher = new Fetcher(store, { fetch: session?.fetch })
 
     const bookmark = new Bookmark({ fetcher, store })
 
-    const data = await bookmark.delete(bookmarkToDeleteURL)
+    const data = await bookmark.delete(url)
     console.log("🚀 ~ handleGetBookmarks ~ data:", data)
   }
 
@@ -113,7 +113,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
         <button onClick={handleGetBookmark}>GET</button>
         <button onClick={handleCreateBookmark}>CREATE</button>
         <button onClick={handleUpdateBookmark}>UPDATE</button>
-        <button onClick={handleDeleteBookmark}>DELETE</button>
+        {/* <button onClick={handleDeleteBookmark}>DELETE</button> */}
       </div>
       <table>
         <thead>
@@ -146,7 +146,7 @@ const AuthenticatedView = ({ session }: { session?: Session }) => {
                   </button>
 
                   <button
-                    onClick={async () => { }}
+                    onClick={async () => { handleDeleteBookmark(b.url) }}
                   >
                     DEL
                   </button>
