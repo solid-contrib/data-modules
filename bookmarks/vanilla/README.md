@@ -16,7 +16,7 @@ import { Bookmark } from "@solid-data-modules/bookmarks-vanilla"
 use it to work with bookmarks
 
 ```typescript
-const result: IBookmark[] = await Bookmark.getAll(session.fetch, session.info.webId, "<defaultRegistryUrl>");
+const result: IBookmark[] = await Bookmark.getAll(session.fetch, session.info.webId, "<defaultPrivateBookmarkDocUrl>");
 ```
 the `getAll` method will return an array of IBookmark, in case there are no bookmarks it will return an empty array.
 ```typescript
@@ -28,7 +28,7 @@ const result: boolean  = await Bookmark.delete("url", session.fetch);
 ```
 the `delete` method will return a boolean indicating if the bookmark was deleted.
 ```typescript
-const result: boolean  = await Bookmark.create(payload: ICreateBookmark, session.fetch, session.info.webId, "<defaultRegistryUrl>");
+const result: boolean  = await Bookmark.create(payload: ICreateBookmark, session.fetch, session.info.webId, "<defaultPrivateBookmarkDocUrl>");
 ```
 the `create` method will return a boolean indicating if the bookmark was created.
 ```typescript
@@ -37,7 +37,7 @@ const result: IBookmark | undefined = await Bookmark.update("url", payload: IUpd
 the `update` method will return an IBookmark, in case there is no bookmark it will return `undefined`.
 
 - `url` indicates the primary key of the bookmark, (IRI in the RDF)
-- `defaultRegistryUrl` indicates the default registry url in case you want to specify, and it's optional, and obviously it has to be a valid URL, the default value is `/bookmarks/index.ttl`
+- `defaultPrivateBookmarkDocUrl` indicates the default registry url in case you want to specify, and it's optional, and obviously it has to be a valid URL, the default value is `/bookmarks/index.ttl`
 - payload is an object containing the fields of the bookmark
 - you need to pass the authenticated fetch and a webId to the methods, these values is obtained from the [auth.ts](https://github.com/solid-contrib/data-modules/blob/main/bookmarks/vanilla/demo/src/utils/auth.ts) in the demo app.
 - session object can be obtained from:
@@ -100,11 +100,11 @@ Once its completed the auth proccess it will redirect to the redirect url, and f
 
 
 ## methods
-the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes an authenticated fetch to use for fetching the data as well as a webId of the logedin user. also it takes the `defaultRegistryUrl` in case you want to store the bookmarks in specific directory.
+the [`Bookmark.getAll`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L72) takes an authenticated fetch to use for fetching the data as well as a webId of the logedin user. also it takes the `defaultPrivateBookmarkDocUrl` in case you want to store the bookmarks in specific directory.
 
 the [`Bookmark.get`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L94) and [`Bookmark.delete`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L108) methods take the url of the bookmark as the primary key and an authenticated fetch.
 
-the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L135) takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` as the payload with an authenticated fetch and a webId. also it takes the `defaultRegistryUrl` in case you want to store the bookmarks in specific directory.
+the [`Bookmark.create`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L135) takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` as the payload with an authenticated fetch and a webId. also it takes the `defaultPrivateBookmarkDocUrl` in case you want to store the bookmarks in specific directory.
 
 the [`Bookmark.update`](https://github.com/solid-contrib/data-modules/blob/422cabb91085916e71c5610235f43fc483493d72/bookmarks/vanilla/src/modules/Bookmark.ts#L169) takes the `url` of the bookmark as primary key, then as a payload, it takes an object with fields: `label`, `topic` and `link`, `creator`, `created` and `updated` with an authenticated fetch.
 
@@ -134,8 +134,8 @@ updated: DateTime string e.g. "2023-10-21T14:16:16Z" (optional)
 
 # typeIndex Support
 
-The [Bookmak.getRegistryUrls](https://github.com/solid-contrib/data-modules/blob/f9216b7a499bef5d962f3a011b95ec3ea44e1e56/bookmarks/vanilla/src/modules/Bookmark.ts#L80C30-L80C30) is the entrypoint for the data module and typeIndex.
-it checkes if typeIndex has a `solid:instance` or `solid:instanceContainer` registerd and returns the url of them as an array of strings. also it takes the `defaultRegistryUrl` in case you want to store the bookmarks in specific directory.
+The [Bookmak.getAllBookmarkDocUrls](https://github.com/solid-contrib/data-modules/blob/f9216b7a499bef5d962f3a011b95ec3ea44e1e56/bookmarks/vanilla/src/modules/Bookmark.ts#L80C30-L80C30) is the entrypoint for the data module and typeIndex.
+it checkes if typeIndex has a `solid:instance` or `solid:instanceContainer` registerd and returns the url of them as an array of strings. also it takes the `defaultPrivateBookmarkDocUrl` in case you want to store the bookmarks in specific directory.
 
 see [Solid Typeindex Support](https://github.com/pondersource/solid-typeindex-support) for more information on typeindex support
 

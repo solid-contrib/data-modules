@@ -27,7 +27,7 @@ import {
 import { namedNode } from '@rdfjs/data-model';
 import { __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt, __crdt_resource } from "../constants";
 import { TypeIndexHelper } from "@rezasoltani/solid-typeindex-support";
-import { isValidUrl } from "../utils";
+import { isValidUrl, merge } from "../utils";
 
 /**
  * Interface for the shape of a bookmark object that can be created.
@@ -74,17 +74,19 @@ export class Bookmark {
      *
      * @param fetch - The fetch function to use for network requests
      * @param webId - The webId of the user to get bookmark registries for
-     * @param defaultRegistryUrl - The default container url
+     * @param defaultPrivateBookmarkDocUrl - Where to store the bookmarks if no type registration is found
      * @returns A promise resolving to an array of registry URL strings
      * @internal
      */
-    public static async getRegistryUrls(
+    public static async getAllBookmarkDocUrls(
         fetch: typeof globalThis.fetch,
         webId: string,
-        defaultRegistryUrl?: string
+        defaultPrivateBookmarkDocUrl?: string
     ): Promise<string[]> {
-        const { instanceContainers, instances } = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
-
+        const privateEntries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true);
+        const publicEntries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, false);
+        const instances = merge(privateEntries.instances, publicEntries.instances);
+        console.log(instances);
         if (!!instances.length) {
             return instances
         } else {
@@ -92,17 +94,17 @@ export class Bookmark {
 
             const baseURL = podToUse ? podToUse : webId?.split("/profile")[0]
 
-            defaultRegistryUrl = `${baseURL}${defaultRegistryUrl ?? '/bookmarks/index.ttl'}`;
+            defaultPrivateBookmarkDocUrl = `${baseURL}${defaultPrivateBookmarkDocUrl ?? '/bookmarks/index.ttl'}`;
 
-            const defaultIndexDataset = await getSolidDataset(defaultRegistryUrl, { fetch: fetch });
+            const defaultIndexDataset = await getSolidDataset(defaultPrivateBookmarkDocUrl, { fetch: fetch });
 
             if (!defaultIndexDataset) {
-                await saveSolidDatasetAt(defaultRegistryUrl, createSolidDataset(), { fetch: fetch });
+                await saveSolidDatasetAt(defaultPrivateBookmarkDocUrl, createSolidDataset(), { fetch: fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registry", BOOKMARK.Bookmark, fetch, defaultRegistryUrl, false, true)
+            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registry", BOOKMARK.Bookmark, fetch, defaultPrivateBookmarkDocUrl, false, true)
 
-            return [defaultRegistryUrl];
+            return [defaultPrivateBookmarkDocUrl];
         }
     }
 
@@ -111,15 +113,15 @@ export class Bookmark {
      *
      * @param fetch - The fetch function to use for network requests.
      * @param webId - The user's webId.
-     * @param defaultRegistryUrl - The default container url
+     * @param defaultPrivateBookmarkDocUrl - The default container url
      * @returns A promise resolving to an array of the user's bookmarks.
      */
     public static async getAll(
         fetch: typeof globalThis.fetch,
         webId: string,
-        defaultRegistryUrl?: string,
+        defaultPrivateBookmarkDocUrl?: string,
     ): Promise<IBookmark[]> {
-        const indexUrls = await this.getRegistryUrls(fetch, webId, defaultRegistryUrl);
+        const indexUrls = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
         try {
             const all = indexUrls.map(async (indexUrl) => {
                 const ds = await getSolidDataset(indexUrl, { fetch: fetch });
@@ -211,14 +213,14 @@ export class Bookmark {
      * @param payload - The bookmark data.
      * @param fetch - The fetch function.
      * @param webId - The user's WebID.
-     * @param defaultRegistryUrl - The default container url
+     * @param defaultPrivateBookmarkDocUrl - Doc to store the bookmark in if no type registration is foundj
      * @returns A promise resolving to true if the bookmark was created, false otherwise.
      */
     public static async create(
         payload: ICreateBookmark,
         fetch: typeof globalThis.fetch,
         webId: string,
-        defaultRegistryUrl?: string,
+        defaultPrivateBookmarkDocUrl?: string,
     ): Promise<boolean> {
         const { title, link, creator, topic } = payload;
 
@@ -226,7 +228,7 @@ export class Bookmark {
         if (creator && !isValidUrl(creator))
             throw new Error("creator is not a valid URL");
 
-        const [indexUrl] = await this.getRegistryUrls(fetch, webId, defaultRegistryUrl);
+        const [indexUrl] = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
 
         const ds = await getSolidDataset(indexUrl, { fetch: fetch });
 
