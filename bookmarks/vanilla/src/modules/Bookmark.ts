@@ -128,25 +128,37 @@ export class Bookmark {
     ): Promise<IBookmark[]> {
         const bookmarkDocUrls = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
         try {
-            const all = bookmarkDocUrls.map(async (indexUrl) => {
-                const ds = await getSolidDataset(indexUrl, { fetch: fetch });
-
+            const all = bookmarkDocUrls.map(async (bookmarkDocUrl) => {
+                const ds = await getSolidDataset(bookmarkDocUrl, { fetch: fetch });
+                // console.log('data set for', bookmarkDocUrl);
                 const things = getThingAll(ds).filter(thing => {
-                    if (thing && thing.predicates && thing.predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']) {
-                        const types = thing.predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'];
-                        if (types && types.namedNodes && types.namedNodes.find((node: any) => node.value === 'http://www.w3.org/2002/01/bookmark#Bookmark'))
-                        console.log();
-                        return true;
+                    // console.log('thing', thing, thing.predicates, thing.predicates[RDF.type], thing.predicates[RDF.type].namedNodes);
+                    if (thing && thing.predicates && thing.predicates[RDF.type] && thing.predicates[RDF.type].namedNodes) {
+                        const types = thing.predicates[RDF.type].namedNodes;
+                        // console.log("thing types", types, JSON.stringify(types));
+                        if (types && types.find((rdfType: string) => rdfType === BOOKMARK.Bookmark)) {
+                            // console.log('found bookmark (type one)', thing.url);
+                            return true;
+                        }
+                        if (types && types.find((rdfType: string) => rdfType === "http://www.w3.org/2002/01/bookmark#BookMark")) {
+                            // console.log('found bookmark (type two)', thing.url);
+                            return true;
+                        }
+                        if (types && types.find((rdfType: string) => rdfType === AS.Note)) {
+                            // console.log('found bookmark (type three)', thing.url);
+                            return true;
+                        }
                     }
+                    // console.log('found non-bookmark', thing.url);
                     return false;
-                })
-
+                });
+                // console.log('things', things);
                 const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
                 const resources = bookmarks.filter(Bookmark => !Bookmark.url.endsWith('-metadata'))
                 const metadatas = bookmarks.filter(Bookmark => Bookmark.url.endsWith('-metadata'))
 
-                const responce = resources.map(bookmark => {
+                const response = resources.map(bookmark => {
                     const metadata = metadatas.find((meta: any) => meta.resource === bookmark.url) as any
 
                     return {
@@ -156,7 +168,7 @@ export class Bookmark {
                     }
                 })
 
-                return responce
+                return response
             })
             const allPromise = Promise.all([...all]);
             const values = (await allPromise).flat();
@@ -241,9 +253,9 @@ export class Bookmark {
         if (creator && !isValidUrl(creator))
             throw new Error("creator is not a valid URL");
 
-        const [indexUrl] = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
+        const [bookmarkDocUrl] = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
 
-        const ds = await getSolidDataset(indexUrl, { fetch: fetch });
+        const ds = await getSolidDataset(bookmarkDocUrl, { fetch: fetch });
 
         let newBookmarkThing = createThing();
 
@@ -292,7 +304,7 @@ export class Bookmark {
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
         const updatedDataset = await saveSolidDatasetAt(
-            indexUrl,
+            bookmarkDocUrl,
             updatedBookmarkList,
             { fetch: fetch }
         );
@@ -361,7 +373,7 @@ export class Bookmark {
         const updated = this.mapUpdated(thing);
         const creator = this.mapCreator(thing);
         const resource = getNamedNode(thing, __crdt_resource)?.value;
-        return {
+        const ret = {
             url,
             title,
             link,
@@ -371,6 +383,8 @@ export class Bookmark {
             ...(creator && { creator }),
             ...(resource && { resource }),
         };
+        console.log('mapped bookmark', thing.predicates, ret);
+        return ret;
     }
 
     /**
@@ -397,8 +411,10 @@ export class Bookmark {
      * @internal
      */
     private static mapLink(thing: ThingPersisted): string {
+        // console.log('mapping link', getLiteral(thing, BOOKMARK.recalls)?.value, )
         return (
             getLiteral(thing, BOOKMARK.recalls)?.value ??
+            getNamedNode(thing, BOOKMARK.recalls)?.value ??
             getNamedNode(thing, AS.url)?.value ??
             ""
         );

@@ -66,7 +66,8 @@ const Bookmarks: FC<IProps> = () => {
 
   useEffect(() => {
     if (session && isLoggedIn) loadBookmarks();
-  }, [session, isLoggedIn, loadBookmarks]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, isLoggedIn]);
 
   const handleSubmit = async () => {
     if (bookmarkToUpdate) {
