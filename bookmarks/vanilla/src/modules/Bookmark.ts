@@ -93,7 +93,7 @@ export class Bookmark {
         const instances = merge(instancesOne, instancesTwo);
         console.log(instances);
         if (!!instances.length) {
-            return instances
+            return instances as string[];
         } else {
             const podToUse = (await getPodUrlAll(webId!, { fetch: fetch }))[0];
 
@@ -126,12 +126,20 @@ export class Bookmark {
         webId: string,
         defaultPrivateBookmarkDocUrl?: string,
     ): Promise<IBookmark[]> {
-        const indexUrls = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
+        const bookmarkDocUrls = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
         try {
-            const all = indexUrls.map(async (indexUrl) => {
+            const all = bookmarkDocUrls.map(async (indexUrl) => {
                 const ds = await getSolidDataset(indexUrl, { fetch: fetch });
 
-                const things = getThingAll(ds)
+                const things = getThingAll(ds).filter(thing => {
+                    if (thing && thing.predicates && thing.predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']) {
+                        const types = thing.predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'];
+                        if (types && types.namedNodes && types.namedNodes.find((node: any) => node.value === 'http://www.w3.org/2002/01/bookmark#Bookmark'))
+                        console.log();
+                        return true;
+                    }
+                    return false;
+                })
 
                 const bookmarks = await things.map(thing => this.mapBookmark(thing))
 

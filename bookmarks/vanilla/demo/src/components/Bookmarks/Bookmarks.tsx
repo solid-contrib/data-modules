@@ -34,9 +34,9 @@ declare global {
 }
 window.Bookmark =  Bookmark || {};
 
-type IProps = {};
+type IProps = object;
 
-const Bookmarks: FC<IProps> = ({ }) => {
+const Bookmarks: FC<IProps> = () => {
   const [bookmarkToUpdate, setBookmarkToUpdate] = useState<undefined | IBookmark>(undefined);
   const { session } = useSession();
   window.fetcher = session?.fetch;
@@ -66,7 +66,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
 
   useEffect(() => {
     if (session && isLoggedIn) loadBookmarks();
-  }, [session, isLoggedIn]);
+  }, [session, isLoggedIn, loadBookmarks]);
 
   const handleSubmit = async () => {
     if (bookmarkToUpdate) {
@@ -87,7 +87,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
       setBookmarkToUpdate(undefined);
     } else {
       // TODO: Create
-      const updatedDataset = await Bookmark.create(
+      await Bookmark.create(
         {
           title: bookmarkTitle,
           link: bookmarkLink,
