@@ -18,6 +18,7 @@ import {
 } from "@inrupt/solid-client";
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
+    AS,
     BOOKMARK,
     DCTERMS,
     FOAF,
@@ -83,9 +84,13 @@ export class Bookmark {
         webId: string,
         defaultPrivateBookmarkDocUrl?: string
     ): Promise<string[]> {
-        const privateEntries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true);
-        const publicEntries = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, false);
-        const instances = merge(privateEntries.instances, publicEntries.instances);
+        const privateEntriesOne = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true);
+        const publicEntriesOne = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, false);
+        const instancesOne = merge(privateEntriesOne.instances, publicEntriesOne.instances);
+        const privateEntriesTwo = await TypeIndexHelper.getFromTypeIndex(webId!, AS.Note, fetch, true);
+        const publicEntriesTwo = await TypeIndexHelper.getFromTypeIndex(webId!, AS.Note, fetch, false);
+        const instancesTwo = merge(privateEntriesTwo.instances, publicEntriesTwo.instances);
+        const instances = merge(instancesOne, instancesTwo);
         console.log(instances);
         if (!!instances.length) {
             return instances
@@ -371,6 +376,7 @@ export class Bookmark {
         return (
             getLiteral(thing, DCTERMS.title)?.value ??
             getLiteral(thing, RDFS.label)?.value ??
+            getLiteral(thing, AS.name)?.value ??
             ""
         );
     }
@@ -385,7 +391,7 @@ export class Bookmark {
     private static mapLink(thing: ThingPersisted): string {
         return (
             getLiteral(thing, BOOKMARK.recalls)?.value ??
-            getNamedNode(thing, BOOKMARK.recalls)?.value ??
+            getNamedNode(thing, AS.url)?.value ??
             ""
         );
     }
@@ -400,6 +406,7 @@ export class Bookmark {
     private static mapCreated(thing: ThingPersisted): string | undefined {
         return (
             getLiteral(thing, DCTERMS.created)?.value ??
+            getLiteral(thing, AS.published)?.value ??
             getLiteral(thing, __crdt_createdAt)?.value
         );
     }
@@ -428,6 +435,7 @@ export class Bookmark {
     private static mapCreator(thing: ThingPersisted): string | undefined {
         return (
             getNamedNode(thing, DCTERMS.creator)?.value ??
+            getNamedNode(thing, AS.actor)?.value ??
             getNamedNode(thing, FOAF.maker)?.value
         );
     }
