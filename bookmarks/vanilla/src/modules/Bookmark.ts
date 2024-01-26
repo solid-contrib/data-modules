@@ -148,6 +148,10 @@ export class Bookmark {
                             // console.log('found bookmark (type three)', thing.url);
                             return true;
                         }
+                        if (types && types.find((rdfType: string) => rdfType === "http://soukai-solid.com/crdt/Metadata")) {
+                            // console.log('found Soukai metadata', thing.url);
+                            return true;
+                        }
                     }
                     // console.log('found non-bookmark', thing.url);
                     return false;
@@ -383,7 +387,7 @@ export class Bookmark {
             ...(creator && { creator }),
             ...(resource && { resource }),
         };
-        console.log('mapped bookmark', thing.predicates, ret);
+        // console.log('mapped bookmark', thing.predicates, ret);
         return ret;
     }
 
