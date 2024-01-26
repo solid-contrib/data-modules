@@ -91,7 +91,7 @@ export class Bookmark {
         const publicEntriesTwo = await TypeIndexHelper.getFromTypeIndex(webId!, AS.Note, fetch, false);
         const instancesTwo = merge(privateEntriesTwo.instances, publicEntriesTwo.instances);
         const instances = merge(instancesOne, instancesTwo);
-        console.log(instances);
+        // console.log(instances);
         if (!!instances.length) {
             return instances as string[];
         } else {
