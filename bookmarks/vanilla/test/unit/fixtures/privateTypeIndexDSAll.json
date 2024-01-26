@@ -55,7 +55,7 @@
     },
     {
         "type": "Subject",
-        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl#bookmarks_registery",
+        "url": "https://solid-dm.solidcommunity.net/settings/privateTypeIndex.ttl#bookmarks_registry",
         "predicates": {
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
                 "namedNodes": [

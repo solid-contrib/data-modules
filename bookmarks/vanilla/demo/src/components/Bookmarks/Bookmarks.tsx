@@ -26,15 +26,22 @@ import {
 } from "../../../../src";
 
 declare global {
-  interface Window { Bookmark: Bookmark; }
+  interface Window {
+    Bookmark?: Bookmark;
+    fetcher?: unknown;
+    webId?: unknown;
+  }
 }
 window.Bookmark =  Bookmark || {};
 
-type IProps = {};
+type IProps = object;
 
-const Bookmarks: FC<IProps> = ({ }) => {
+const Bookmarks: FC<IProps> = () => {
   const [bookmarkToUpdate, setBookmarkToUpdate] = useState<undefined | IBookmark>(undefined);
   const { session } = useSession();
+  window.fetcher = session?.fetch;
+  window.webId = session?.info?.webId;
+
   const { info: { isLoggedIn } } = session;
 
   const [bookmarkTitle, setbookmarkTitle] = useState("");
@@ -42,13 +49,24 @@ const Bookmarks: FC<IProps> = ({ }) => {
 
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
+  let loading = false;
+
   async function loadBookmarks() {
+    if (loading) {
+      console.log("Already loading, skip");
+      return;
+    }
+    console.log("Loading bookmarks");
+    loading = true;
     const list = await Bookmark.getAll(session.fetch, session.info.webId!);
     setBookmarks(list);
+    loading = false;
+    console.log("Loaded bookmarks");
   }
 
   useEffect(() => {
     if (session && isLoggedIn) loadBookmarks();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, isLoggedIn]);
 
   const handleSubmit = async () => {
@@ -70,7 +88,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
       setBookmarkToUpdate(undefined);
     } else {
       // TODO: Create
-      const updatedDataset = await Bookmark.create(
+      await Bookmark.create(
         {
           title: bookmarkTitle,
           link: bookmarkLink,

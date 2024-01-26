@@ -148,7 +148,7 @@ export class BookmarkFactory {
 
         defaultContainerUrl = `${baseURL}${defaultContainerUrl ?? "bookmarks/"}`;
 
-        await TypeIndexHelper.registerInTypeIndex(args?.webId!, "bookmarks_registery", Bookmark.rdfsClasses[0], fetch, defaultContainerUrl, true, true)
+        await TypeIndexHelper.registerInTypeIndex(args?.webId!, "bookmarks_registry", Bookmark.rdfsClasses[0], fetch, defaultContainerUrl, true, true)
 
         BookmarkFactory.instance = new BookmarkFactory([defaultContainerUrl], []);
       }
