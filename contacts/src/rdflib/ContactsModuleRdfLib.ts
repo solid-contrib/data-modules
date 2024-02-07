@@ -8,6 +8,7 @@ import {
   CreateNewGroupCommand,
   FullContact,
   FullGroup,
+  NewContact,
   RemoveContactFromGroupCommand,
 } from "..";
 import { AddressBookQuery, ContactQuery } from "./queries";
@@ -81,15 +82,19 @@ export class ContactsModuleRdfLib implements ContactsModule {
     contact,
     groupUris,
   }: CreateNewContactCommand) {
-    const addressBookNode = sym(addressBookUri);
-    await this.fetchNode(addressBookNode);
-    const operation = createNewContact(
-      new AddressBookQuery(this.store, addressBookNode),
+    const contactQuery = await this.executeCreateNewContact(
+      addressBookUri,
       contact,
     );
-    await executeUpdate(this.fetcher, this.updater, operation);
+    await this.executeAddContactToGroups(groupUris, contactQuery);
 
-    const contactQuery = new ContactQuery(this.store, sym(operation.uri));
+    return contactQuery.contactNode.uri;
+  }
+
+  private async executeAddContactToGroups(
+    groupUris: string[] | undefined,
+    contactQuery: ContactQuery,
+  ) {
     const groupNodes = (groupUris ?? []).map((it) => sym(it));
     await this.fetchAll(groupNodes);
 
@@ -101,8 +106,21 @@ export class ContactsModuleRdfLib implements ContactsModule {
     });
 
     await Promise.allSettled(groupUpdates);
+  }
 
-    return operation.uri;
+  private async executeCreateNewContact(
+    addressBookUri: string,
+    contact: NewContact,
+  ) {
+    const addressBookNode = sym(addressBookUri);
+    await this.fetchNode(addressBookNode);
+    const operation = createNewContact(
+      new AddressBookQuery(this.store, addressBookNode),
+      contact,
+    );
+    await executeUpdate(this.fetcher, this.updater, operation);
+
+    return new ContactQuery(this.store, sym(operation.uri));
   }
 
   async readContact(uri: string): Promise<FullContact> {
