@@ -1,7 +1,7 @@
 import { Statement } from "rdflib";
 
-export { createAddressBook } from "./createAddressBook";
-export { createNewContact } from "./createNewContact";
+export { createAddressBook } from "./createAddressBook.js";
+export { createNewContact } from "./createNewContact.js";
 
 export interface FileToCreate {
   uri: string;

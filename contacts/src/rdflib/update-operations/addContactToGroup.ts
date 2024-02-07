@@ -1,8 +1,8 @@
-import { ContactQuery } from "../queries";
-import { GroupQuery } from "../queries/GroupQuery";
-import { UpdateOperation } from "./index";
+import { ContactQuery } from "../queries/index.js";
+import { GroupQuery } from "../queries/GroupQuery.js";
+import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 
 export function addContactToGroup(
   contactQuery: ContactQuery,

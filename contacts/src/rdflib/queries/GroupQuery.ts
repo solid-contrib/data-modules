@@ -1,5 +1,5 @@
 import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 
 export class GroupQuery {
   private groupDoc: NamedNode;

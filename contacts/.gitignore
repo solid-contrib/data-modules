@@ -1,4 +1,5 @@
 node_modules
 dist
+esm
 dev-server/data/
 src/e2e-tests/.test-data

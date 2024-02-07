@@ -1,4 +1,4 @@
-export { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib";
+export { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib.js";
 
 export interface ContactsModule {
   /**

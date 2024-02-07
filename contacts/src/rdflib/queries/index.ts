@@ -1,2 +1,2 @@
-export { AddressBookQuery } from "./AddressBookQuery";
-export { ContactQuery } from "./ContactQuery";
+export { AddressBookQuery } from "./AddressBookQuery.js";
+export { ContactQuery } from "./ContactQuery.js";

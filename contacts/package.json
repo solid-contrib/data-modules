@@ -2,6 +2,7 @@
   "name": "@solid-data-modules/contacts-rdflib",
   "version": "0.3.0",
   "description": "A library to manage address books and contacts in Solid Pods based on rdflib.js",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -42,6 +43,7 @@
     "@solid/community-server": "^7.0.3",
     "@types/jest": "^29.5.11",
     "@types/jest-when": "^3.5.5",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",

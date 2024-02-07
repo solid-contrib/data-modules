@@ -1,8 +1,8 @@
 import { lit, st, sym } from "rdflib";
 import { v4 as uuid } from "uuid";
-import { dc, vcard } from "../namespaces";
+import { dc, vcard } from "../namespaces.js";
 
-import { UpdateOperation } from "./index";
+import { UpdateOperation } from "./index.js";
 
 export function createAddressBook(
   container: string,
