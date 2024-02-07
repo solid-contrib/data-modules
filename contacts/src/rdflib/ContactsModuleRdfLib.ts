@@ -50,6 +50,8 @@ export class ContactsModuleRdfLib implements ContactsModule {
       this.fetchNode(groupIndex),
     ]);
 
+    await this.fetchAll([nameEmailIndex, groupIndex]);
+
     const contacts = query.queryContacts();
     const groups = query.queryGroups();
     return {
@@ -64,13 +66,21 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return fetchNode(this.fetcher, node);
   }
 
+  private async fetchAll(nodes: (Node | null)[]) {
+    return Promise.all(nodes.map((it) => this.fetchNode(it)));
+  }
+
   async createAddressBook({ containerUri, name }: CreateAddressBookCommand) {
     const operation = createAddressBook(containerUri, name);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
 
-  async createNewContact({ addressBookUri, contact }: CreateNewContactCommand) {
+  async createNewContact({
+    addressBookUri,
+    contact,
+    groupUris,
+  }: CreateNewContactCommand) {
     const addressBookNode = sym(addressBookUri);
     await this.fetchNode(addressBookNode);
     const operation = createNewContact(
@@ -78,6 +88,20 @@ export class ContactsModuleRdfLib implements ContactsModule {
       contact,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
+
+    const contactQuery = new ContactQuery(this.store, sym(operation.uri));
+    const groupNodes = (groupUris ?? []).map((it) => sym(it));
+    await this.fetchAll(groupNodes);
+
+    const groupUpdates = groupNodes.map((groupNode) => {
+      const groupQuery = new GroupQuery(this.store, groupNode);
+
+      const operation = addContactToGroup(contactQuery, groupQuery);
+      return executeUpdate(this.fetcher, this.updater, operation);
+    });
+
+    await Promise.allSettled(groupUpdates);
+
     return operation.uri;
   }
 
