@@ -9,7 +9,7 @@
     "build:doc": "typedoc src/index.ts --out ../gh-pages/contacts-rdflib-api",
     "test": "jest",
     "lint": "eslint",
-    "test:e2e": "jest --config jest.e2e.config.js",
+    "test:e2e": "jest --config jest.e2e.config.ts",
     "pod": "community-solid-server --config ./dev-server/config/config-mashlib.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
     "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
     "pod:clean": "rm -rf ./dev-server/data",
@@ -53,6 +53,7 @@
     "prettier": "^3.2.4",
     "serve": "^14.2.1",
     "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.25.7",
     "typescript": "^5.3.3"
   },
