@@ -91,6 +91,10 @@ export interface CreateNewContactCommand {
    * The data of the contact to create
    */
   contact: NewContact;
+  /**
+   * URIs of existing groups to add the contact to
+   */
+  groupUris?: string[];
 }
 
 /**

@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
 - [removeContactFromGroup](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#removeContactFromGroup)
+
+### Changed
+
+- [createNewContact](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#createNewContact) now allows to pass `groupUris` to add the new contact to existing groups initially
 
 ## 0.3.0
 

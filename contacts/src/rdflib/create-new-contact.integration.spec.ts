@@ -74,4 +74,99 @@ describe("create new contact", () => {
  }`,
     );
   });
+
+  it("adds new contact to existing group", async () => {
+    const authenticatedFetch = jest.fn();
+
+    (uuid as jest.Mock).mockReturnValueOnce(
+      "82dfdfc0-d13c-4dfc-b36d-c0d11db81d94",
+    );
+
+    const store = graph();
+    const fetcher = new Fetcher(store, {
+      fetch: authenticatedFetch,
+    });
+    const updater = new UpdateManager(store);
+    const contacts = new ContactsModuleRdfLib({
+      store,
+      fetcher,
+      updater,
+    });
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/index.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+    @prefix ab: <http://www.w3.org/ns/pim/ab#>.
+    @prefix dc: <http://purl.org/dc/elements/1.1/>.
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+  
+    <#this> a vcard:AddressBook;
+        dc:title "Alice's contacts";
+        vcard:nameEmailIndex <people.ttl>;
+        vcard:groupIndex <groups.ttl>.
+`,
+    );
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Group/1/index.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+  
+    <#this> a vcard:Group;
+        vcard:fn "Group 1".
+`,
+    );
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Group/2/index.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+  
+    <#this> a vcard:Group;
+        vcard:fn "Group 2".
+`,
+    );
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/people.ttl",
+      "",
+    );
+
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl",
+    );
+
+    await contacts.createNewContact({
+      addressBookUri: "https://pod.test/alice/contacts/index.ttl#this",
+      contact: {
+        name: "Bob",
+      },
+      groupUris: [
+        "https://pod.test/alice/contacts/Group/1/index.ttl#this",
+        "https://pod.test/alice/contacts/Group/2/index.ttl#this",
+      ],
+    });
+
+    expectPatchRequest(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Group/1/index.ttl",
+      `INSERT DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> .
+<https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+ }`,
+    );
+
+    expectPatchRequest(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Group/2/index.ttl",
+      `INSERT DATA { <https://pod.test/alice/contacts/Group/2/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> .
+<https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+ }`,
+    );
+  });
 });
