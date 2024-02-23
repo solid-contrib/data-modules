@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [createNewContact](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#createNewContact) now allows to pass `groupUris` to add the new contact to existing groups initially
 
+### ⚠ Breaking Changes 
+
+- Migrated to ESM format, CommonJS is no longer provided
+- ContactsModuleRdfLib is now the default export
+
 ## 0.3.0
 
 ### Added
@@ -34,7 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [readContact](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#readContact)
 
-### Breaking Changes
+### ⚠ Breaking Changes
 
 - [CreateAddressBookCommand](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/CreateAddressBookCommand.html)
   - property `container` renamed to `containerUri`
