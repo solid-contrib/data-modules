@@ -35,6 +35,9 @@
     "url": "https://github.com/solid-contrib/data-modules/issues"
   },
   "homepage": "https://github.com/solid-contrib/data-modules#readme",
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "rdflib": "^2.2.33"
   },
