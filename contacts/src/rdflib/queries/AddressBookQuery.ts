@@ -1,6 +1,6 @@
 import { IndexedFormula, isNamedNode, NamedNode, sym } from "rdflib";
-import { dc, vcard } from "../namespaces";
-import { Contact, Group } from "../../index";
+import { dc, vcard } from "../namespaces.js";
+import { Contact, Group } from "../../index.js";
 import { v4 as uuid } from "uuid";
 
 export class AddressBookQuery {

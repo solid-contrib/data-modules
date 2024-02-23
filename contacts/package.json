@@ -2,13 +2,14 @@
   "name": "@solid-data-modules/contacts-rdflib",
   "version": "0.3.0",
   "description": "A library to manage address books and contacts in Solid Pods based on rdflib.js",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "build:doc": "typedoc src/index.ts --out ../gh-pages/contacts-rdflib-api",
     "test": "jest",
     "lint": "eslint",
-    "test:e2e": "jest --config jest.e2e.config.js",
+    "test:e2e": "jest --config jest.e2e.config.ts",
     "pod": "community-solid-server --config ./dev-server/config/config-mashlib.json --seedConfig ./dev-server/seed.json --rootFilePath ./dev-server/data",
     "pod:init": "cp -r ./dev-server/initial-data/* ./dev-server/data/",
     "pod:clean": "rm -rf ./dev-server/data",
@@ -34,6 +35,9 @@
     "url": "https://github.com/solid-contrib/data-modules/issues"
   },
   "homepage": "https://github.com/solid-contrib/data-modules#readme",
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "rdflib": "^2.2.33"
   },
@@ -42,6 +46,7 @@
     "@solid/community-server": "^7.0.3",
     "@types/jest": "^29.5.11",
     "@types/jest-when": "^3.5.5",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
@@ -51,6 +56,7 @@
     "prettier": "^3.2.4",
     "serve": "^14.2.1",
     "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.25.7",
     "typescript": "^5.3.3"
   },

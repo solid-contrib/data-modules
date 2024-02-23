@@ -1,1 +1,1 @@
-export { ContactsModuleRdfLib as ContactsModule } from "./ContactsModuleRdfLib";
+export { ContactsModuleRdfLib as ContactsModule } from "./ContactsModuleRdfLib.js";

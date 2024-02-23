@@ -1,4 +1,4 @@
-import {ContactsModuleRdfLib as ContactsModule} from '../dist/index.js';
+import ContactsModule from '../dist/index.js';
 import {Fetcher, graph, UpdateManager} from "rdflib";
 
 const store = graph()

@@ -1,6 +1,5 @@
-import {ContactsModuleRdfLib as ContactsModule} from '../dist/index.js';
-import {Fetcher, graph, UpdateManager} from "rdflib";
-import {faker} from "@faker-js/faker";
+import ContactsModule from "../dist/index.js";
+import { Fetcher, graph, UpdateManager } from "rdflib";
 
 const store = graph();
 const fetcher = new Fetcher(store);

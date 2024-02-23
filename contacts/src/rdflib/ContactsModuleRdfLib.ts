@@ -11,14 +11,17 @@ import {
   NewContact,
   RemoveContactFromGroupCommand,
 } from "..";
-import { AddressBookQuery, ContactQuery } from "./queries";
-import { createAddressBook, createNewContact } from "./update-operations";
-import { executeUpdate } from "./web-operations/executeUpdate";
-import { fetchNode } from "./web-operations/fetchNode";
-import { createNewGroup } from "./update-operations/createNewGroup";
-import { GroupQuery } from "./queries/GroupQuery";
-import { addContactToGroup } from "./update-operations/addContactToGroup";
-import { removeContactFromGroup } from "./update-operations/removeContactFromGroup";
+import { AddressBookQuery, ContactQuery } from "./queries/index.js";
+import {
+  createAddressBook,
+  createNewContact,
+} from "./update-operations/index.js";
+import { executeUpdate } from "./web-operations/executeUpdate.js";
+import { fetchNode } from "./web-operations/fetchNode.js";
+import { createNewGroup } from "./update-operations/createNewGroup.js";
+import { GroupQuery } from "./queries/GroupQuery.js";
+import { addContactToGroup } from "./update-operations/addContactToGroup.js";
+import { removeContactFromGroup } from "./update-operations/removeContactFromGroup.js";
 
 interface ModuleConfig {
   store: IndexedFormula;

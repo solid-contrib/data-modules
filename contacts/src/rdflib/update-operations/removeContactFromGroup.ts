@@ -1,6 +1,6 @@
-import { UpdateOperation } from "./index";
+import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 import { ContactQuery } from "../queries";
 import { GroupQuery } from "../queries/GroupQuery";
 
