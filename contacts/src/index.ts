@@ -1,4 +1,6 @@
-export { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib.js";
+import { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib.js";
+
+export default ContactsModuleRdfLib;
 
 export interface ContactsModule {
   /**
