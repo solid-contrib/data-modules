@@ -269,6 +269,32 @@ describe("contacts module", () => {
       }),
     );
   });
+
+  it("can add a new email address to an existing contact", async () => {
+    const contacts = setupModule();
+
+    const contactUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+    const newEmailAddress = "alice@pod.test";
+
+    const contactBefore = await contacts.readContact(contactUri);
+
+    expect(
+      contactBefore.emails.some((email) => email.value === newEmailAddress),
+    ).toBe(false);
+
+    const uri = await contacts.addNewEmailAddress(contactUri, newEmailAddress);
+
+    const contactAfter = await contacts.readContact(contactUri);
+
+    expect(contactAfter.emails).toContainEqual(
+      expect.objectContaining({
+        uri,
+        value: newEmailAddress,
+      }),
+    );
+  });
 });
 
 function setupModule() {
