@@ -77,6 +77,18 @@ export interface ContactsModule {
     contactUri: string,
     newPhoneNumber: string,
   ): Promise<string>;
+
+  /**
+   * Adds a new email address to the given contact
+   *
+   * @param contactUri - The URI of the contact
+   * @param newEmailAddress - The email address to add
+   * @return The URI of the newly created email address resource
+   */
+  addNewEmailAddress(
+    contactUri: string,
+    newEmailAddress: string,
+  ): Promise<string>;
 }
 
 /**
