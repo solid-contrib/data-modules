@@ -1,2 +1,8 @@
-<#this> <http://www.w3.org/2006/vcard/ns#fn> "Dennis Cummings";
-    a <http://www.w3.org/2006/vcard/ns#Individual>.
+<#this>
+    <http://www.w3.org/2006/vcard/ns#fn>           "Dennis Cummings" ;
+    a                                              <http://www.w3.org/2006/vcard/ns#Individual> ;
+    <http://www.w3.org/2006/vcard/ns#hasTelephone> <#phone> ;
+.
+
+<#phone>
+    <http://www.w3.org/2006/vcard/ns#value> <tel:+123465> .
