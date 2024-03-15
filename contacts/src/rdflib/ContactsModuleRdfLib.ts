@@ -24,6 +24,7 @@ import { addContactToGroup } from "./update-operations/addContactToGroup.js";
 import { removeContactFromGroup } from "./update-operations/removeContactFromGroup.js";
 import { addNewPhoneNumber } from "./update-operations/addNewPhoneNumber.js";
 import { addNewEmailAddress } from "./update-operations/addNewEmailAddress.js";
+import { removePhoneNumber } from "./update-operations/removePhoneNumber.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -199,6 +200,19 @@ export class ContactsModuleRdfLib implements ContactsModule {
   async addNewEmailAddress(contactUri: string, newEmailAddress: string) {
     const contactNode = sym(contactUri);
     const operation = addNewEmailAddress(contactNode, newEmailAddress);
+    await executeUpdate(this.fetcher, this.updater, operation);
+    return operation.uri;
+  }
+
+  async removePhoneNumber(contactUri: string, phoneNumberUri: string) {
+    const contactNode = sym(contactUri);
+    const phoneNumberNode = sym(phoneNumberUri);
+    await this.fetchNode(phoneNumberNode);
+    const operation = removePhoneNumber(
+      contactNode,
+      phoneNumberNode,
+      this.store,
+    );
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
