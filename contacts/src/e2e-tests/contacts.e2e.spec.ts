@@ -295,6 +295,35 @@ describe("contacts module", () => {
       }),
     );
   });
+
+  it("removes an existing phone number", async () => {
+    const contacts = setupModule();
+
+    const contactUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+    const phoneNumberUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497210116";
+
+    const contactBefore = await contacts.readContact(contactUri);
+
+    expect(contactBefore.phoneNumbers).toContainEqual(
+      expect.objectContaining({
+        uri: phoneNumberUri,
+        value: "+1234567890",
+      }),
+    );
+
+    await contacts.removePhoneNumber(contactUri, phoneNumberUri);
+
+    const contactAfter = await contacts.readContact(contactUri);
+    expect(contactAfter.phoneNumbers).not.toContainEqual(
+      expect.objectContaining({
+        uri: phoneNumberUri,
+        value: "+1234567890",
+      }),
+    );
+  });
 });
 
 function setupModule() {
