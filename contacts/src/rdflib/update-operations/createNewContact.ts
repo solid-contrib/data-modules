@@ -1,4 +1,4 @@
-import { AddressBookQuery } from "../queries/AddressBookQuery";
+import { AddressBookQuery } from "../queries/AddressBookQuery.js";
 import { lit, st, sym } from "rdflib";
 import { rdf, vcard } from "../namespaces.js";
 

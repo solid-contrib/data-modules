@@ -10,7 +10,7 @@ import {
   FullGroup,
   NewContact,
   RemoveContactFromGroupCommand,
-} from "..";
+} from "../index.js";
 import { AddressBookQuery, ContactQuery } from "./queries/index.js";
 import {
   createAddressBook,

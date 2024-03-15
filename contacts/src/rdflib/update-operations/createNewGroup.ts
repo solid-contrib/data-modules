@@ -1,4 +1,4 @@
-import { AddressBookQuery } from "../queries";
+import { AddressBookQuery } from "../queries/index.js";
 import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
 import { rdf, vcard } from "../namespaces.js";
