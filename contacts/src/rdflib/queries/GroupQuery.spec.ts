@@ -1,8 +1,6 @@
 import { graph, lit, sym } from "rdflib";
 import { GroupQuery } from "./GroupQuery";
 import { rdf, vcard } from "../namespaces";
-import { AddressBookQuery } from "./AddressBookQuery";
-import * as querystring from "querystring";
 
 describe(GroupQuery.name, () => {
   describe("query name", () => {
