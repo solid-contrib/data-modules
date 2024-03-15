@@ -186,4 +186,8 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const operation = removeContactFromGroup(contactQuery, groupQuery);
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  async addNewPhoneNumber(contactUri: string, newPhoneNumber: string) {
+    return "";
+  }
 }
