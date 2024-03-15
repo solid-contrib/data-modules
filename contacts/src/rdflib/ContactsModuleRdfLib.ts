@@ -214,6 +214,5 @@ export class ContactsModuleRdfLib implements ContactsModule {
       this.store,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
-    return operation.uri;
   }
 }
