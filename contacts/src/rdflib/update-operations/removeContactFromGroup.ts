@@ -1,8 +1,8 @@
 import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
 import { vcard } from "../namespaces.js";
-import { ContactQuery } from "../queries";
-import { GroupQuery } from "../queries/GroupQuery";
+import { ContactQuery } from "../queries/index.js";
+import { GroupQuery } from "../queries/GroupQuery.js";
 
 export function removeContactFromGroup(
   contactQuery: ContactQuery,

@@ -241,6 +241,34 @@ describe("contacts module", () => {
       name,
     });
   });
+
+  it("can add a new phone number to an existing contact", async () => {
+    const contacts = setupModule();
+
+    const contactUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+    const newPhoneNumber = "01189998819991197253";
+
+    const contactBefore = await contacts.readContact(contactUri);
+
+    expect(
+      contactBefore.phoneNumbers.some(
+        (phone) => phone.value === newPhoneNumber,
+      ),
+    ).toBe(false);
+
+    const uri = await contacts.addNewPhoneNumber(contactUri, newPhoneNumber);
+
+    const contactAfter = await contacts.readContact(contactUri);
+
+    expect(contactAfter.phoneNumbers).toContainEqual(
+      expect.objectContaining({
+        uri,
+        value: newPhoneNumber,
+      }),
+    );
+  });
 });
 
 function setupModule() {

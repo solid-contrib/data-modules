@@ -1,5 +1,5 @@
 import { Fetcher, UpdateManager } from "rdflib";
-import { UpdateOperation } from "../update-operations";
+import { UpdateOperation } from "../update-operations/index.js";
 
 export async function executeUpdate(
   fetcher: Fetcher,

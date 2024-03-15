@@ -65,6 +65,18 @@ export interface ContactsModule {
    * @param command
    */
   removeContactFromGroup(command: RemoveContactFromGroupCommand): Promise<void>;
+
+  /**
+   * Adds a new phone number to the given contact
+   *
+   * @param contactUri - The URI of the contact
+   * @param newPhoneNumber - The phone number to add (RFC 3966 telephone-subscriber part format)
+   * @return The URI of the newly created phone number resource
+   */
+  addNewPhoneNumber(
+    contactUri: string,
+    newPhoneNumber: string,
+  ): Promise<string>;
 }
 
 /**

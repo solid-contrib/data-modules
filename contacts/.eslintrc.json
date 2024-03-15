@@ -6,7 +6,8 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:require-extensions/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -14,8 +15,18 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "require-extensions"
     ],
     "rules": {
-    }
+    },
+    "overrides": [
+        {
+            "files": ["*.spec.ts"],
+            "rules": {
+                "require-extensions/require-extensions": 0,
+                "require-extensions/require-index": 0
+            }
+        }
+    ]
 }
