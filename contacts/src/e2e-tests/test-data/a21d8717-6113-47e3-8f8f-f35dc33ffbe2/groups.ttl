@@ -1,0 +1,15 @@
+@prefix :      <#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+
+<index.ttl#this>
+    vcard:includesGroup <Group/f027e045-5b4b-46b0-b9c0-b0f5418bc97a/index.ttl#this>,
+                        <Group/dc27d717-9587-48d5-a58a-a5b29dd99c64/index.ttl#this> .
+
+<Group/f027e045-5b4b-46b0-b9c0-b0f5418bc97a/index.ttl#this>
+    a        vcard:Group ;
+    vcard:fn "ACME Corp." .
+
+<Group/dc27d717-9587-48d5-a58a-a5b29dd99c64/index.ttl#this>
+    a        vcard:Group ;
+    vcard:fn "Colleagues" .
+

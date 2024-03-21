@@ -22,7 +22,7 @@
     },
     "overrides": [
         {
-            "files": ["*.spec.ts"],
+            "files": ["*.spec.ts", "globalSetup.ts", "globalTeardown.ts"],
             "rules": {
                 "require-extensions/require-extensions": 0,
                 "require-extensions/require-index": 0

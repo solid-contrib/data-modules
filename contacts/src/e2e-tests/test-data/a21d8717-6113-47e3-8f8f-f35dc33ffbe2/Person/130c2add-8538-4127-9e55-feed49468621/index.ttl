@@ -1,0 +1,4 @@
+<#this>
+    <http://www.w3.org/2006/vcard/ns#fn> "Liza Rusudan" ;
+    a                                    <http://www.w3.org/2006/vcard/ns#Individual>
+.
