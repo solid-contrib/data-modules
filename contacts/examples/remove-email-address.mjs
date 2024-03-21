@@ -10,15 +10,15 @@ const contactUri = "http://localhost:3000/alice/public-write/ab9694d6-120e-415d-
 
 const result = await contacts.readContact(contactUri)
 
-if (result.phoneNumbers.length === 0) {
-  throw new Error("no phone numbers left, try the add-new-phone-number example")
+if (result.emails.length === 0) {
+  throw new Error("no email address left, try the add-new-email-address example")
 }
 
-const phoneNumberUri = result.phoneNumbers[0].uri
+const emailAddressUri = result.emails[0].uri
 
-console.log("removing phone number", phoneNumberUri, "from contact", contactUri)
+console.log("removing email address", emailAddressUri, "from contact", contactUri)
 
-await contacts.removePhoneNumber(contactUri, phoneNumberUri)
+await contacts.removeEmailAddress(contactUri, emailAddressUri)
 
 const contact = await contacts.readContact(contactUri)
 console.log("updated contact", contact)

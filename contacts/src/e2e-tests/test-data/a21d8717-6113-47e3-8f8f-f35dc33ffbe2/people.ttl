@@ -1,0 +1,6 @@
+@prefix :       <#> .
+@prefix vcard:  <http://www.w3.org/2006/vcard/ns#> .
+
+<Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#this>
+    vcard:inAddressBook <index.ttl#this> ;
+    vcard:fn            "Liza Rusudan" .

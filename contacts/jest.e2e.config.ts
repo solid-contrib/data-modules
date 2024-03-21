@@ -6,6 +6,8 @@ const config: Config = {
   rootDir: "src/e2e-tests",
   testTimeout: 60000,
   detectOpenHandles: true,
+  globalSetup: "<rootDir>/globalSetup.ts",
+  globalTeardown: "<rootDir>/globalTeardown.ts",
   forceExit: true,
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
