@@ -38,4 +38,15 @@ describe("address books", () => {
       ],
     });
   });
+
+  it("lists all address books from public type index", async () => {
+    const contacts = setupModule();
+    const result = await contacts.listAddressBooks(
+      "http://localhost:3456/profile/card#me",
+    );
+    expect(result.publicUris).toEqual([
+      "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/index.ttl#this",
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this",
+    ]);
+  });
 });

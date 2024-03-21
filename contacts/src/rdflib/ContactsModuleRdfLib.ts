@@ -2,6 +2,7 @@ import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
 import {
   AddContactToGroupCommand,
   AddressBook,
+  AddressBookLists,
   ContactsModule,
   CreateAddressBookCommand,
   CreateNewContactCommand,
@@ -227,5 +228,12 @@ export class ContactsModuleRdfLib implements ContactsModule {
       this.store,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
+  }
+
+  async listAddressBooks(webId: string): Promise<AddressBookLists> {
+    return {
+      publicUris: [],
+      privateUris: [],
+    };
   }
 }

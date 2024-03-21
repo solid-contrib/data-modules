@@ -4,6 +4,13 @@ export default ContactsModuleRdfLib;
 
 export interface ContactsModule {
   /**
+   * Lists all known address books of the given Solid user
+   * @param webId - The WebID of the user whose address books to list
+   * @return The URIs of the address books grouped by public (listed) and private (unlisted) instances
+   */
+  listAddressBooks(webId: string): Promise<AddressBookLists>;
+
+  /**
    * Creates a new address book in the given container
    * @param command
    * @return The URI of the newly created address book
@@ -159,6 +166,14 @@ export interface AddressBook {
   title: string;
   contacts: Contact[];
   groups: Group[];
+}
+
+/**
+ *
+ */
+export interface AddressBookLists {
+  publicUris: string[];
+  privateUris: string[];
 }
 
 /**

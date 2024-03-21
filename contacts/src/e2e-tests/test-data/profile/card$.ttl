@@ -1,0 +1,10 @@
+@prefix :      <#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+
+:me
+    a        vcard:Individual ;
+    vcard:fn "Alice" ;
+    solid:publicTypeIndex <../settings/publicTypeIndex.ttl> ;
+.
