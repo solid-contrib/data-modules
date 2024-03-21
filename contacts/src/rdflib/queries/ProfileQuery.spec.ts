@@ -1,6 +1,6 @@
 import { graph, lit, sym } from "rdflib";
 import { ProfileQuery } from "./ProfileQuery";
-import { solid } from "../namespaces";
+import { pim, solid } from "../namespaces";
 
 describe("ProfileQuery", () => {
   describe("query public type index", () => {
@@ -71,7 +71,7 @@ describe("ProfileQuery", () => {
       const profileNode = sym("https://pod.test/alice/profile/card#me");
       store.add(
         profileNode,
-        solid("preferencesFile"),
+        pim("preferencesFile"),
         sym("https://pod.test/alice/settings/prefs.ttl"),
         profileNode.doc(),
       );
@@ -85,7 +85,7 @@ describe("ProfileQuery", () => {
       const profileNode = sym("https://pod.test/alice/profile/card#me");
       store.add(
         profileNode,
-        solid("preferencesFile"),
+        pim("preferencesFile"),
         lit("https://pod.test/alice/settings/prefs.ttl"),
         profileNode.doc(),
       );
@@ -99,7 +99,7 @@ describe("ProfileQuery", () => {
       const profileNode = sym("https://pod.test/alice/profile/card#me");
       store.add(
         profileNode,
-        solid("preferencesFile"),
+        pim("preferencesFile"),
         sym("https://pod.test/alice/settings/prefs.ttl"),
         sym("https://pod.test/alice/wrong.ttl"),
       );

@@ -1,5 +1,5 @@
 import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
-import { solid } from "../namespaces.js";
+import { pim, solid } from "../namespaces.js";
 
 export class ProfileQuery {
   constructor(
@@ -8,17 +8,19 @@ export class ProfileQuery {
   ) {}
 
   queryPublicTypeIndex(): NamedNode | null {
-    return this.queryNamedNode("publicTypeIndex");
+    const predicate = solid("publicTypeIndex") as NamedNode;
+    return this.queryNamedNode(predicate);
   }
 
   queryPreferencesFile() {
-    return this.queryNamedNode("preferencesFile");
+    const predicate = pim("preferencesFile") as NamedNode;
+    return this.queryNamedNode(predicate);
   }
 
-  private queryNamedNode(predicate: string) {
+  private queryNamedNode(predicate: NamedNode) {
     const node = this.store.any(
       this.profileNode,
-      solid(predicate),
+      predicate,
       null,
       this.profileNode.doc(),
     );

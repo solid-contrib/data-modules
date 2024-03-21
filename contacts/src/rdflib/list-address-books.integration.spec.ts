@@ -59,10 +59,11 @@ describe("list address books", () => {
       `
     @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
     @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+    @prefix pim: <http://www.w3.org/ns/pim/space#>.
   
     <#me> a vcard:Individual;
         vcard:fn "Alice";
-        solid:preferencesFile <https://pod.test/alice/settings/prefs.ttl> ;
+        pim:preferencesFile <https://pod.test/alice/settings/prefs.ttl> ;
         .
 `,
     );
