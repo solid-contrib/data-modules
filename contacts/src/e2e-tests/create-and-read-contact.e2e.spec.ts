@@ -28,31 +28,31 @@ describe("create and read contact", () => {
     const contacts = setupModule();
 
     const contactUri =
-      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+      "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#this";
 
     const result = await contacts.readContact(contactUri);
 
     expect(result).toEqual({
-      uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this",
-      name: "Molly Braaten",
+      uri: "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#this",
+      name: "Liza Rusudan",
       emails: [
         {
-          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497197769",
-          value: "molly.braaten@gov.test",
+          uri: "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#email-1",
+          value: "liza.rusudan@work.test",
         },
         {
-          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702500031124",
-          value: "molly.braaten@home.test",
+          uri: "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#email-2",
+          value: "liza.rusudan@home.test",
         },
       ],
       phoneNumbers: [
         {
-          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702497210116",
-          value: "+1234567890",
+          uri: "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#phone-1",
+          value: "+11122233",
         },
         {
-          uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702500092868",
-          value: "+0987654321",
+          uri: "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/Person/130c2add-8538-4127-9e55-feed49468621/index.ttl#phone-2",
+          value: "+444555666",
         },
       ],
     });
