@@ -1,0 +1,7 @@
+@prefix :      <#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+
+<../profile/card#me>
+    solid:privateTypeIndex <../settings/privateTypeIndex.ttl> ;
+.

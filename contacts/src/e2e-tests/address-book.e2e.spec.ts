@@ -39,7 +39,7 @@ describe("address books", () => {
     });
   });
 
-  it("lists all address books from public type index", async () => {
+  it("lists all address books from private and public type index", async () => {
     const contacts = setupModule();
     const result = await contacts.listAddressBooks(
       "http://localhost:3456/profile/card#me",
@@ -47,6 +47,10 @@ describe("address books", () => {
     expect(result.publicUris).toEqual([
       "http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/index.ttl#this",
       "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this",
+    ]);
+    expect(result.privateUris).toEqual([
+      "http://localhost:3456/7e9b9a6d-f203-4e3b-ab7f-658e84ea461c/index.ttl#this",
+      "http://localhost:3456/cd37cf7b-5fbb-4b09-bb0f-3236f9e97343/index.ttl#this",
     ]);
   });
 });
