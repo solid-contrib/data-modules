@@ -83,4 +83,33 @@ describe("edit contact information", () => {
       }),
     );
   });
+
+  it("removes an existing email address", async () => {
+    const contacts = setupModule();
+
+    const contactUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+
+    const emailAddressUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#id1702500031124";
+
+    const contactBefore = await contacts.readContact(contactUri);
+
+    expect(contactBefore.emails).toContainEqual(
+      expect.objectContaining({
+        uri: emailAddressUri,
+        value: "molly.braaten@home.test",
+      }),
+    );
+
+    await contacts.removeEmailAddress(contactUri, emailAddressUri);
+
+    const contactAfter = await contacts.readContact(contactUri);
+    expect(contactAfter.emails).not.toContainEqual(
+      expect.objectContaining({
+        uri: emailAddressUri,
+        value: "molly.braaten@home.test",
+      }),
+    );
+  });
 });

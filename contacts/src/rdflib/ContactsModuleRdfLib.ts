@@ -215,4 +215,6 @@ export class ContactsModuleRdfLib implements ContactsModule {
     );
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  async removeEmailAddress(contactUri: string, emailAddressUri: string) {}
 }

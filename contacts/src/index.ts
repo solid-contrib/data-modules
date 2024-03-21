@@ -97,6 +97,17 @@ export interface ContactsModule {
    * @param phoneNumberUri - The URI of the phone number resource
    */
   removePhoneNumber(contactUri: string, phoneNumberUri: string): Promise<void>;
+
+  /**
+   * Removes the given email address from the given contact
+   *
+   * @param contactUri - The URI of the contact
+   * @param emailAddressUri - The URI of the email address resource
+   */
+  removeEmailAddress(
+    contactUri: string,
+    emailAddressUri: string,
+  ): Promise<void>;
 }
 
 /**
