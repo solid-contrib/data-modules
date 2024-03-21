@@ -41,5 +41,19 @@ describe("ProfileQuery", () => {
       const result = query.queryPublicTypeIndex();
       expect(result).toBeNull();
     });
+
+    it("returns null if statement is in the wrong document", () => {
+      const store = graph();
+      const profileNode = sym("https://pod.test/alice/profile/card#me");
+      store.add(
+        profileNode,
+        solid("publicTypeIndex"),
+        sym("https://pod.test/alice/settings/publicTypeIndex.ttl"),
+        sym("https://pod.test/alice/wrong.ttl"),
+      );
+      const query = new ProfileQuery(profileNode, store);
+      const result = query.queryPublicTypeIndex();
+      expect(result).toBeNull();
+    });
   });
 });

@@ -12,6 +12,7 @@ export class ProfileQuery {
       this.profileNode,
       solid("publicTypeIndex"),
       null,
+      this.profileNode.doc(),
     );
     if (isNamedNode(node)) {
       return node as NamedNode;
