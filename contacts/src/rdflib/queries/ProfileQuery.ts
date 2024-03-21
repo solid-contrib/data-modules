@@ -8,9 +8,17 @@ export class ProfileQuery {
   ) {}
 
   queryPublicTypeIndex(): NamedNode | null {
+    return this.queryNamedNode("publicTypeIndex");
+  }
+
+  queryPreferencesFile() {
+    return this.queryNamedNode("preferencesFile");
+  }
+
+  private queryNamedNode(predicate: string) {
     const node = this.store.any(
       this.profileNode,
-      solid("publicTypeIndex"),
+      solid(predicate),
       null,
       this.profileNode.doc(),
     );
