@@ -10,6 +10,6 @@
 <#AddressBook>
     a              solid:TypeRegistration ;
     solid:forClass vcard:AddressBook ;
-    solid:instance <a21d8717-6113-47e3-8f8f-f35dc33ffbe2/index.ttl#this>,
-                   <4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this> ;
+    solid:instance <../a21d8717-6113-47e3-8f8f-f35dc33ffbe2/index.ttl#this>,
+                   <../4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this> ;
 .

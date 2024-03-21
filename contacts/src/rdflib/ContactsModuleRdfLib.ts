@@ -1,4 +1,11 @@
-import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
+import {
+  Fetcher,
+  IndexedFormula,
+  NamedNode,
+  Node,
+  sym,
+  UpdateManager,
+} from "rdflib";
 import {
   AddContactToGroupCommand,
   AddressBook,
@@ -27,6 +34,8 @@ import { addNewPhoneNumber } from "./update-operations/addNewPhoneNumber.js";
 import { addNewEmailAddress } from "./update-operations/addNewEmailAddress.js";
 import { removePhoneNumber } from "./update-operations/removePhoneNumber.js";
 import { removeEmailAddress } from "./update-operations/removeEmailAddress.js";
+import { ProfileQuery } from "./queries/ProfileQuery.js";
+import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -231,9 +240,31 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }
 
   async listAddressBooks(webId: string): Promise<AddressBookLists> {
+    const profileNode = sym(webId);
+    await this.fetchNode(profileNode);
+    const publicTypeIndexNode = new ProfileQuery(
+      profileNode,
+      this.store,
+    ).queryPublicTypeIndex();
+
+    const publicUris = await this.listPublicAddressBooks(publicTypeIndexNode);
+
     return {
-      publicUris: [],
+      publicUris,
       privateUris: [],
     };
+  }
+
+  private async listPublicAddressBooks(
+    publicTypeIndexNode: NamedNode | null,
+  ): Promise<string[]> {
+    if (!publicTypeIndexNode) {
+      return [];
+    }
+    await this.fetchNode(publicTypeIndexNode);
+    return new TypeIndexQuery(
+      this.store,
+      publicTypeIndexNode,
+    ).queryAddressBookInstances();
   }
 }
