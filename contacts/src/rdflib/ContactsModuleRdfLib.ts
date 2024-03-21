@@ -36,6 +36,7 @@ import { removePhoneNumber } from "./update-operations/removePhoneNumber.js";
 import { removeEmailAddress } from "./update-operations/removeEmailAddress.js";
 import { ProfileQuery } from "./queries/ProfileQuery.js";
 import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
+import { PreferencesQuery } from "./queries/PreferencesQuery.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -242,20 +243,25 @@ export class ContactsModuleRdfLib implements ContactsModule {
   async listAddressBooks(webId: string): Promise<AddressBookLists> {
     const profileNode = sym(webId);
     await this.fetchNode(profileNode);
-    const publicTypeIndexNode = new ProfileQuery(
-      profileNode,
-      this.store,
-    ).queryPublicTypeIndex();
 
-    const publicUris = await this.listPublicAddressBooks(publicTypeIndexNode);
+    const profileQuery = new ProfileQuery(profileNode, this.store);
+    const publicTypeIndexNode = profileQuery.queryPublicTypeIndex();
+    const preferencesFile = profileQuery.queryPreferencesFile();
+
+    const publicUris = await this.fetchIndexedAddressBooks(publicTypeIndexNode);
+    const privateTypeIndex = await this.fetchPrivateTypeIndex(
+      profileNode,
+      preferencesFile,
+    );
+    const privateUris = await this.fetchIndexedAddressBooks(privateTypeIndex);
 
     return {
       publicUris,
-      privateUris: [],
+      privateUris,
     };
   }
 
-  private async listPublicAddressBooks(
+  private async fetchIndexedAddressBooks(
     publicTypeIndexNode: NamedNode | null,
   ): Promise<string[]> {
     if (!publicTypeIndexNode) {
@@ -266,5 +272,21 @@ export class ContactsModuleRdfLib implements ContactsModule {
       this.store,
       publicTypeIndexNode,
     ).queryAddressBookInstances();
+  }
+
+  private async fetchPrivateTypeIndex(
+    profileNode: NamedNode,
+    preferencesFile: NamedNode | null,
+  ): Promise<NamedNode | null> {
+    if (!preferencesFile) {
+      return null;
+    }
+    await this.fetchNode(preferencesFile);
+    const preferencesQuery = new PreferencesQuery(
+      this.store,
+      profileNode,
+      preferencesFile,
+    );
+    return preferencesQuery.queryPrivateTypeIndex();
   }
 }
