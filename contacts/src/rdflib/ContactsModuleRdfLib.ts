@@ -248,15 +248,24 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const publicTypeIndexNode = profileQuery.queryPublicTypeIndex();
     const preferencesFile = profileQuery.queryPreferencesFile();
 
-    const publicUris = await this.fetchIndexedAddressBooks(publicTypeIndexNode);
-    const privateTypeIndex = await this.fetchPrivateTypeIndex(
+    const promisePublicUris =
+      this.fetchIndexedAddressBooks(publicTypeIndexNode);
+    const promisePrivateTypeIndex = this.fetchPrivateTypeIndex(
       profileNode,
       preferencesFile,
     );
-    const privateUris = await this.fetchIndexedAddressBooks(privateTypeIndex);
+    const [publicUris, privateTypeIndex] = await Promise.allSettled([
+      promisePublicUris,
+      promisePrivateTypeIndex,
+    ]);
+
+    const privateUris =
+      privateTypeIndex.status === "fulfilled"
+        ? await this.fetchIndexedAddressBooks(privateTypeIndex.value)
+        : [];
 
     return {
-      publicUris,
+      publicUris: publicUris.status === "fulfilled" ? publicUris.value : [],
       privateUris,
     };
   }
