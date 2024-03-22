@@ -1,5 +1,5 @@
 import { IndexedFormula, isNamedNode, NamedNode, Node } from "rdflib";
-import { rdf, solid, vcard } from "../namespaces.js";
+import { solid, vcard } from "../namespaces.js";
 
 export class TypeIndexQuery {
   constructor(
@@ -15,7 +15,7 @@ export class TypeIndexQuery {
       this.typeIndexDoc,
     );
 
-    if (!this.isValidTypeRegistration(addressBookRegistration)) return [];
+    if (!isNamedNode(addressBookRegistration)) return [];
 
     const instance = this.store.each(
       addressBookRegistration,
@@ -24,21 +24,5 @@ export class TypeIndexQuery {
       this.typeIndexDoc,
     );
     return instance.map((it) => it.value);
-  }
-
-  private isValidTypeRegistration(
-    addressBookRegistration: Node | null,
-  ): addressBookRegistration is NamedNode {
-    const isTypeRegistration = this.store.holds(
-      addressBookRegistration,
-      rdf("type"),
-      solid("TypeRegistration"),
-      this.typeIndexDoc,
-    );
-    return (
-      addressBookRegistration !== null &&
-      isNamedNode(addressBookRegistration) &&
-      isTypeRegistration
-    );
   }
 }
