@@ -1,7 +1,15 @@
-import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
+import {
+  Fetcher,
+  IndexedFormula,
+  NamedNode,
+  Node,
+  sym,
+  UpdateManager,
+} from "rdflib";
 import {
   AddContactToGroupCommand,
   AddressBook,
+  AddressBookLists,
   ContactsModule,
   CreateAddressBookCommand,
   CreateNewContactCommand,
@@ -26,6 +34,9 @@ import { addNewPhoneNumber } from "./update-operations/addNewPhoneNumber.js";
 import { addNewEmailAddress } from "./update-operations/addNewEmailAddress.js";
 import { removePhoneNumber } from "./update-operations/removePhoneNumber.js";
 import { removeEmailAddress } from "./update-operations/removeEmailAddress.js";
+import { ProfileQuery } from "./queries/ProfileQuery.js";
+import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
+import { PreferencesQuery } from "./queries/PreferencesQuery.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -227,5 +238,64 @@ export class ContactsModuleRdfLib implements ContactsModule {
       this.store,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
+  }
+
+  async listAddressBooks(webId: string): Promise<AddressBookLists> {
+    const profileNode = sym(webId);
+    await this.fetchNode(profileNode);
+
+    const profileQuery = new ProfileQuery(profileNode, this.store);
+    const publicTypeIndexNode = profileQuery.queryPublicTypeIndex();
+    const preferencesFile = profileQuery.queryPreferencesFile();
+
+    const promisePublicUris =
+      this.fetchIndexedAddressBooks(publicTypeIndexNode);
+    const promisePrivateTypeIndex = this.fetchPrivateTypeIndex(
+      profileNode,
+      preferencesFile,
+    );
+    const [publicUris, privateTypeIndex] = await Promise.allSettled([
+      promisePublicUris,
+      promisePrivateTypeIndex,
+    ]);
+
+    const privateUris =
+      privateTypeIndex.status === "fulfilled"
+        ? await this.fetchIndexedAddressBooks(privateTypeIndex.value)
+        : [];
+
+    return {
+      publicUris: publicUris.status === "fulfilled" ? publicUris.value : [],
+      privateUris,
+    };
+  }
+
+  private async fetchIndexedAddressBooks(
+    publicTypeIndexNode: NamedNode | null,
+  ): Promise<string[]> {
+    if (!publicTypeIndexNode) {
+      return [];
+    }
+    await this.fetchNode(publicTypeIndexNode);
+    return new TypeIndexQuery(
+      this.store,
+      publicTypeIndexNode,
+    ).queryAddressBookInstances();
+  }
+
+  private async fetchPrivateTypeIndex(
+    profileNode: NamedNode,
+    preferencesFile: NamedNode | null,
+  ): Promise<NamedNode | null> {
+    if (!preferencesFile) {
+      return null;
+    }
+    await this.fetchNode(preferencesFile);
+    const preferencesQuery = new PreferencesQuery(
+      this.store,
+      profileNode,
+      preferencesFile,
+    );
+    return preferencesQuery.queryPrivateTypeIndex();
   }
 }

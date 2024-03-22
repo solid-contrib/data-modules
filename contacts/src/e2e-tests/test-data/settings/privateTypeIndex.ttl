@@ -1,0 +1,15 @@
+@prefix :      <#>.
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+
+
+<>
+    a solid:UnlistedDocument, solid:TypeIndex .
+
+
+<#AddressBook>
+    a              solid:TypeRegistration ;
+    solid:forClass vcard:AddressBook ;
+    solid:instance <../7e9b9a6d-f203-4e3b-ab7f-658e84ea461c/index.ttl#this>,
+                   <../cd37cf7b-5fbb-4b09-bb0f-3236f9e97343/index.ttl#this> ;
+.

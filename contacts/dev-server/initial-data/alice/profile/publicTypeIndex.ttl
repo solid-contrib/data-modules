@@ -1,2 +1,4 @@
-<#id1697053287983> <http://www.w3.org/ns/solid/terms#instance> <http://localhost:3000/alice/public-contacts/index.ttl#this>;
+<#id1711107256450> <http://www.w3.org/ns/solid/terms#instance> <http://localhost:3000/alice/public-contacts/index.ttl#this>;
+    <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook>.
+<#id1711107288881> <http://www.w3.org/ns/solid/terms#instance> <http://localhost:3000/alice/public-write/ab9694d6-120e-415d-a315-90cd84c2e062/index.ttl#this>;
     <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook>.

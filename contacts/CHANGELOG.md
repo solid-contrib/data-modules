@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [addNewEmailAddress](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#addNewEmailAddress)
 - [removePhoneNumber](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#removePhoneNumber)
 - [removeEmailAddress](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#removeEmailAddress)
+- [listAddressBooks](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#listAddressBooks)
 
 ## 0.4.0
 

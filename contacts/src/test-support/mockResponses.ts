@@ -31,3 +31,18 @@ export function mockNotFound(fetch: jest.Mock, uri: string) {
       text: () => Promise.resolve("Not Found"),
     } as Response);
 }
+
+export function mockForbidden(fetch: jest.Mock, uri: string) {
+  when(fetch)
+    .calledWith(uri, expect.anything())
+    .mockResolvedValue({
+      ok: true,
+      status: 403,
+      statusText: "Forbidden",
+      headers: new Headers({
+        "Content-Type": "text/plain",
+        "wac-allow": 'user="read write append control",public=""',
+      }),
+      text: () => Promise.resolve("You do not have access to this resource."),
+    } as Response);
+}
