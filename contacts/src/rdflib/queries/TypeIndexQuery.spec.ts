@@ -127,6 +127,44 @@ describe("TypeIndexQuery", () => {
       ]);
     });
 
+    it("combines instances from multiple type registrations for address books", () => {
+      // see https://github.com/solid/type-indexes/issues/32#issuecomment-2013540668
+      const store = graph();
+
+      parse(
+        `
+      @prefix : <#>.
+      @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+      @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+      
+      :registration-1 a solid:TypeRegistration ;
+         solid:forClass vcard:AddressBook ;
+         solid:instance <https://pod.test/alice/contacts/1/index.ttl#this> .
+               
+      :registration-2 a solid:TypeRegistration ;
+         solid:forClass vcard:AddressBook ;
+         solid:instance <https://pod.test/alice/contacts/2/index.ttl#this> .
+         
+      :registration-3 a solid:TypeRegistration ;
+         solid:forClass :SomeThingElse ;
+         solid:instance <https://pod.test/alice/something/else/index.ttl#this> .
+      
+      `,
+        store,
+        "https://pod.test/alice/setting/publicTypeIndex.ttl",
+      );
+
+      const query = new TypeIndexQuery(
+        store,
+        sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
+      );
+      const result = query.queryAddressBookInstances();
+      expect(result).toEqual([
+        "https://pod.test/alice/contacts/1/index.ttl#this",
+        "https://pod.test/alice/contacts/2/index.ttl#this",
+      ]);
+    });
+
     describe("use correct source documents", () => {
       it("returns no instances from a wrong document", () => {
         const store = graph();

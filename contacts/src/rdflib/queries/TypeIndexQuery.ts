@@ -1,4 +1,4 @@
-import { IndexedFormula, isNamedNode, NamedNode, Node } from "rdflib";
+import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
 import { solid, vcard } from "../namespaces.js";
 
 export class TypeIndexQuery {
@@ -8,21 +8,21 @@ export class TypeIndexQuery {
   ) {}
 
   queryAddressBookInstances() {
-    const addressBookRegistration = this.store.any(
+    const addressBookRegistrations = this.store.each(
       null,
       solid("forClass"),
       vcard("AddressBook"),
       this.typeIndexDoc,
     );
+    return addressBookRegistrations.flatMap((registration) => {
+      if (!isNamedNode(registration)) return [];
+      return this.getInstanceValues(registration as NamedNode);
+    });
+  }
 
-    if (!isNamedNode(addressBookRegistration)) return [];
-
-    const instance = this.store.each(
-      addressBookRegistration,
-      solid("instance"),
-      null,
-      this.typeIndexDoc,
-    );
-    return instance.map((it) => it.value);
+  private getInstanceValues(registration: NamedNode) {
+    return this.store
+      .each(registration, solid("instance"), null, this.typeIndexDoc)
+      .map((it) => it.value);
   }
 }
