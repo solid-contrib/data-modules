@@ -4,7 +4,9 @@ export default ContactsModuleRdfLib;
 
 export interface ContactsModule {
   /**
-   * Lists all known address books of the given Solid user
+   * Lists all known address books of the given Solid user.
+   * Private instances will only be listed, if the fetcher has access to the preferences document and
+   * the private type index, otherwise only public instances will be returned and the privateUris will be an empty array.
    * @param webId - The WebID of the user whose address books to list
    * @return The URIs of the address books grouped by public (listed) and private (unlisted) instances
    */
@@ -169,10 +171,16 @@ export interface AddressBook {
 }
 
 /**
- *
+ * Lists URIs of address book found in index documents
  */
 export interface AddressBookLists {
+  /**
+   * URIs listed in the public type index
+   */
   publicUris: string[];
+  /**
+   * URIS listed in the private type index. Stays empty if the index is not accessible.
+   */
   privateUris: string[];
 }
 
