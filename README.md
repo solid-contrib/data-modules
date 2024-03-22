@@ -1,4 +1,7 @@
 # data-modules
+This project is [funded](https://nlnet.nl/project/SolidDataModules/) by <img src="https://nlnet.nl/logo/banner.svg" style="width: 5%; margin: 0 1% 0 1%;">
+/ <img src="https://nlnet.nl/image/logos/NGI0Entrust_tag.svg" style="width: 5%; margin: 0 1% 0 1%;">
+
 Solid Data Modules are snippets of JavaScript code that handle the reading and writing of one specific
 type of data in the user's Solid pod, regardless of how the different data formats used by various Solid apps,
 and how they evolve.
