@@ -4,13 +4,13 @@ import { solid } from "../namespaces.js";
 export class PreferencesQuery {
   constructor(
     private store: IndexedFormula,
-    private profileNode: NamedNode,
+    private webIdNode: NamedNode,
     private preferencesDoc: NamedNode,
   ) {}
 
   queryPrivateTypeIndex(): NamedNode | null {
     const node = this.store.any(
-      this.profileNode,
+      this.webIdNode,
       solid("privateTypeIndex"),
       null,
       this.preferencesDoc,

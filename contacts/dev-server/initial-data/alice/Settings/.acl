@@ -1,18 +1,18 @@
 @prefix : <#>.
 @prefix acl: <http://www.w3.org/ns/auth/acl#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix pub: <./>.
+@prefix folder: <./>.
 @prefix c: <../profile/card#>.
 
 :ControlReadWrite
     a acl:Authorization;
-    acl:accessTo pub:;
+    acl:accessTo folder:;
     acl:agent c:me;
-    acl:default pub:;
+    acl:default folder:;
     acl:mode acl:Control, acl:Read, acl:Write.
 :Read
     a acl:Authorization;
-    acl:accessTo pub:;
+    acl:accessTo folder:;
     acl:agentClass foaf:Agent;
-    acl:default pub:;
+    acl:default folder:;
     acl:mode acl:Read.

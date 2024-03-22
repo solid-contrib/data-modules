@@ -3,7 +3,7 @@ import { pim, solid } from "../namespaces.js";
 
 export class ProfileQuery {
   constructor(
-    private profileNode: NamedNode,
+    private webIdNode: NamedNode,
     private store: IndexedFormula,
   ) {}
 
@@ -19,10 +19,10 @@ export class ProfileQuery {
 
   private queryNamedNode(predicate: NamedNode) {
     const node = this.store.any(
-      this.profileNode,
+      this.webIdNode,
       predicate,
       null,
-      this.profileNode.doc(),
+      this.webIdNode.doc(),
     );
     if (isNamedNode(node)) {
       return node as NamedNode;
