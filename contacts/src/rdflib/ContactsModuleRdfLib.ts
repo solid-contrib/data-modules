@@ -42,6 +42,7 @@ import { removeEmailAddress } from "./update-operations/removeEmailAddress.js";
 import { ProfileQuery } from "./queries/ProfileQuery.js";
 import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
 import { PreferencesQuery } from "./queries/PreferencesQuery.js";
+import { renameContact } from "./update-operations/renameContact.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -316,5 +317,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return preferencesQuery.queryPrivateTypeIndex();
   }
 
-  async renameContact(command: RenameContactCommand) {}
+  async renameContact({ contactUri, newName }: RenameContactCommand) {
+    const contactNode = sym(contactUri);
+    await this.fetchNode(contactNode);
+    const operation = renameContact(this.store, contactNode, newName);
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
 }
