@@ -118,4 +118,35 @@ describe("edit contact information", () => {
       }),
     );
   });
+
+  it("renames an existing contact", async () => {
+    const contacts = setupModule();
+
+    const addressBookUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/index.ttl#this";
+
+    const addressBookBefore = await contacts.readAddressBook(addressBookUri);
+
+    const contactToRename = addressBookBefore.contacts.find(
+      (it) => it.name === "Molly Braaten",
+    );
+
+    if (!contactToRename) {
+      fail("contact to rename not present");
+    }
+
+    await contacts.renameContact({
+      contactUri: contactToRename.uri,
+      newName: "Mollie Brateen",
+    });
+
+    const renamedContact = await contacts.readContact(contactToRename.uri);
+    expect(renamedContact.name).toEqual("Mollie Brateen");
+
+    const addressBookAfter = await contacts.readAddressBook(addressBookUri);
+    expect(addressBookAfter.contacts).toContainEqual({
+      uri: contactToRename.uri,
+      name: "Mollie Brateen",
+    });
+  });
 });

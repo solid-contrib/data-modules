@@ -22,6 +22,7 @@ import {
   RemoveContactFromGroupCommand,
   RemoveEmailAddressCommand,
   RemovePhoneNumberCommand,
+  RenameContactCommand,
 } from "../index.js";
 import { AddressBookQuery, ContactQuery } from "./queries/index.js";
 import {
@@ -314,4 +315,6 @@ export class ContactsModuleRdfLib implements ContactsModule {
     );
     return preferencesQuery.queryPrivateTypeIndex();
   }
+
+  async renameContact(command: RenameContactCommand) {}
 }
