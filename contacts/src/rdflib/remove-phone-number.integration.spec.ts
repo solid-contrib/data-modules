@@ -43,10 +43,10 @@ describe("remove phone number", () => {
 `,
     );
 
-    await contacts.removePhoneNumber(
-      "https://pod.test/alice/contacts/Person/1/index.ttl#this",
-      "https://pod.test/alice/contacts/Person/1/phone#this",
-    );
+    await contacts.removePhoneNumber({
+      contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
+      phoneNumberUri: "https://pod.test/alice/contacts/Person/1/phone#this",
+    });
 
     expectPatchRequest(
       authenticatedFetch,

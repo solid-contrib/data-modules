@@ -8,6 +8,8 @@ import {
 } from "rdflib";
 import {
   AddContactToGroupCommand,
+  AddNewEmailAddressCommand,
+  AddNewPhoneNumberCommand,
   AddressBook,
   AddressBookLists,
   ContactsModule,
@@ -18,6 +20,8 @@ import {
   FullGroup,
   NewContact,
   RemoveContactFromGroupCommand,
+  RemoveEmailAddressCommand,
+  RemovePhoneNumberCommand,
 } from "../index.js";
 import { AddressBookQuery, ContactQuery } from "./queries/index.js";
 import {
@@ -202,21 +206,30 @@ export class ContactsModuleRdfLib implements ContactsModule {
     await executeUpdate(this.fetcher, this.updater, operation);
   }
 
-  async addNewPhoneNumber(contactUri: string, newPhoneNumber: string) {
+  async addNewPhoneNumber({
+    contactUri,
+    newPhoneNumber,
+  }: AddNewPhoneNumberCommand) {
     const contactNode = sym(contactUri);
     const operation = addNewPhoneNumber(contactNode, newPhoneNumber);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
 
-  async addNewEmailAddress(contactUri: string, newEmailAddress: string) {
+  async addNewEmailAddress({
+    contactUri,
+    newEmailAddress,
+  }: AddNewEmailAddressCommand) {
     const contactNode = sym(contactUri);
     const operation = addNewEmailAddress(contactNode, newEmailAddress);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
 
-  async removePhoneNumber(contactUri: string, phoneNumberUri: string) {
+  async removePhoneNumber({
+    contactUri,
+    phoneNumberUri,
+  }: RemovePhoneNumberCommand) {
     const contactNode = sym(contactUri);
     const phoneNumberNode = sym(phoneNumberUri);
     await this.fetchNode(phoneNumberNode);
@@ -228,7 +241,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
     await executeUpdate(this.fetcher, this.updater, operation);
   }
 
-  async removeEmailAddress(contactUri: string, emailAddressUri: string) {
+  async removeEmailAddress({
+    contactUri,
+    emailAddressUri,
+  }: RemoveEmailAddressCommand) {
     const contactNode = sym(contactUri);
     const emailAddressNode = sym(emailAddressUri);
     await this.fetchNode(emailAddressNode);

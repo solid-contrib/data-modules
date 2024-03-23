@@ -78,45 +78,32 @@ export interface ContactsModule {
   /**
    * Adds a new phone number to the given contact
    *
-   * @param contactUri - The URI of the contact
-   * @param newPhoneNumber - The phone number to add (RFC 3966 telephone-subscriber part format)
+   * @param command
    * @return The URI of the newly created phone number resource
    */
-  addNewPhoneNumber(
-    contactUri: string,
-    newPhoneNumber: string,
-  ): Promise<string>;
+  addNewPhoneNumber(command: AddNewPhoneNumberCommand): Promise<string>;
 
   /**
    * Adds a new email address to the given contact
    *
-   * @param contactUri - The URI of the contact
-   * @param newEmailAddress - The email address to add
+   * @param command
    * @return The URI of the newly created email address resource
    */
-  addNewEmailAddress(
-    contactUri: string,
-    newEmailAddress: string,
-  ): Promise<string>;
+  addNewEmailAddress(command: AddNewEmailAddressCommand): Promise<string>;
 
   /**
    * Removes the given phone number from the given contact
    *
-   * @param contactUri - The URI of the contact
-   * @param phoneNumberUri - The URI of the phone number resource
+   * @param command
    */
-  removePhoneNumber(contactUri: string, phoneNumberUri: string): Promise<void>;
+  removePhoneNumber(command: RemovePhoneNumberCommand): Promise<void>;
 
   /**
    * Removes the given email address from the given contact
    *
-   * @param contactUri - The URI of the contact
-   * @param emailAddressUri - The URI of the email address resource
+   * @param command
    */
-  removeEmailAddress(
-    contactUri: string,
-    emailAddressUri: string,
-  ): Promise<void>;
+  removeEmailAddress(command: RemoveEmailAddressCommand): Promise<void>;
 }
 
 /**
@@ -296,4 +283,60 @@ export interface RemoveContactFromGroupCommand {
    * The URI of an existing contact, that should be removed to the group
    */
   groupUri: string;
+}
+
+/**
+ * Data needed to add a phone number to an existing contact
+ */
+export interface AddNewPhoneNumberCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   * The phone number to add (RFC 3966 telephone-subscriber part format)
+   */
+  newPhoneNumber: string;
+}
+
+/**
+ * Data needed to remove a phone number from an existing contact
+ */
+export interface RemovePhoneNumberCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   *  The URI of the phone number resource to remove
+   */
+  phoneNumberUri: string;
+}
+
+/**
+ * Data needed to remove an email address from an existing contact
+ */
+export interface AddNewEmailAddressCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   * The email address to add
+   */
+  newEmailAddress: string;
+}
+
+/**
+ * Data needed to remove an email address from an existing contact
+ */
+export interface RemoveEmailAddressCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   * The URI of the email address resource to remove
+   */
+  emailAddressUri: string;
 }

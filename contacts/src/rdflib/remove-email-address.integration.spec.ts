@@ -43,10 +43,10 @@ describe("remove email address", () => {
 `,
     );
 
-    await contacts.removeEmailAddress(
-      "https://pod.test/alice/contacts/Person/1/index.ttl#this",
-      "https://pod.test/alice/contacts/Person/1/email#this",
-    );
+    await contacts.removeEmailAddress({
+      contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
+      emailAddressUri: "https://pod.test/alice/contacts/Person/1/email#this",
+    });
 
     expectPatchRequest(
       authenticatedFetch,

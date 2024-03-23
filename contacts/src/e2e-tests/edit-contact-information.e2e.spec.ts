@@ -17,7 +17,10 @@ describe("edit contact information", () => {
       ),
     ).toBe(false);
 
-    const uri = await contacts.addNewPhoneNumber(contactUri, newPhoneNumber);
+    const uri = await contacts.addNewPhoneNumber({
+      contactUri,
+      newPhoneNumber,
+    });
 
     const contactAfter = await contacts.readContact(contactUri);
 
@@ -43,7 +46,10 @@ describe("edit contact information", () => {
       contactBefore.emails.some((email) => email.value === newEmailAddress),
     ).toBe(false);
 
-    const uri = await contacts.addNewEmailAddress(contactUri, newEmailAddress);
+    const uri = await contacts.addNewEmailAddress({
+      contactUri,
+      newEmailAddress,
+    });
 
     const contactAfter = await contacts.readContact(contactUri);
 
@@ -73,7 +79,7 @@ describe("edit contact information", () => {
       }),
     );
 
-    await contacts.removePhoneNumber(contactUri, phoneNumberUri);
+    await contacts.removePhoneNumber({ contactUri, phoneNumberUri });
 
     const contactAfter = await contacts.readContact(contactUri);
     expect(contactAfter.phoneNumbers).not.toContainEqual(
@@ -102,7 +108,7 @@ describe("edit contact information", () => {
       }),
     );
 
-    await contacts.removeEmailAddress(contactUri, emailAddressUri);
+    await contacts.removeEmailAddress({ contactUri, emailAddressUri });
 
     const contactAfter = await contacts.readContact(contactUri);
     expect(contactAfter.emails).not.toContainEqual(

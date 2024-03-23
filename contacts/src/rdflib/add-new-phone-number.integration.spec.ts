@@ -35,10 +35,10 @@ describe("add new phone number", () => {
 `,
     );
 
-    const uri = await contacts.addNewPhoneNumber(
-      "https://pod.test/alice/contacts/Person/1/index.ttl#this",
-      "123456789",
-    );
+    const uri = await contacts.addNewPhoneNumber({
+      contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
+      newPhoneNumber: "123456789",
+    });
 
     expectPatchRequest(
       authenticatedFetch,

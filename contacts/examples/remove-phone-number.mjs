@@ -18,7 +18,7 @@ const phoneNumberUri = result.phoneNumbers[0].uri
 
 console.log("removing phone number", phoneNumberUri, "from contact", contactUri)
 
-await contacts.removePhoneNumber(contactUri, phoneNumberUri)
+await contacts.removePhoneNumber({ contactUri, phoneNumberUri });
 
 const contact = await contacts.readContact(contactUri)
 console.log("updated contact", contact)

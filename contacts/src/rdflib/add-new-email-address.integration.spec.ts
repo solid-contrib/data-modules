@@ -35,10 +35,10 @@ describe("add new email address", () => {
 `,
     );
 
-    const uri = await contacts.addNewEmailAddress(
-      "https://pod.test/alice/contacts/Person/1/index.ttl#this",
-      "alice@mail.test",
-    );
+    const uri = await contacts.addNewEmailAddress({
+      contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
+      newEmailAddress: "alice@mail.test",
+    });
 
     expectPatchRequest(
       authenticatedFetch,

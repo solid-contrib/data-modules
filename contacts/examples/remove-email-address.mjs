@@ -18,7 +18,7 @@ const emailAddressUri = result.emails[0].uri
 
 console.log("removing email address", emailAddressUri, "from contact", contactUri)
 
-await contacts.removeEmailAddress(contactUri, emailAddressUri)
+await contacts.removeEmailAddress({ contactUri, emailAddressUri });
 
 const contact = await contacts.readContact(contactUri)
 console.log("updated contact", contact)
