@@ -1,30 +1,27 @@
-import { lit, st } from "rdflib";
+import { IndexedFormula, lit, NamedNode, st } from "rdflib";
 import { UpdateOperation } from "./index.js";
 import { vcard } from "../namespaces.js";
-import { ContactQuery } from "../queries/ContactQuery.js";
 
 export function renameContact(
-  contactQuery: ContactQuery,
+  store: IndexedFormula,
+  contactNode: NamedNode,
   newName: string,
 ): UpdateOperation {
+  const deletions = store.statementsMatching(
+    contactNode,
+    vcard("fn"),
+    null,
+    null,
+  );
+
+  const insertions = deletions.map((it) =>
+    st(it.subject, it.predicate, lit(newName), it.graph),
+  );
+
   return {
     uri: "",
-    insertions: [
-      st(
-        contactQuery.contactNode,
-        vcard("fn"),
-        lit(newName),
-        contactQuery.contactNode.doc(),
-      ),
-    ],
-    deletions: [
-      st(
-        contactQuery.contactNode,
-        vcard("fn"),
-        lit(contactQuery.queryName()),
-        contactQuery.contactNode.doc(),
-      ),
-    ],
+    insertions,
+    deletions,
     filesToCreate: [],
   };
 }
