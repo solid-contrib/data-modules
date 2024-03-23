@@ -2,9 +2,9 @@ import { AddressBookQuery } from "./AddressBookQuery";
 import { graph, lit, sym } from "rdflib";
 import { dc, vcard } from "../namespaces";
 
-import { v4 as uuid } from "uuid";
+import { generateId } from "../generate-id";
 
-jest.mock("uuid");
+jest.mock("../generate-id");
 
 describe("AddressBookQuery", () => {
   describe("query title", () => {
@@ -651,9 +651,7 @@ describe("AddressBookQuery", () => {
 
   describe("propose new contact node", () => {
     it("mints a new URI based on the address book container", () => {
-      (uuid as jest.Mock).mockReturnValueOnce(
-        "44a5fc88-fc3c-4f69-83ab-78d49764881c",
-      );
+      (generateId as jest.Mock).mockReturnValueOnce("p0ZoB1FwH6");
       const store = graph();
       const addressBookNode = sym(
         "http://pod.test/alice/contacts/index.ttl#this",
@@ -661,18 +659,14 @@ describe("AddressBookQuery", () => {
       const query = new AddressBookQuery(store, addressBookNode);
       const contactNode = query.proposeNewContactNode();
       expect(contactNode).toEqual(
-        sym(
-          "http://pod.test/alice/contacts/Person/44a5fc88-fc3c-4f69-83ab-78d49764881c/index.ttl#this",
-        ),
+        sym("http://pod.test/alice/contacts/Person/p0ZoB1FwH6/index.ttl#this"),
       );
     });
   });
 
   describe("propose new group node", () => {
     it("mints a new URI based on the address book container", () => {
-      (uuid as jest.Mock).mockReturnValueOnce(
-        "367da26e-460c-4ab8-b6ca-a32edc88df51",
-      );
+      (generateId as jest.Mock).mockReturnValueOnce("mSjGCTfn8w");
       const store = graph();
       const addressBookNode = sym(
         "http://pod.test/alice/contacts/index.ttl#this",
@@ -680,9 +674,7 @@ describe("AddressBookQuery", () => {
       const query = new AddressBookQuery(store, addressBookNode);
       const contactNode = query.proposeNewGroupNode();
       expect(contactNode).toEqual(
-        sym(
-          "http://pod.test/alice/contacts/Group/367da26e-460c-4ab8-b6ca-a32edc88df51/index.ttl#this",
-        ),
+        sym("http://pod.test/alice/contacts/Group/mSjGCTfn8w/index.ttl#this"),
       );
     });
   });

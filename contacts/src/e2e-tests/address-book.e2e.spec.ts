@@ -8,7 +8,7 @@ describe("address books", () => {
       name: "Personal contacts",
     });
     expect(uri).toMatch(
-      new RegExp("http://localhost:3456/[a-z\\-0-9]+/index.ttl#this"),
+      new RegExp("http://localhost:3456/[a-zA-Z0-9]{6}/index.ttl#this"),
     );
   });
 

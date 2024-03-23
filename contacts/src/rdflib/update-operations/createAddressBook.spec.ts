@@ -1,24 +1,22 @@
 import { createAddressBook } from "./createAddressBook";
-import { v4 as uuid } from "uuid";
+import { generateId } from "../generate-id";
 import { lit, st, sym } from "rdflib";
 import { dc, vcard } from "../namespaces.js";
 import { UpdateOperation } from "./index.js";
 
-jest.mock("uuid");
+jest.mock("../generate-id");
 
 describe("createAddressBook", () => {
-  it("generates a URI for the new address book based on the container and a random uuid", () => {
+  it("generates a URI for the new address book based on the container and a random id", () => {
     // given
-    (uuid as jest.Mock).mockReturnValueOnce(
-      "4b7f70e2-a30a-474b-9eb7-8301f8bd56b0",
-    );
+    (generateId as jest.Mock).mockReturnValueOnce("yt4Xx5nHMB");
     // when
     const result = createAddressBook(
       "https://pod.test/container/",
       "Test addresses",
     );
     expect(result.uri).toEqual(
-      "https://pod.test/container/4b7f70e2-a30a-474b-9eb7-8301f8bd56b0/index.ttl#this",
+      "https://pod.test/container/yt4Xx5nHMB/index.ttl#this",
     );
   });
   it("does not prepare any deletions", () => {
@@ -32,9 +30,7 @@ describe("createAddressBook", () => {
   describe("insertions", () => {
     let result: UpdateOperation;
     beforeEach(() => {
-      (uuid as jest.Mock).mockReturnValueOnce(
-        "b66d3267-fca0-400f-80c0-ab9ff7a7c77d",
-      );
+      (generateId as jest.Mock).mockReturnValueOnce("e8Civ0HoDy");
       result = createAddressBook(
         "https://pod.test/container/",
         "Test addresses",
@@ -65,9 +61,7 @@ describe("createAddressBook", () => {
         st(
           sym(result.uri),
           vcard("nameEmailIndex"),
-          sym(
-            "https://pod.test/container/b66d3267-fca0-400f-80c0-ab9ff7a7c77d/people.ttl",
-          ),
+          sym("https://pod.test/container/e8Civ0HoDy/people.ttl"),
           sym(result.uri).doc(),
         ),
       );
@@ -77,9 +71,7 @@ describe("createAddressBook", () => {
         st(
           sym(result.uri),
           vcard("groupIndex"),
-          sym(
-            "https://pod.test/container/b66d3267-fca0-400f-80c0-ab9ff7a7c77d/groups.ttl",
-          ),
+          sym("https://pod.test/container/e8Civ0HoDy/groups.ttl"),
           sym(result.uri).doc(),
         ),
       );
@@ -89,9 +81,7 @@ describe("createAddressBook", () => {
   describe("files to create", () => {
     let result: UpdateOperation;
     beforeEach(() => {
-      (uuid as jest.Mock).mockReturnValueOnce(
-        "7b93245b-1d43-48da-832e-c40e62032a05",
-      );
+      (generateId as jest.Mock).mockReturnValueOnce("iPjiGoHXAK");
       result = createAddressBook(
         "https://pod.test/container/",
         "Test addresses",
@@ -100,13 +90,13 @@ describe("createAddressBook", () => {
 
     it("include the name email index", () => {
       expect(result.filesToCreate).toContainEqual({
-        uri: "https://pod.test/container/7b93245b-1d43-48da-832e-c40e62032a05/people.ttl",
+        uri: "https://pod.test/container/iPjiGoHXAK/people.ttl",
       });
     });
 
     it("include the group index", () => {
       expect(result.filesToCreate).toContainEqual({
-        uri: "https://pod.test/container/7b93245b-1d43-48da-832e-c40e62032a05/groups.ttl",
+        uri: "https://pod.test/container/iPjiGoHXAK/groups.ttl",
       });
     });
   });

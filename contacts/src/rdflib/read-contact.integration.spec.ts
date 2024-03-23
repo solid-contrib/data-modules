@@ -3,7 +3,7 @@ import { mockTurtleResponse } from "../test-support/mockResponses";
 
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
-jest.mock("uuid");
+jest.mock("./generate-id");
 
 describe("read contact", () => {
   it("returns the contact's name and uri", async () => {

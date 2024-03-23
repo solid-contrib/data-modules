@@ -4,19 +4,17 @@ import {
   mockTurtleResponse,
 } from "../test-support/mockResponses";
 
-import { v4 as uuid } from "uuid";
+import { generateId } from "./generate-id";
 import { expectPatchRequest } from "../test-support/expectRequests";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
-jest.mock("uuid");
+jest.mock("./generate-id");
 
 describe("create new contact", () => {
   it("creates contact resource", async () => {
     const authenticatedFetch = jest.fn();
 
-    (uuid as jest.Mock).mockReturnValueOnce(
-      "82dfdfc0-d13c-4dfc-b36d-c0d11db81d94",
-    );
+    (generateId as jest.Mock).mockReturnValueOnce("82dfdfc0");
 
     const store = graph();
     const fetcher = new Fetcher(store, {
@@ -53,7 +51,7 @@ describe("create new contact", () => {
 
     mockNotFound(
       authenticatedFetch,
-      "https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl",
+      "https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl",
     );
 
     const createdUri = await contacts.createNewContact({
@@ -64,13 +62,13 @@ describe("create new contact", () => {
     });
 
     expect(createdUri).toEqual(
-      "https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this",
+      "https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this",
     );
     expectPatchRequest(
       authenticatedFetch,
-      "https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
-<https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Individual> .
+      "https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl",
+      `INSERT DATA { <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+<https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Individual> .
  }`,
     );
   });
@@ -78,9 +76,7 @@ describe("create new contact", () => {
   it("adds new contact to existing group", async () => {
     const authenticatedFetch = jest.fn();
 
-    (uuid as jest.Mock).mockReturnValueOnce(
-      "82dfdfc0-d13c-4dfc-b36d-c0d11db81d94",
-    );
+    (generateId as jest.Mock).mockReturnValueOnce("82dfdfc0");
 
     const store = graph();
     const fetcher = new Fetcher(store, {
@@ -139,7 +135,7 @@ describe("create new contact", () => {
 
     mockNotFound(
       authenticatedFetch,
-      "https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl",
+      "https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl",
     );
 
     await contacts.createNewContact({
@@ -156,16 +152,16 @@ describe("create new contact", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> .
-<https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+      `INSERT DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> .
+<https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
  }`,
     );
 
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/2/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/2/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> .
-<https://pod.test/alice/contacts/Person/82dfdfc0-d13c-4dfc-b36d-c0d11db81d94/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+      `INSERT DATA { <https://pod.test/alice/contacts/Group/2/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> .
+<https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
  }`,
     );
   });

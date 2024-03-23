@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
 import {
@@ -7,15 +6,15 @@ import {
 } from "../test-support/mockResponses";
 import { expectPatchRequest } from "../test-support/expectRequests";
 
-jest.mock("uuid");
+import { generateId } from "./generate-id";
+
+jest.mock("./generate-id");
 
 describe("create new group", () => {
   it("creates group resource", async () => {
     const authenticatedFetch = jest.fn();
 
-    (uuid as jest.Mock).mockReturnValueOnce(
-      "b4e9fd85-3b38-4db7-8599-d0eda0b2ac74",
-    );
+    (generateId as jest.Mock).mockReturnValueOnce("b4e9fd85");
 
     const store = graph();
     const fetcher = new Fetcher(store, {
@@ -52,7 +51,7 @@ describe("create new group", () => {
 
     mockNotFound(
       authenticatedFetch,
-      "https://pod.test/alice/contacts/Group/b4e9fd85-3b38-4db7-8599-d0eda0b2ac74/index.ttl",
+      "https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl",
     );
 
     const createdUri = await contacts.createNewGroup({
@@ -61,13 +60,13 @@ describe("create new group", () => {
     });
 
     expect(createdUri).toEqual(
-      "https://pod.test/alice/contacts/Group/b4e9fd85-3b38-4db7-8599-d0eda0b2ac74/index.ttl#this",
+      "https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this",
     );
     expectPatchRequest(
       authenticatedFetch,
-      "https://pod.test/alice/contacts/Group/b4e9fd85-3b38-4db7-8599-d0eda0b2ac74/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/b4e9fd85-3b38-4db7-8599-d0eda0b2ac74/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "best friends" .
-<https://pod.test/alice/contacts/Group/b4e9fd85-3b38-4db7-8599-d0eda0b2ac74/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Group> .
+      "https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl",
+      `INSERT DATA { <https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "best friends" .
+<https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Group> .
  }`,
     );
   });

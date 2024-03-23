@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [removeEmailAddress](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#removeEmailAddress)
 - [listAddressBooks](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#listAddressBooks)
 
+### Changed
+
+- Newly created address books, contacts & groups now use a 6 character [short unique ID](https://www.npmjs.com/package/short-unique-id) instead of a uuid v4. Those identifiers do not have to be globally unique, only in the scope of the target container / address book / group. The short ID has enough entropy to prevent collisions in these contexts, but leads to much shorter URIs.
+
 ## 0.4.0
 
 ### Added

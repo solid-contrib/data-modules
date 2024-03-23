@@ -1,6 +1,8 @@
 import { lit, st, sym } from "rdflib";
-import { v4 as uuid } from "uuid";
+
 import { dc, vcard } from "../namespaces.js";
+
+import { generateId } from "../generate-id.js";
 
 import { UpdateOperation } from "./index.js";
 
@@ -8,7 +10,7 @@ export function createAddressBook(
   container: string,
   name: string,
 ): UpdateOperation {
-  const id = uuid();
+  const id = generateId();
   const uri = `${container}${id}/index.ttl#this`;
   const nameEmailIndexUri = `${container}${id}/people.ttl`;
   const groupIndexUri = `${container}${id}/groups.ttl`;
