@@ -4,3 +4,5 @@ bookmarks/node_modules
 bookmarks/dist
 bookmarks/soukai/demo/.vite
 gh-pages
+solid-typeindex-support
+soukai-solid-utils
