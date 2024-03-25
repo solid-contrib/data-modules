@@ -39,7 +39,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "rdflib": "^2.2.33"
+    "rdflib": "2.x"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
