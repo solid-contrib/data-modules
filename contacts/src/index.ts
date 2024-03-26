@@ -47,6 +47,12 @@ export interface ContactsModule {
   readContact(uri: string): Promise<FullContact>;
 
   /**
+   * Changes the name of the given contact to a new value
+   * @param command
+   */
+  renameContact(command: RenameContactCommand): Promise<void>;
+
+  /**
    * Creates a new group within a given address book
    * @param command
    * @return The URI of the newly created group
@@ -339,4 +345,18 @@ export interface RemoveEmailAddressCommand {
    * The URI of the email address resource to remove
    */
   emailAddressUri: string;
+}
+
+/**
+ * Data needed to rename a contact
+ */
+export interface RenameContactCommand {
+  /**
+   * The URI of the contact to rename
+   */
+  contactUri: string;
+  /**
+   * The new name
+   */
+  newName: string;
 }

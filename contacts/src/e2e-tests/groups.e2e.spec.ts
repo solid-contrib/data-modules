@@ -51,7 +51,7 @@ describe("groups", () => {
       "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Group/88f4eb67-f510-49c8-8d52-9080cd3e489f/index.ttl#this";
 
     const contactUri =
-      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this";
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/968b9718-036c-40a6-832b-a0732402d8e1/index.ttl#this";
 
     const groupBefore = await contacts.readGroup(groupUri);
     expect(
@@ -62,8 +62,8 @@ describe("groups", () => {
 
     const groupAfter = await contacts.readGroup(groupUri);
     expect(groupAfter.members).toContainEqual({
-      uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this",
-      name: "Molly Braaten",
+      uri: "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/968b9718-036c-40a6-832b-a0732402d8e1/index.ttl#this",
+      name: "Bran Breda",
     });
   });
 
