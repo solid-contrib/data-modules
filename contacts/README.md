@@ -22,7 +22,7 @@ npm install rdflib @solid-data-modules/contacts-rdflib
 
 ```typescript
 import {Fetcher, graph, UpdateManager} from "rdflib";
-import ContactsModuleRdfLib, { ContactsModule } from "@solid-data-module/contacts-rdflib";
+import ContactsModuleRdfLib, { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 
 // 1️⃣ create rdflib store, fetcher and updater as usual
 const store = graph();
@@ -38,21 +38,21 @@ const updater = new UpdateManager(store);
 const module: ContactsModule = new ContactsModuleRdfLib({store, fetcher, updater});
 
 // 3️⃣ use the module to interact with address books and contacts
-const uri = await contacts.createAddressBook({
-  container: "https://pod.example/alice/",
+const uri = await module.createAddressBook({
+  containerUri: "https://pod.example/alice/",
   name: "new address book"
 })
 
-const contactUri = await contacts.createNewContact({
+const contactUri = await module.createNewContact({
   addressBook: uri,
   contact: {
       name: "Maurice Moss",
       email: "maurice.moss@reynholm-industries.example",
-      phone: "0118-999-881-99-9119-725-3"
+      phoneNumber: "0118-999-881-99-9119-725-3"
   },
 });
 
-const addressBook = await contacts.readAddressBook(uri)
+const addressBook = await module.readAddressBook(uri)
 console.log(addressBook)
 ```
 
