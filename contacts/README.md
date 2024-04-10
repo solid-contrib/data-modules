@@ -58,14 +58,18 @@ console.log(addressBook)
 
 ### Example scripts
 
-Executable example scripts how to use the module can be found in [./examples](./examples) folder. To run a script call it like
+Executable example scripts how to use the module can be found in [./examples](./examples) folder.
+
+The [development server](#development-server) needs to be **running** and **initialized** for this.
+
+After that you can run an example script like this:
 
 ```shell
 npm run build
 node ./examples/read-address-book.mjs
 ```
 
-The [development server](#development-server) needs to be running for this.
+
 
 ### Available features
 
@@ -99,14 +103,18 @@ npm run build
 
 ### Development server
 
+#### Start server
+
 You can start a development solid server via:
 
 ```shell
 npm run pod
 ```
 
-This will seed an account and pod for test user alice. Find the credentials of
+This will seed an account and an _empty_ pod for test user alice. Find the credentials of
 that account in [./dev-server/seed.json](./dev-server/seed.json)
+
+#### Initialize example data
 
 To add some example data to this pod run
 
