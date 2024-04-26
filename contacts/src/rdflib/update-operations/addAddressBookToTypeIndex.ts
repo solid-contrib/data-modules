@@ -1,6 +1,7 @@
 import { NamedNode, st, sym } from "rdflib";
 import { UpdateOperation } from "./index.js";
 import { solid } from "../namespaces.js";
+import { generateId } from "../generate-id.js";
 
 export function addAddressBookToTypeIndex(
   typeIndexDoc: NamedNode,
@@ -11,7 +12,7 @@ export function addAddressBookToTypeIndex(
     filesToCreate: [],
     insertions: [
       st(
-        sym(typeIndexDoc.value + "#registration"),
+        sym(`${typeIndexDoc.value}#${generateId()}`),
         solid("instance"),
         sym(addressBookUri),
         typeIndexDoc.doc(),

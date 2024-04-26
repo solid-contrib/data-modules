@@ -73,7 +73,9 @@ describe("create address book", () => {
   it("updates the private type index, if owner is given", async () => {
     const authenticatedFetch = jest.fn();
 
-    (generateId as jest.Mock).mockReturnValueOnce("b6edf2b9");
+    (generateId as jest.Mock)
+      .mockReturnValueOnce("b6edf2b9")
+      .mockReturnValueOnce("3b6e");
 
     const store = graph();
     const fetcher = new Fetcher(store, {
@@ -150,7 +152,7 @@ describe("create address book", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/settings/privateTypeIndex.ttl",
-      `INSERT DATA { <https://pod.test/alice/settings/privateTypeIndex.ttl#registration> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
+      `INSERT DATA { <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
  }`,
     );
   });
