@@ -4,7 +4,7 @@ import { solid, vcard } from "../namespaces.js";
 export class TypeIndexQuery {
   constructor(
     private store: IndexedFormula,
-    private typeIndexDoc: NamedNode,
+    public typeIndexDoc: NamedNode,
   ) {}
 
   queryAddressBookInstances() {

@@ -1,5 +1,8 @@
 import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { mockNotFound } from "../test-support/mockResponses";
+import {
+  mockNotFound,
+  mockTurtleResponse,
+} from "../test-support/mockResponses";
 
 import { generateId } from "./generate-id";
 import {
@@ -64,6 +67,91 @@ describe("create address book", () => {
     expectPutEmptyTurtleFile(
       authenticatedFetch,
       "https://pod.test/alice/n528gSMwTN/groups.ttl",
+    );
+  });
+
+  it("updates the private type index, if owner is given", async () => {
+    const authenticatedFetch = jest.fn();
+
+    (generateId as jest.Mock).mockReturnValueOnce("b6edf2b9");
+
+    const store = graph();
+    const fetcher = new Fetcher(store, {
+      fetch: authenticatedFetch,
+    });
+    const updater = new UpdateManager(store);
+    const contacts = new ContactsModuleRdfLib({
+      store,
+      fetcher,
+      updater,
+    });
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/profile/card",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+    @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+    @prefix pim: <http://www.w3.org/ns/pim/space#>.
+  
+    <#me> a vcard:Individual;
+        vcard:fn "Alice";
+        pim:preferencesFile <https://pod.test/alice/settings/prefs.ttl> ;
+        .
+`,
+    );
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/settings/prefs.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+    @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+  
+    <https://pod.test/alice/profile/card#me> 
+        solid:privateTypeIndex <https://pod.test/alice/settings/privateTypeIndex.ttl> ;
+        .
+`,
+    );
+
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/settings/privateTypeIndex.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+    @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+  
+    <#registration> a solid:TypeRegistration ;
+       solid:forClass vcard:AddressBook ;
+       solid:instance <https://pod.test/alice/contacts/3/index.ttl#this> ;
+       .
+`,
+    );
+
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/b6edf2b9/index.ttl",
+    );
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/b6edf2b9/people.ttl",
+    );
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/b6edf2b9/groups.ttl",
+    );
+
+    await contacts.createAddressBook({
+      containerUri: "https://pod.test/alice/",
+      name: "My Contacts",
+      ownerWebId: "https://pod.test/alice/profile/card#me",
+    });
+
+    expectPatchRequest(
+      authenticatedFetch,
+      "https://pod.test/alice/settings/privateTypeIndex.ttl",
+      `INSERT DATA { <https://pod.test/alice/settings/privateTypeIndex.ttl#registration> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
+ }`,
     );
   });
 });
