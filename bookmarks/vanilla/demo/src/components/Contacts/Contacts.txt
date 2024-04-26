@@ -1,0 +1,35 @@
+import {Fetcher, graph, UpdateManager} from "rdflib";
+import ContactsModuleRdfLib, { ContactsModule } from "@solid-data-modules/contacts-rdflib";
+
+async function contactsDemo() {
+// 1️⃣ create rdflib store, fetcher and updater as usual
+const store = graph();
+const fetcher = new Fetcher(
+        store,
+        // 💡 pass an authenticated fetch
+        // to be able to access private resources*
+        /* fetch: authenticatedFetch */
+);
+const updater = new UpdateManager(store);
+
+// 2️⃣ create the contacts module
+const module: ContactsModule = new ContactsModuleRdfLib({store, fetcher, updater});
+
+// 3️⃣ use the module to interact with address books and contacts
+const uri = await module.createAddressBook({
+  containerUri: "https://pod.example/alice/",
+  name: "new address book"
+})
+
+const contactUri = await module.createNewContact({
+  addressBook: uri,
+  contact: {
+      name: "Maurice Moss",
+      email: "maurice.moss@reynholm-industries.example",
+      phoneNumber: "0118-999-881-99-9119-725-3"
+  },
+});
+
+const addressBook = await module.readAddressBook(uri)
+console.log(addressBook)
+}
