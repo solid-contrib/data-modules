@@ -76,7 +76,8 @@ const Bookmarks: FC<IProps> = () => {
         title: bookmarkTitle,
         link: bookmarkLink,
       }
-      const res = await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
+      await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
+      // const res = await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
       // console.log(res)
 
 
