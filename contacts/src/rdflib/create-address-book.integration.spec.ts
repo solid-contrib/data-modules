@@ -119,15 +119,7 @@ describe("create address book", () => {
     mockTurtleResponse(
       authenticatedFetch,
       "https://pod.test/alice/settings/privateTypeIndex.ttl",
-      `
-    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
-    @prefix solid: <http://www.w3.org/ns/solid/terms#>.
-  
-    <#registration> a solid:TypeRegistration ;
-       solid:forClass vcard:AddressBook ;
-       solid:instance <https://pod.test/alice/contacts/3/index.ttl#this> ;
-       .
-`,
+      ``,
     );
 
     mockNotFound(
@@ -152,7 +144,9 @@ describe("create address book", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/settings/privateTypeIndex.ttl",
-      `INSERT DATA { <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
+      `INSERT DATA { <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/solid/terms#TypeRegistration> .
+<https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook> .
+<https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
  }`,
     );
   });
