@@ -20,6 +20,7 @@ export interface ContactsModule {
   createAddressBook({
     containerUri,
     name,
+    ownerWebId,
   }: CreateAddressBookCommand): Promise<string>;
 
   /**
@@ -124,6 +125,11 @@ export interface CreateAddressBookCommand {
    * The human-readable title for the address book
    */
   name: string;
+  /**
+   * WebID of the Solid user who creates the address book.
+   * If given, the private type index of that user will be updated to include the new address book.
+   */
+  ownerWebId?: string;
 }
 
 /**
