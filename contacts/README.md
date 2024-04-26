@@ -44,7 +44,7 @@ const uri = await module.createAddressBook({
 })
 
 const contactUri = await module.createNewContact({
-  addressBook: uri,
+  addressBookUri: uri,
   contact: {
       name: "Maurice Moss",
       email: "maurice.moss@reynholm-industries.example",
