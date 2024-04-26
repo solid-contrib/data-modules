@@ -10,9 +10,10 @@
     acl:agent c:me;
     acl:default folder:;
     acl:mode acl:Control, acl:Read, acl:Write.
-:Read
+
+:ReadWrite
     a acl:Authorization;
     acl:accessTo folder:;
     acl:agentClass foaf:Agent;
     acl:default folder:;
-    acl:mode acl:Read.
+    acl:mode acl:Read, acl:Write.
