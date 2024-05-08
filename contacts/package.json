@@ -1,6 +1,6 @@
 {
   "name": "@solid-data-modules/contacts-rdflib",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A library to manage address books and contacts in Solid Pods based on rdflib.js",
   "type": "module",
   "main": "dist/index.js",
