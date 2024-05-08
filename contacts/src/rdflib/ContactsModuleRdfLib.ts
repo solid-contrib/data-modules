@@ -45,6 +45,7 @@ import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
 import { PreferencesQuery } from "./queries/PreferencesQuery.js";
 import { renameContact } from "./update-operations/renameContact.js";
 import { addAddressBookToTypeIndex } from "./update-operations/addAddressBookToTypeIndex.js";
+import { updatePhoneNumber } from "./update-operations/updatePhoneNumber.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -295,7 +296,16 @@ export class ContactsModuleRdfLib implements ContactsModule {
   async updatePhoneNumber({
     phoneNumberUri,
     newPhoneNumber,
-  }: UpdatePhoneNumberCommand) {}
+  }: UpdatePhoneNumberCommand) {
+    const phoneNumberNode = sym(phoneNumberUri);
+    await this.fetchNode(phoneNumberNode);
+    const operation = updatePhoneNumber(
+      phoneNumberNode,
+      newPhoneNumber,
+      this.store,
+    );
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
 
   async listAddressBooks(webId: string): Promise<AddressBookLists> {
     const profileNode = sym(webId);
