@@ -149,6 +149,36 @@ describe("edit contact information", () => {
     ]);
   });
 
+  it("updates an existing email address", async () => {
+    const contacts = setupModule();
+
+    const contactUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/EZCodK/index.ttl#this";
+
+    const contactBefore = await contacts.readContact(contactUri);
+    const emailAddress = contactBefore.emails[0];
+
+    expect(contactBefore.emails).toEqual([
+      {
+        uri: emailAddress.uri,
+        value: "winifred-watsica@mail.test",
+      },
+    ]);
+
+    await contacts.updateEmailAddress({
+      emailAddressUri: emailAddress.uri,
+      newEmailAddress: "w.watsica@new-value.test",
+    });
+
+    const contactAfter = await contacts.readContact(contactUri);
+    expect(contactAfter.emails).toEqual([
+      {
+        uri: emailAddress.uri,
+        value: "w.watsica@new-value.test",
+      },
+    ]);
+  });
+
   it("renames an existing contact", async () => {
     const contacts = setupModule();
 
