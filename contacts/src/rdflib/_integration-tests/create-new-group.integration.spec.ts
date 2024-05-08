@@ -1,14 +1,14 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
 import {
   mockNotFound,
   mockTurtleResponse,
-} from "../test-support/mockResponses";
-import { expectPatchRequest } from "../test-support/expectRequests";
+} from "../../test-support/mockResponses";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 
-import { generateId } from "./generate-id";
+import { generateId } from "../generate-id";
 
-jest.mock("./generate-id");
+jest.mock("../generate-id");
 
 describe("create new group", () => {
   it("creates group resource", async () => {

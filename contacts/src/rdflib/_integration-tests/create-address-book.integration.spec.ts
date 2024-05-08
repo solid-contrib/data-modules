@@ -1,17 +1,17 @@
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
 import {
   mockNotFound,
   mockTurtleResponse,
-} from "../test-support/mockResponses";
+} from "../../test-support/mockResponses";
 
-import { generateId } from "./generate-id";
+import { generateId } from "../generate-id";
 import {
   expectPatchRequest,
   expectPutEmptyTurtleFile,
-} from "../test-support/expectRequests";
+} from "../../test-support/expectRequests";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
-jest.mock("./generate-id");
+jest.mock("../generate-id");
 
 describe("create address book", () => {
   it("creates the address book resource", async () => {

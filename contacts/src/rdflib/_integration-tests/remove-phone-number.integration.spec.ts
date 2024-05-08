@@ -1,10 +1,12 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../test-support/mockResponses";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 
-describe("update phone number", () => {
-  it("updates the phone number value statement", async () => {
+jest.mock("../generate-id");
+
+describe("remove phone number", () => {
+  it("removes the phone number statements and link to contact", async () => {
     const authenticatedFetch = jest.fn();
 
     const store = graph();
@@ -41,17 +43,22 @@ describe("update phone number", () => {
 `,
     );
 
-    await contacts.updatePhoneNumber({
+    await contacts.removePhoneNumber({
+      contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
       phoneNumberUri: "https://pod.test/alice/contacts/Person/1/phone#this",
-      newPhoneNumber: "+654321",
     });
+
+    expectPatchRequest(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Person/1/index.ttl",
+      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasTelephone> <https://pod.test/alice/contacts/Person/1/phone#this> .
+ }`,
+    );
 
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/phone",
       `DELETE DATA { <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+123456> .
- } 
- ; INSERT DATA { <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+654321> .
  }`,
     );
   });
