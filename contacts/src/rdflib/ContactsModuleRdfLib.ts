@@ -23,6 +23,7 @@ import {
   RemoveEmailAddressCommand,
   RemovePhoneNumberCommand,
   RenameContactCommand,
+  UpdatePhoneNumberCommand,
 } from "../index.js";
 import { AddressBookQuery, ContactQuery } from "./queries/index.js";
 import {
@@ -290,6 +291,11 @@ export class ContactsModuleRdfLib implements ContactsModule {
     );
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  async updatePhoneNumber({
+    phoneNumberUri,
+    newPhoneNumber,
+  }: UpdatePhoneNumberCommand) {}
 
   async listAddressBooks(webId: string): Promise<AddressBookLists> {
     const profileNode = sym(webId);

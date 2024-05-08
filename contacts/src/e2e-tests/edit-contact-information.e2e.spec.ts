@@ -119,6 +119,36 @@ describe("edit contact information", () => {
     );
   });
 
+  it("updates an existing phone number", async () => {
+    const contacts = setupModule();
+
+    const contactUri =
+      "http://localhost:3456/4243dbb6-3126-4bf9-9ea7-45e35c3c8d9d/Person/EZCodK/index.ttl#this";
+
+    const contactBefore = await contacts.readContact(contactUri);
+    const phoneNumber = contactBefore.phoneNumbers[0];
+
+    expect(contactBefore.phoneNumbers).toEqual([
+      {
+        uri: phoneNumber.uri,
+        value: "+1-491-303-1336",
+      },
+    ]);
+
+    await contacts.updatePhoneNumber({
+      phoneNumberUri: phoneNumber.uri,
+      newPhoneNumber: "+1-600-792-9224",
+    });
+
+    const contactAfter = await contacts.readContact(contactUri);
+    expect(contactAfter.phoneNumbers).toEqual([
+      {
+        uri: phoneNumber.uri,
+        value: "+1-600-792-9224",
+      },
+    ]);
+  });
+
   it("renames an existing contact", async () => {
     const contacts = setupModule();
 
