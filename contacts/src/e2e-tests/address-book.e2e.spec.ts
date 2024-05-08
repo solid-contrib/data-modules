@@ -53,4 +53,17 @@ describe("address books", () => {
       "http://localhost:3456/cd37cf7b-5fbb-4b09-bb0f-3236f9e97343/index.ttl#this",
     ]);
   });
+
+  it("can list a newly created address book", async () => {
+    const ownerWebId = "http://localhost:3456/profile/card#me";
+    const contacts = setupModule();
+    const uri = await contacts.createAddressBook({
+      containerUri: "http://localhost:3456/",
+      name: "Private address book",
+      ownerWebId,
+    });
+
+    const result = await contacts.listAddressBooks(ownerWebId);
+    expect(result.privateUris).toContainEqual(uri);
+  });
 });

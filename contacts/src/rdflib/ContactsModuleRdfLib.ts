@@ -43,6 +43,7 @@ import { ProfileQuery } from "./queries/ProfileQuery.js";
 import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
 import { PreferencesQuery } from "./queries/PreferencesQuery.js";
 import { renameContact } from "./update-operations/renameContact.js";
+import { addAddressBookToTypeIndex } from "./update-operations/addAddressBookToTypeIndex.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -95,10 +96,42 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return Promise.all(nodes.map((it) => this.fetchNode(it)));
   }
 
-  async createAddressBook({ containerUri, name }: CreateAddressBookCommand) {
+  async createAddressBook({
+    containerUri,
+    name,
+    ownerWebId,
+  }: CreateAddressBookCommand) {
     const operation = createAddressBook(containerUri, name);
     await executeUpdate(this.fetcher, this.updater, operation);
+
+    if (ownerWebId) {
+      await this.updatePrivateTypeIndex(ownerWebId, operation.uri);
+    }
+
     return operation.uri;
+  }
+
+  private async updatePrivateTypeIndex(
+    ownerWebId: string,
+    addressBookUri: string,
+  ) {
+    const profileNode = sym(ownerWebId);
+    await this.fetchNode(profileNode);
+
+    const profileQuery = new ProfileQuery(profileNode, this.store);
+    const preferencesFile = profileQuery.queryPreferencesFile();
+    const privateTypeIndex = await this.fetchPrivateTypeIndex(
+      profileNode,
+      preferencesFile,
+    );
+    if (!privateTypeIndex) {
+      throw new Error(`Private type not found for WebID ${ownerWebId}.`);
+    }
+    const operation = addAddressBookToTypeIndex(
+      privateTypeIndex,
+      addressBookUri,
+    );
+    await executeUpdate(this.fetcher, this.updater, operation);
   }
 
   async createNewContact({

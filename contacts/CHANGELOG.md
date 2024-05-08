@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [renameContact](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#renameContact)
 
+### Changed
+
+- [createAddressBook](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#createAddressBook)
+  - allows to optionally pass a `ownerWebId` to add the new address book to the private type index of that user.
+
+
 ## 0.5.0
 
 ### Added
