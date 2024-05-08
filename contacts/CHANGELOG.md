@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [renameContact](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#renameContact)
 - [updatePhoneNumber](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#updatePhoneNumber)
+- [updateEmailAddress](https://solid-contrib.github.io/data-modules/contacts-rdflib-api/interfaces/ContactsModule.html#updateEmailAddress)
 
 ### Changed
 
