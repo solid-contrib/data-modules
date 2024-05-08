@@ -1,5 +1,5 @@
 import { UpdateOperation } from "./index.js";
-import { IndexedFormula, NamedNode, st } from "rdflib";
+import { IndexedFormula, NamedNode, st, sym } from "rdflib";
 import { vcard } from "../namespaces.js";
 
 export function updatePhoneNumber(
@@ -11,9 +11,17 @@ export function updatePhoneNumber(
   const deletions = oldValue
     ? [st(phoneNumberNode, vcard("value"), oldValue, phoneNumberNode.doc())]
     : [];
+  const insertions = [
+    st(
+      phoneNumberNode,
+      vcard("value"),
+      sym("tel:" + newPhoneNumber),
+      phoneNumberNode.doc(),
+    ),
+  ];
   return {
     uri: "",
-    insertions: [],
+    insertions,
     deletions,
     filesToCreate: [],
   };

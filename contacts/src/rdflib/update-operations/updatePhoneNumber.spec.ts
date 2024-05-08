@@ -30,6 +30,22 @@ describe("updatePhoneNumber", () => {
         ),
       );
     });
+
+    it("inserts the new value", () => {
+      const result = updatePhoneNumber(
+        sym("https://alice.test/contacts/1/phone#1"),
+        "+5678",
+        store,
+      );
+      expect(result.insertions).toContainEqual(
+        st(
+          sym("https://alice.test/contacts/1/phone#1"),
+          vcard("value"),
+          sym("tel:+5678"),
+          sym("https://alice.test/contacts/1/phone"),
+        ),
+      );
+    });
   });
 
   describe("missing value to new value", () => {
@@ -43,6 +59,21 @@ describe("updatePhoneNumber", () => {
         store,
       );
       expect(result.deletions).toEqual([]);
+    });
+    it("inserts the new value", () => {
+      const result = updatePhoneNumber(
+        sym("https://alice.test/contacts/1/phone#1"),
+        "+5678",
+        store,
+      );
+      expect(result.insertions).toContainEqual(
+        st(
+          sym("https://alice.test/contacts/1/phone#1"),
+          vcard("value"),
+          sym("tel:+5678"),
+          sym("https://alice.test/contacts/1/phone"),
+        ),
+      );
     });
   });
 });
