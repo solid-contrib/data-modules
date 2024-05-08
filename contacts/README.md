@@ -12,10 +12,30 @@ interoperable way.
 
 ## Usage
 
-### Installation
+### Installation via npm
 
 ```shell
 npm install rdflib @solid-data-modules/contacts-rdflib
+```
+
+### Usage in the brower via CDN
+
+You can use the module directly in the browser (without any install or build step) by using the [esm.sh CDN](https://esm.sh/) and an import map:
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "@solid-data-modules/contacts-rdflib": "https://esm.sh/@solid-data-modules/contacts-rdflib",
+      "rdflib": "https://esm.sh/rdflib"
+    }
+  }
+</script>
+<script type="module">
+  import ContactsModuleRdfLib from "@solid-data-modules/contacts-rdflib";
+  import { Fetcher, graph, UpdateManager } from "rdflib";
+  // ... use the module as described in the quick start
+</script>
 ```
 
 ### Quick start
@@ -68,8 +88,6 @@ After that you can run an example script like this:
 npm run build
 node ./examples/read-address-book.mjs
 ```
-
-
 
 ### Available features
 
