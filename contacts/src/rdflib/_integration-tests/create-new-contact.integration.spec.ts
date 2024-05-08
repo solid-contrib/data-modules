@@ -1,14 +1,14 @@
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
 import {
   mockNotFound,
   mockTurtleResponse,
-} from "../test-support/mockResponses";
+} from "../../test-support/mockResponses";
 
-import { generateId } from "./generate-id";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import { generateId } from "../generate-id";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
-jest.mock("./generate-id");
+jest.mock("../generate-id");
 
 describe("create new contact", () => {
   it("creates contact resource", async () => {

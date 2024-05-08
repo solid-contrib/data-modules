@@ -23,6 +23,8 @@ import {
   RemoveEmailAddressCommand,
   RemovePhoneNumberCommand,
   RenameContactCommand,
+  UpdateEmailAddressCommand,
+  UpdatePhoneNumberCommand,
 } from "../index.js";
 import { AddressBookQuery, ContactQuery } from "./queries/index.js";
 import {
@@ -44,6 +46,8 @@ import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
 import { PreferencesQuery } from "./queries/PreferencesQuery.js";
 import { renameContact } from "./update-operations/renameContact.js";
 import { addAddressBookToTypeIndex } from "./update-operations/addAddressBookToTypeIndex.js";
+import { updatePhoneNumber } from "./update-operations/updatePhoneNumber.js";
+import { updateEmailAddress } from "./update-operations/updateEmailAddress.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -286,6 +290,34 @@ export class ContactsModuleRdfLib implements ContactsModule {
     const operation = removeEmailAddress(
       contactNode,
       emailAddressNode,
+      this.store,
+    );
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
+
+  async updatePhoneNumber({
+    phoneNumberUri,
+    newPhoneNumber,
+  }: UpdatePhoneNumberCommand) {
+    const phoneNumberNode = sym(phoneNumberUri);
+    await this.fetchNode(phoneNumberNode);
+    const operation = updatePhoneNumber(
+      phoneNumberNode,
+      newPhoneNumber,
+      this.store,
+    );
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
+
+  async updateEmailAddress({
+    emailAddressUri,
+    newEmailAddress,
+  }: UpdateEmailAddressCommand) {
+    const emailAddressNode = sym(emailAddressUri);
+    await this.fetchNode(emailAddressNode);
+    const operation = updateEmailAddress(
+      emailAddressNode,
+      newEmailAddress,
       this.store,
     );
     await executeUpdate(this.fetcher, this.updater, operation);

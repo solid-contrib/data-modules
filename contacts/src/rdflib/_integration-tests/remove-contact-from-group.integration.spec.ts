@@ -1,10 +1,10 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../test-support/mockResponses";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 
-describe("add contact to group", () => {
-  it("references the contact to the group document", async () => {
+describe("remove contact from group", () => {
+  it("removes the contact reference from the group document", async () => {
     const authenticatedFetch = jest.fn();
 
     const store = graph();
@@ -25,22 +25,14 @@ describe("add contact to group", () => {
     @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
   
     <#this> a vcard:Group;
-        vcard:fn "Friends".
+        vcard:fn "Friends" ;
+        vcard:hasMember <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
+        
+    <https://pod.test/alice/contacts/Person/1/index.ttl#this> vcard:fn "Finley Kim" .
 `,
     );
 
-    mockTurtleResponse(
-      authenticatedFetch,
-      "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `
-    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
-  
-    <#this> a vcard:Individual;
-        vcard:fn "Finley Kim".
-`,
-    );
-
-    await contacts.addContactToGroup({
+    await contacts.removeContactFromGroup({
       groupUri: "https://pod.test/alice/contacts/Group/1/index.ttl#this",
       contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
     });
@@ -48,7 +40,7 @@ describe("add contact to group", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
+      `DELETE DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
 <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
  }`,
     );

@@ -15,7 +15,7 @@ const newEmailAddress = faker.internet.email();
 
 const result = await contacts.addNewEmailAddress({
   contactUri,
-  emailAddress: newEmailAddress,
+  newEmailAddress,
 });
 console.log("newly added email address:", result);
 

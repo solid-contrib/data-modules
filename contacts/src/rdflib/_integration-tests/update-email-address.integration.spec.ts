@@ -1,12 +1,10 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../test-support/mockResponses";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 
-jest.mock("./generate-id");
-
-describe("remove email address", () => {
-  it("removes the email address statements and link to contact", async () => {
+describe("update email address", () => {
+  it("updates the email address value statement", async () => {
     const authenticatedFetch = jest.fn();
 
     const store = graph();
@@ -39,26 +37,21 @@ describe("remove email address", () => {
     @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
   
     <#this>
-        vcard:value <mailto:bob@mail.test> .
+        vcard:value <mailto:old-value@mail.test> .
 `,
     );
 
-    await contacts.removeEmailAddress({
-      contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
+    await contacts.updateEmailAddress({
       emailAddressUri: "https://pod.test/alice/contacts/Person/1/email#this",
+      newEmailAddress: "new-value@mail.test",
     });
 
     expectPatchRequest(
       authenticatedFetch,
-      "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasEmail> <https://pod.test/alice/contacts/Person/1/email#this> .
- }`,
-    );
-
-    expectPatchRequest(
-      authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/email",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:bob@mail.test> .
+      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:old-value@mail.test> .
+ } 
+ ; INSERT DATA { <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:new-value@mail.test> .
  }`,
     );
   });

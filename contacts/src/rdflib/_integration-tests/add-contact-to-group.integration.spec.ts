@@ -1,10 +1,10 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../test-support/mockResponses";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 
-describe("remove contact from group", () => {
-  it("removes the contact reference from the group document", async () => {
+describe("add contact to group", () => {
+  it("references the contact to the group document", async () => {
     const authenticatedFetch = jest.fn();
 
     const store = graph();
@@ -25,14 +25,22 @@ describe("remove contact from group", () => {
     @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
   
     <#this> a vcard:Group;
-        vcard:fn "Friends" ;
-        vcard:hasMember <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
-        
-    <https://pod.test/alice/contacts/Person/1/index.ttl#this> vcard:fn "Finley Kim" .
+        vcard:fn "Friends".
 `,
     );
 
-    await contacts.removeContactFromGroup({
+    mockTurtleResponse(
+      authenticatedFetch,
+      "https://pod.test/alice/contacts/Person/1/index.ttl",
+      `
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+  
+    <#this> a vcard:Individual;
+        vcard:fn "Finley Kim".
+`,
+    );
+
+    await contacts.addContactToGroup({
       groupUri: "https://pod.test/alice/contacts/Group/1/index.ttl#this",
       contactUri: "https://pod.test/alice/contacts/Person/1/index.ttl#this",
     });
@@ -40,7 +48,7 @@ describe("remove contact from group", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
+      `INSERT DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
 <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
  }`,
     );

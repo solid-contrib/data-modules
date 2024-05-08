@@ -1,8 +1,8 @@
 import {
   mockForbidden,
   mockTurtleResponse,
-} from "../test-support/mockResponses";
-import { setupModule } from "../test-support/setupModule";
+} from "../../test-support/mockResponses";
+import { setupModule } from "../../test-support/setupModule";
 
 describe("list address books", () => {
   it("lists all instances from public type index", async () => {

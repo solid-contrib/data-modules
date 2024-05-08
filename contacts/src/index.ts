@@ -106,6 +106,20 @@ export interface ContactsModule {
   removePhoneNumber(command: RemovePhoneNumberCommand): Promise<void>;
 
   /**
+   * Updates the given phone number to a new value
+   *
+   * @param command
+   */
+  updatePhoneNumber(command: UpdatePhoneNumberCommand): Promise<void>;
+
+  /**
+   * Updates the given email address to a new value
+   *
+   * @param command
+   */
+  updateEmailAddress(command: UpdateEmailAddressCommand): Promise<void>;
+
+  /**
    * Removes the given email address from the given contact
    *
    * @param command
@@ -351,6 +365,34 @@ export interface RemoveEmailAddressCommand {
    * The URI of the email address resource to remove
    */
   emailAddressUri: string;
+}
+
+/**
+ * Data needed to update an existing phone number
+ */
+export interface UpdatePhoneNumberCommand {
+  /**
+   * The URI of the phone number to update
+   */
+  phoneNumberUri: string;
+  /**
+   * The new phone number (RFC 3966 telephone-subscriber part format)
+   */
+  newPhoneNumber: string;
+}
+
+/**
+ * Data needed to update an existing email address
+ */
+export interface UpdateEmailAddressCommand {
+  /**
+   * The URI of the email address to update
+   */
+  emailAddressUri: string;
+  /**
+   * The new email address
+   */
+  newEmailAddress: string;
 }
 
 /**

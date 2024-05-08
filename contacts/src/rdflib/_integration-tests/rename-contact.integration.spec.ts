@@ -1,7 +1,7 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "./ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../test-support/mockResponses";
-import { expectPatchRequest } from "../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { expectPatchRequest } from "../../test-support/expectRequests";
 
 describe("rename contact", () => {
   it("updates vcard:fn in the contacts document", async () => {
