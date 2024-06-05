@@ -1,4 +1,11 @@
 import { BookmarksModule } from "../index";
+import { Fetcher, IndexedFormula, UpdateManager } from "rdflib";
+
+interface ModuleConfig {
+  store: IndexedFormula;
+  fetcher: Fetcher;
+  updater: UpdateManager;
+}
 
 export class BookmarksModuleRdfLib implements BookmarksModule {
   private readonly fetcher: Fetcher;
