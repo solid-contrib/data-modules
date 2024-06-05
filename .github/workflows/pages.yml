@@ -60,6 +60,17 @@ jobs:
         run: npm run build:doc
 
 ######################
+###################### bookmarks/rdflib module
+
+      - name: Install bookmarks/rdflib dev dependencies
+        working-directory: ./bookmarks/rdflib
+        run: npm ci --only=dev
+
+      - name: Build bookmarks/rdflib doc
+        working-directory: ./bookmarks/rdflib
+        run: npm run build:doc
+
+######################
 
       - name: Upload pages
         uses: actions/upload-pages-artifact@v1
