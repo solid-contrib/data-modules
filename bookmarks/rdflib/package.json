@@ -12,7 +12,7 @@
     "serve:doc": "serve ../../gh-pages",
     "test": "jest",
     "test:e2e": "jest --config jest.e2e.config.ts",
-    "lint": "eslint  ./src/**",
+    "lint": "eslint  ./src/** ./examples/**",
     "pod": "community-solid-server --config ../dev-server/config/config-mashlib.json --seedConfig ../dev-server/seed.json --rootFilePath ../dev-server/data",
     "pod:init": "cp -r ../dev-server/initial-data/* ../dev-server/data/",
     "pod:clean": "rm -rf ../dev-server/data"

@@ -64,7 +64,7 @@ After that you can run an example script like this:
 
 ```shell
 npm run build
-node ./examples/create-bookmark.mjs
+node ./examples/create-bookmark-within-container.mjs
 ```
 
 ### Available features
