@@ -1,0 +1,7 @@
+<#it>
+    a                                             <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/created>            "2024-05-22T19:37:30.784Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/title>              "Test Bookmark" ;
+    <http://purl.org/dc/terms/updated>            "2024-05-22T19:37:30.784Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://www.w3.org/2002/01/bookmark#hasTopic> <https://topic.example> ;
+    <http://www.w3.org/2002/01/bookmark#recalls>  <https://website.test> .

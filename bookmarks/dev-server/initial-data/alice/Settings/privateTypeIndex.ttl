@@ -1,0 +1,8 @@
+@prefix :      <#>.
+@prefix terms: <http://www.w3.org/ns/solid/terms#>.
+@prefix bookm: <http://www.w3.org/2002/01/bookmark#>.
+
+<#Bookmark>
+    a              terms:TypeRegistration ;
+    terms:forClass bookm:Bookmark ;
+    terms:instance </alice/bookmarks/index.ttl> .
