@@ -3,6 +3,7 @@ import { BookmarksModuleRdfLib } from "../BookmarksModuleRdfLib";
 import { generateId } from "../../generate-id";
 import { expectPatchRequest } from "../../test-support/expectRequests";
 import { Fetcher, graph, UpdateManager } from "rdflib";
+import { mockNotFound } from "../../test-support/mockResponses";
 
 jest.mock("../../generate-id");
 
@@ -23,10 +24,15 @@ describe("create bookmark", () => {
       updater,
     });
 
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/bookmarks/70501305",
+    );
+
     const createdUri = await bookmarks.createBookmark({
       containerUri: "https://pod.test/alice/bookmarks/",
       title: "My favorite website",
-      url: "http://favorite.example",
+      url: "https://favorite.example",
     });
 
     expect(createdUri).toEqual("https://pod.test/alice/bookmarks/70501305#it");

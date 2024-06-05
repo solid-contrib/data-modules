@@ -45,6 +45,7 @@
   "devDependencies": {
     "@solid/community-server": "^7.0.5",
     "@types/jest": "^29.5.12",
+    "@types/jest-when": "^3.5.5",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "eslint": "^8.57.0",
     "eslint-plugin-require-extensions": "^0.1.3",
