@@ -1,4 +1,4 @@
-import { BookmarksModule } from "../index";
+import { BookmarksModule } from "../index.js";
 import { Fetcher, IndexedFormula, UpdateManager } from "rdflib";
 
 interface ModuleConfig {
