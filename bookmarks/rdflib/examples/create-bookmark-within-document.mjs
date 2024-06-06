@@ -7,7 +7,7 @@ const updater = new UpdateManager(store)
 const bookmarks = new BookmarksModule({store, fetcher, updater})
 
 const uri = await bookmarks.createBookmark({
-  storageUrl: "http://localhost:3000/alice/bookmarks/",
+  storageUrl: "http://localhost:3000/alice/public/bookmarks",
   title: "My favorite website",
   url: "https://favorite.example"
 })

@@ -16,11 +16,19 @@
     a acl:Authorization;
     acl:agent <http://localhost:3000/alice/profile/card#me>;
     # Optional owner email, to be used for account recovery:
-    
+
     # Set the access to the root storage folder itself
     acl:accessTo <./>;
     # All resources will inherit this authorization, by default
     acl:default <./>;
     # The owner has all of the access modes allowed
     acl:mode
-        acl:Read, acl:Write, acl:Control.
+            acl:Read, acl:Write, acl:Control.
+
+# read / write access for public for testing without auth
+<#ReadWrite>
+    a acl:Authorization;
+    acl:accessTo <./>;
+    acl:agentClass foaf:Agent;
+    acl:default <./>;
+    acl:mode acl:Read, acl:Write.
