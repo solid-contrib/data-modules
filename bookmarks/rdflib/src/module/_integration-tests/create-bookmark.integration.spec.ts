@@ -33,7 +33,7 @@ describe("create bookmark", () => {
     );
 
     const createdUri = await bookmarks.createBookmark({
-      containerUri: "https://pod.test/alice/bookmarks/",
+      storageUrl: "https://pod.test/alice/bookmarks/",
       title: "My favorite website",
       url: "https://favorite.example",
     });

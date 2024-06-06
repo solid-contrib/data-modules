@@ -5,11 +5,11 @@ export default BookmarksModuleRdfLib;
 /**
  * Data needed to create a new bookmark within a container
  */
-export interface CreateBookmarkInContainerCommand {
+export interface CreateBookmarkCommand {
   /**
-   * The URI of the target container
+   * The URL of the target container or document to store the bookmark
    */
-  containerUri: string;
+  storageUrl: string;
   /**
    * The human-readable title of the bookmark
    */
@@ -22,8 +22,8 @@ export interface CreateBookmarkInContainerCommand {
 
 export interface BookmarksModule {
   createBookmark({
-    containerUri,
+    storageUrl,
     title,
     url,
-  }: CreateBookmarkInContainerCommand): Promise<string>;
+  }: CreateBookmarkCommand): Promise<string>;
 }

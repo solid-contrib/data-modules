@@ -1,4 +1,4 @@
-import { BookmarksModule, CreateBookmarkInContainerCommand } from "../index.js";
+import { BookmarksModule, CreateBookmarkCommand } from "../index.js";
 import { Fetcher, IndexedFormula, UpdateManager } from "rdflib";
 import { createBookmarkWithinContainer } from "./update-operations/index.js";
 import { executeUpdate } from "./web-operations/executeUpdate.js";
@@ -21,11 +21,11 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
   }
 
   async createBookmark({
-    containerUri,
+    storageUrl,
     title,
     url,
-  }: CreateBookmarkInContainerCommand): Promise<string> {
-    const operation = createBookmarkWithinContainer(containerUri, title, url);
+  }: CreateBookmarkCommand): Promise<string> {
+    const operation = createBookmarkWithinContainer(storageUrl, title, url);
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
