@@ -1,0 +1,9 @@
+<#fcb771d4>
+    a                                            <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/title>             "First bookmark in a document" ;
+    <http://www.w3.org/2002/01/bookmark#recalls> <https://first-bookmark.example> .
+
+<#180a31e2>
+    a                                            <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/title>             "Second bookmark in a document" ;
+    <http://www.w3.org/2002/01/bookmark#recalls> <https://second-bookmark.example> .
