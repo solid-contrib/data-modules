@@ -1,6 +1,7 @@
 import { Statement } from "rdflib";
 
 export { createBookmarkWithinContainer } from "./createBookmarkWithinContainer.js";
+export { createBookmarkWithinDocument } from "./createBookmarkWithinDocument.js";
 
 export interface FileToCreate {
   uri: string;
