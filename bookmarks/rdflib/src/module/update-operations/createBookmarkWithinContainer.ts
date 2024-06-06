@@ -32,6 +32,16 @@ export function createBookmarkWithinContainer(
         sym(url),
         bookmarkNode.doc(),
       ),
+      st(
+        bookmarkNode,
+        sym("http://purl.org/dc/terms/created"),
+        lit(
+          new Date().toISOString(),
+          undefined,
+          sym("http://www.w3.org/2001/XMLSchema#dateTime"),
+        ),
+        bookmarkNode.doc(),
+      ),
     ],
     filesToCreate: [],
   };
