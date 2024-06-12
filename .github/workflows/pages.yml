@@ -70,6 +70,18 @@ jobs:
         working-directory: ./bookmarks/rdflib
         run: npm run build:doc
 
+
+######################
+###################### rdflib utils
+
+      - name: Install rdflib utils dev dependencies
+        working-directory: ./utils/rdflib
+        run: npm ci --only=dev
+
+      - name: Build utils/rdflib doc
+        working-directory: ./utils/rdflib
+        run: npm run build:doc
+
 ######################
 
       - name: Upload pages
