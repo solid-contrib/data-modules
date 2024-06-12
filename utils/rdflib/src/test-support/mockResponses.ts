@@ -1,8 +1,14 @@
 import { when } from "jest-when";
 
-export function mockTurtleDocument(fetch: jest.Mock, uri: string, ttl: string) {
+/**
+ * Mock a turtle document at the given URL
+ * @param fetch - A mocked fetch function
+ * @param url - The URL to mock
+ * @param ttl - The mocked turtle file content
+ */
+export function mockTurtleDocument(fetch: jest.Mock, url: string, ttl: string) {
   when(fetch)
-    .calledWith(uri, expect.anything())
+    .calledWith(url, expect.anything())
     .mockResolvedValue({
       ok: true,
       status: 200,
@@ -17,9 +23,14 @@ export function mockTurtleDocument(fetch: jest.Mock, uri: string, ttl: string) {
     } as Response);
 }
 
-export function mockLdpContainer(fetch: jest.Mock, uri: string) {
+/**
+ * Mock a LDP container at the given URL
+ * @param fetch - A mocked fetch function
+ * @param url - The URL to mock
+ */
+export function mockLdpContainer(fetch: jest.Mock, url: string) {
   when(fetch)
-    .calledWith(uri, expect.anything())
+    .calledWith(url, expect.anything())
     .mockResolvedValue({
       ok: true,
       status: 200,
@@ -41,9 +52,14 @@ export function mockLdpContainer(fetch: jest.Mock, uri: string) {
     } as Response);
 }
 
-export function mockNotFound(fetch: jest.Mock, uri: string) {
+/**
+ * Mock a 404 - Not Found response for the given URL
+ * @param fetch - A mocked fetch function
+ * @param url - The URL to mock
+ */
+export function mockNotFound(fetch: jest.Mock, url: string) {
   when(fetch)
-    .calledWith(uri, expect.anything())
+    .calledWith(url, expect.anything())
     .mockResolvedValue({
       ok: true,
       status: 404,
@@ -57,9 +73,14 @@ export function mockNotFound(fetch: jest.Mock, uri: string) {
     } as Response);
 }
 
-export function mockForbidden(fetch: jest.Mock, uri: string) {
+/**
+ * Mock a 403 - Forbidden response for the given URL
+ * @param fetch - A mocked fetch function
+ * @param url - The URL to mock
+ */
+export function mockForbidden(fetch: jest.Mock, url: string) {
   when(fetch)
-    .calledWith(uri, expect.anything())
+    .calledWith(url, expect.anything())
     .mockResolvedValue({
       ok: true,
       status: 403,

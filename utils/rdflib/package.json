@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "npm run clean && tsc",
-    "build:doc": "typedoc src/index.ts --out ../../gh-pages/rdflib-utils",
+    "build:doc": "typedoc src/index.ts src/test-support/index.ts --out ../../gh-pages/rdflib-utils",
     "test": "jest",
     "lint": "eslint  ./src/**"
   },

@@ -15,7 +15,7 @@ export interface FileToCreate {
 /**
  * Describes updates that should be applied to a Pod (without applying them yet)
  *
- * Use executeUpdate to actually perform the operation.
+ * Use {@link executeUpdate} to actually perform the operation.
  */
 export interface UpdateOperation {
   /**
