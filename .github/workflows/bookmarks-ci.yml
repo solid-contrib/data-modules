@@ -3,7 +3,8 @@ run-name: ${{ github.actor }} is running jest
 on:
   push:
     paths:
-      - bookmarks/**
+      - bookmarks/soukai/**
+      - bookmarks/vanilla/**
       - .github/workflows/bookmarks-ci.yml
 jobs:
   test-bookmarks-vanilla:

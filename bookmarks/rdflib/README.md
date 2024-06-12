@@ -51,6 +51,11 @@ const updater = new UpdateManager(store);
 const module: BookmarksModule = new BookmarksModuleRdfLib({store, fetcher, updater});
 
 // 3️⃣ use the module to interact with bookmarks
+const uri = await bookmarks.createBookmark({
+  storageUrl: "http://localhost:3000/alice/public/bookmarks",
+  title: "My favorite website",
+  url: "https://favorite.example"
+})
 
 ```
 
@@ -64,7 +69,7 @@ After that you can run an example script like this:
 
 ```shell
 npm run build
-node ./examples/create-bookmark.mjs
+node ./examples/create-bookmark-within-container.mjs
 ```
 
 ### Available features
