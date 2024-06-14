@@ -3,12 +3,12 @@ import { lit, st, sym } from "rdflib";
 import { rdf, vcard } from "../namespaces.js";
 
 import { NewContact } from "../../index.js";
-import { UpdateOperation } from "./index.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function createNewContact(
   addressBook: AddressBookQuery,
   newContact: NewContact,
-): UpdateOperation {
+): UpdateOperation & { uri: string } {
   const contactNode = addressBook.proposeNewContactNode();
   const nameEmailIndex = addressBook.queryNameEmailIndex();
   if (!nameEmailIndex) {
