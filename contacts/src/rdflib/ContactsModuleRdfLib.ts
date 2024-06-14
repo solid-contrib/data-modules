@@ -37,12 +37,14 @@ import {
   ModuleSupport,
   PreferencesQuery,
   ProfileQuery,
+  TypeIndexQuery,
 } from "@solid-data-modules/rdflib-utils";
-import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
 import { renameContact } from "./update-operations/renameContact.js";
 import { addAddressBookToTypeIndex } from "./update-operations/addAddressBookToTypeIndex.js";
 import { updatePhoneNumber } from "./update-operations/updatePhoneNumber.js";
 import { updateEmailAddress } from "./update-operations/updateEmailAddress.js";
+import { vcard } from "./namespaces.js";
+const VCARD_ADDRESS_BOOK = vcard("AddressBook") as NamedNode;
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -347,7 +349,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     return new TypeIndexQuery(
       this.store,
       publicTypeIndexNode,
-    ).queryAddressBookInstances();
+    ).queryInstancesForClass(VCARD_ADDRESS_BOOK);
   }
 
   private async fetchPrivateTypeIndex(
