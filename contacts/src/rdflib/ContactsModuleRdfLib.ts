@@ -24,7 +24,6 @@ import {
   createAddressBook,
   createNewContact,
 } from "./update-operations/index.js";
-import { executeUpdate } from "./web-operations/executeUpdate.js";
 import { createNewGroup } from "./update-operations/createNewGroup.js";
 import { GroupQuery } from "./queries/GroupQuery.js";
 import { addContactToGroup } from "./update-operations/addContactToGroup.js";
@@ -34,13 +33,14 @@ import { addNewEmailAddress } from "./update-operations/addNewEmailAddress.js";
 import { removePhoneNumber } from "./update-operations/removePhoneNumber.js";
 import { removeEmailAddress } from "./update-operations/removeEmailAddress.js";
 import {
+  executeUpdate,
   ModuleSupport,
   PreferencesQuery,
   ProfileQuery,
   TypeIndexQuery,
+  addInstanceToTypeIndex,
 } from "@solid-data-modules/rdflib-utils";
 import { renameContact } from "./update-operations/renameContact.js";
-import { addAddressBookToTypeIndex } from "./update-operations/addAddressBookToTypeIndex.js";
 import { updatePhoneNumber } from "./update-operations/updatePhoneNumber.js";
 import { updateEmailAddress } from "./update-operations/updateEmailAddress.js";
 import { vcard } from "./namespaces.js";
@@ -117,9 +117,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
     if (!privateTypeIndex) {
       throw new Error(`Private type not found for WebID ${ownerWebId}.`);
     }
-    const operation = addAddressBookToTypeIndex(
+    const operation = addInstanceToTypeIndex(
       privateTypeIndex,
       addressBookUri,
+      VCARD_ADDRESS_BOOK,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
   }

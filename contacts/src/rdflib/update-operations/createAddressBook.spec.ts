@@ -2,7 +2,7 @@ import { createAddressBook } from "./createAddressBook";
 import { generateId } from "../generate-id";
 import { lit, st, sym } from "rdflib";
 import { dc, vcard } from "../namespaces.js";
-import { UpdateOperation } from "./index.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 jest.mock("../generate-id");
 
@@ -28,7 +28,7 @@ describe("createAddressBook", () => {
   });
 
   describe("insertions", () => {
-    let result: UpdateOperation;
+    let result: UpdateOperation & { uri: string };
     beforeEach(() => {
       (generateId as jest.Mock).mockReturnValueOnce("e8Civ0HoDy");
       result = createAddressBook(
@@ -90,13 +90,13 @@ describe("createAddressBook", () => {
 
     it("include the name email index", () => {
       expect(result.filesToCreate).toContainEqual({
-        uri: "https://pod.test/container/iPjiGoHXAK/people.ttl",
+        url: "https://pod.test/container/iPjiGoHXAK/people.ttl",
       });
     });
 
     it("include the group index", () => {
       expect(result.filesToCreate).toContainEqual({
-        uri: "https://pod.test/container/iPjiGoHXAK/groups.ttl",
+        url: "https://pod.test/container/iPjiGoHXAK/groups.ttl",
       });
     });
   });

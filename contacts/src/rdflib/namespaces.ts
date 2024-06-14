@@ -1,5 +1,6 @@
 import { Namespace } from "rdflib";
 
+// TODO replace with utils lib
 export const rdf = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
 export const vcard = Namespace("http://www.w3.org/2006/vcard/ns#");

@@ -1,6 +1,6 @@
-import { UpdateOperation } from "./index.js";
 import { IndexedFormula, NamedNode, st } from "rdflib";
 import { vcard } from "../namespaces.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function removeEmailAddress(
   contactNode: NamedNode,
@@ -14,7 +14,6 @@ export function removeEmailAddress(
     emailNode.doc(),
   );
   return {
-    uri: "",
     insertions: [],
     deletions: [
       ...emailStatements,
