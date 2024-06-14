@@ -64,6 +64,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@solid-data-modules/rdflib-utils": "^0.1.2-921d155.0"
+    "@solid-data-modules/rdflib-utils": "^0.1.2-3a1e9c9.0"
   }
 }
