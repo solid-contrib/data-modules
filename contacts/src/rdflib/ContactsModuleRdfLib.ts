@@ -1,11 +1,4 @@
-import {
-  Fetcher,
-  IndexedFormula,
-  NamedNode,
-  Node,
-  sym,
-  UpdateManager,
-} from "rdflib";
+import { Fetcher, IndexedFormula, NamedNode, sym, UpdateManager } from "rdflib";
 import {
   AddContactToGroupCommand,
   AddNewEmailAddressCommand,
@@ -31,8 +24,6 @@ import {
   createAddressBook,
   createNewContact,
 } from "./update-operations/index.js";
-import { executeUpdate } from "./web-operations/executeUpdate.js";
-import { fetchNode } from "./web-operations/fetchNode.js";
 import { createNewGroup } from "./update-operations/createNewGroup.js";
 import { GroupQuery } from "./queries/GroupQuery.js";
 import { addContactToGroup } from "./update-operations/addContactToGroup.js";
@@ -41,13 +32,19 @@ import { addNewPhoneNumber } from "./update-operations/addNewPhoneNumber.js";
 import { addNewEmailAddress } from "./update-operations/addNewEmailAddress.js";
 import { removePhoneNumber } from "./update-operations/removePhoneNumber.js";
 import { removeEmailAddress } from "./update-operations/removeEmailAddress.js";
-import { ProfileQuery } from "./queries/ProfileQuery.js";
-import { TypeIndexQuery } from "./queries/TypeIndexQuery.js";
-import { PreferencesQuery } from "./queries/PreferencesQuery.js";
+import {
+  executeUpdate,
+  ModuleSupport,
+  PreferencesQuery,
+  ProfileQuery,
+  TypeIndexQuery,
+  addInstanceToTypeIndex,
+} from "@solid-data-modules/rdflib-utils";
 import { renameContact } from "./update-operations/renameContact.js";
-import { addAddressBookToTypeIndex } from "./update-operations/addAddressBookToTypeIndex.js";
 import { updatePhoneNumber } from "./update-operations/updatePhoneNumber.js";
 import { updateEmailAddress } from "./update-operations/updateEmailAddress.js";
+import { vcard } from "./namespaces.js";
+const VCARD_ADDRESS_BOOK = vcard("AddressBook") as NamedNode;
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -59,8 +56,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
   private readonly fetcher: Fetcher;
   private readonly store: IndexedFormula;
   private readonly updater: UpdateManager;
+  private readonly support: ModuleSupport;
 
   constructor(config: ModuleConfig) {
+    this.support = new ModuleSupport(config);
     this.store = config.store;
     this.fetcher = config.fetcher;
     this.updater = config.updater;
@@ -68,19 +67,14 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async readAddressBook(uri: string): Promise<AddressBook> {
     const addressBookNode = sym(uri);
-    await this.fetchNode(addressBookNode);
+    await this.support.fetchNode(addressBookNode);
 
     const query = new AddressBookQuery(this.store, addressBookNode);
     const title = query.queryTitle();
     const nameEmailIndex = query.queryNameEmailIndex();
     const groupIndex = query.queryGroupIndex();
 
-    await Promise.allSettled([
-      this.fetchNode(nameEmailIndex),
-      this.fetchNode(groupIndex),
-    ]);
-
-    await this.fetchAll([nameEmailIndex, groupIndex]);
+    await this.support.fetchAll([nameEmailIndex, groupIndex]);
 
     const contacts = query.queryContacts();
     const groups = query.queryGroups();
@@ -90,14 +84,6 @@ export class ContactsModuleRdfLib implements ContactsModule {
       contacts,
       groups,
     };
-  }
-
-  private async fetchNode(node: Node | null) {
-    return fetchNode(this.fetcher, node);
-  }
-
-  private async fetchAll(nodes: (Node | null)[]) {
-    return Promise.all(nodes.map((it) => this.fetchNode(it)));
   }
 
   async createAddressBook({
@@ -120,7 +106,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     addressBookUri: string,
   ) {
     const profileNode = sym(ownerWebId);
-    await this.fetchNode(profileNode);
+    await this.support.fetchNode(profileNode);
 
     const profileQuery = new ProfileQuery(profileNode, this.store);
     const preferencesFile = profileQuery.queryPreferencesFile();
@@ -131,9 +117,10 @@ export class ContactsModuleRdfLib implements ContactsModule {
     if (!privateTypeIndex) {
       throw new Error(`Private type not found for WebID ${ownerWebId}.`);
     }
-    const operation = addAddressBookToTypeIndex(
+    const operation = addInstanceToTypeIndex(
       privateTypeIndex,
       addressBookUri,
+      VCARD_ADDRESS_BOOK,
     );
     await executeUpdate(this.fetcher, this.updater, operation);
   }
@@ -157,7 +144,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     contactQuery: ContactQuery,
   ) {
     const groupNodes = (groupUris ?? []).map((it) => sym(it));
-    await this.fetchAll(groupNodes);
+    await this.support.fetchAll(groupNodes);
 
     const groupUpdates = groupNodes.map((groupNode) => {
       const groupQuery = new GroupQuery(this.store, groupNode);
@@ -174,7 +161,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     contact: NewContact,
   ) {
     const addressBookNode = sym(addressBookUri);
-    await this.fetchNode(addressBookNode);
+    await this.support.fetchNode(addressBookNode);
     const operation = createNewContact(
       new AddressBookQuery(this.store, addressBookNode),
       contact,
@@ -186,7 +173,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async readContact(uri: string): Promise<FullContact> {
     const contactNode = sym(uri);
-    await this.fetchNode(contactNode);
+    await this.support.fetchNode(contactNode);
     const query = new ContactQuery(this.store, contactNode);
     const name = query.queryName();
     const emails = query.queryEmails();
@@ -201,7 +188,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async createNewGroup({ addressBookUri, groupName }: CreateNewGroupCommand) {
     const addressBookNode = sym(addressBookUri);
-    await this.fetchNode(addressBookNode);
+    await this.support.fetchNode(addressBookNode);
 
     const query = new AddressBookQuery(this.store, addressBookNode);
     const operation = createNewGroup(query, groupName);
@@ -211,7 +198,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async readGroup(uri: string): Promise<FullGroup> {
     const groupNode = sym(uri);
-    await this.fetchNode(groupNode);
+    await this.support.fetchNode(groupNode);
     const query = new GroupQuery(this.store, groupNode);
     const name = query.queryName();
     const members = query.queryMembers();
@@ -225,7 +212,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
   async addContactToGroup({ contactUri, groupUri }: AddContactToGroupCommand) {
     const contactNode = sym(contactUri);
     const groupNode = sym(groupUri);
-    await this.fetchNode(contactNode);
+    await this.support.fetchNode(contactNode);
     const contactQuery = new ContactQuery(this.store, contactNode);
     const groupQuery = new GroupQuery(this.store, groupNode);
     const operation = addContactToGroup(contactQuery, groupQuery);
@@ -238,7 +225,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }: RemoveContactFromGroupCommand) {
     const contactNode = sym(contactUri);
     const groupNode = sym(groupUri);
-    await this.fetchNode(groupNode);
+    await this.support.fetchNode(groupNode);
     const contactQuery = new ContactQuery(this.store, contactNode);
     const groupQuery = new GroupQuery(this.store, groupNode);
     const operation = removeContactFromGroup(contactQuery, groupQuery);
@@ -271,7 +258,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }: RemovePhoneNumberCommand) {
     const contactNode = sym(contactUri);
     const phoneNumberNode = sym(phoneNumberUri);
-    await this.fetchNode(phoneNumberNode);
+    await this.support.fetchNode(phoneNumberNode);
     const operation = removePhoneNumber(
       contactNode,
       phoneNumberNode,
@@ -286,7 +273,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
   }: RemoveEmailAddressCommand) {
     const contactNode = sym(contactUri);
     const emailAddressNode = sym(emailAddressUri);
-    await this.fetchNode(emailAddressNode);
+    await this.support.fetchNode(emailAddressNode);
     const operation = removeEmailAddress(
       contactNode,
       emailAddressNode,
@@ -300,7 +287,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     newPhoneNumber,
   }: UpdatePhoneNumberCommand) {
     const phoneNumberNode = sym(phoneNumberUri);
-    await this.fetchNode(phoneNumberNode);
+    await this.support.fetchNode(phoneNumberNode);
     const operation = updatePhoneNumber(
       phoneNumberNode,
       newPhoneNumber,
@@ -314,7 +301,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     newEmailAddress,
   }: UpdateEmailAddressCommand) {
     const emailAddressNode = sym(emailAddressUri);
-    await this.fetchNode(emailAddressNode);
+    await this.support.fetchNode(emailAddressNode);
     const operation = updateEmailAddress(
       emailAddressNode,
       newEmailAddress,
@@ -325,7 +312,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async listAddressBooks(webId: string): Promise<AddressBookLists> {
     const profileNode = sym(webId);
-    await this.fetchNode(profileNode);
+    await this.support.fetchNode(profileNode);
 
     const profileQuery = new ProfileQuery(profileNode, this.store);
     const publicTypeIndexNode = profileQuery.queryPublicTypeIndex();
@@ -359,11 +346,11 @@ export class ContactsModuleRdfLib implements ContactsModule {
     if (!publicTypeIndexNode) {
       return [];
     }
-    await this.fetchNode(publicTypeIndexNode);
+    await this.support.fetchNode(publicTypeIndexNode);
     return new TypeIndexQuery(
       this.store,
       publicTypeIndexNode,
-    ).queryAddressBookInstances();
+    ).queryInstancesForClass(VCARD_ADDRESS_BOOK);
   }
 
   private async fetchPrivateTypeIndex(
@@ -373,7 +360,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
     if (!preferencesFile) {
       return null;
     }
-    await this.fetchNode(preferencesFile);
+    await this.support.fetchNode(preferencesFile);
     const preferencesQuery = new PreferencesQuery(
       this.store,
       profileNode,
@@ -384,7 +371,7 @@ export class ContactsModuleRdfLib implements ContactsModule {
 
   async renameContact({ contactUri, newName }: RenameContactCommand) {
     const contactNode = sym(contactUri);
-    await this.fetchNode(contactNode);
+    await this.support.fetchNode(contactNode);
     const operation = renameContact(this.store, contactNode, newName);
     await executeUpdate(this.fetcher, this.updater, operation);
   }

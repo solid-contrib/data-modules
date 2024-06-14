@@ -1,8 +1,8 @@
 import { ContactQuery } from "../queries/index.js";
 import { GroupQuery } from "../queries/GroupQuery.js";
-import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
 import { vcard } from "../namespaces.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function addContactToGroup(
   contactQuery: ContactQuery,
@@ -10,7 +10,6 @@ export function addContactToGroup(
 ): UpdateOperation {
   const name = contactQuery.queryName();
   return {
-    uri: "",
     insertions: [
       st(
         groupQuery.groupNode,

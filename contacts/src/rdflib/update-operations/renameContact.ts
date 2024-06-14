@@ -1,6 +1,6 @@
 import { IndexedFormula, lit, NamedNode, st } from "rdflib";
-import { UpdateOperation } from "./index.js";
 import { vcard } from "../namespaces.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function renameContact(
   store: IndexedFormula,
@@ -19,7 +19,6 @@ export function renameContact(
   );
 
   return {
-    uri: "",
     insertions,
     deletions,
     filesToCreate: [],

@@ -1,8 +1,8 @@
-import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
 import { vcard } from "../namespaces.js";
 import { ContactQuery } from "../queries/index.js";
 import { GroupQuery } from "../queries/GroupQuery.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function removeContactFromGroup(
   contactQuery: ContactQuery,
@@ -14,7 +14,6 @@ export function removeContactFromGroup(
     throw new Error("member not found in group");
   }
   return {
-    uri: "",
     insertions: [],
     deletions: [
       st(
