@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [ModuleSupport](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ModuleSupport.html)
 - [TypeIndexQuery](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.TypeIndexQuery.html)
+- [addInstanceToTypeIndex](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/index.addInstanceToTypeIndex.html)
 
 
 ## 0.1.1
