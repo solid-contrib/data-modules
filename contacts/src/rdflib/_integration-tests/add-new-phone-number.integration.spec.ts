@@ -1,11 +1,11 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
-import { expectPatchRequest } from "../../test-support/expectRequests";
-import { generateId } from "../generate-id";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
+import { mockTurtleResponse } from "../../test-support/mockResponses.js";
+import { expectPatchRequest } from "../../test-support/expectRequests.js";
 import { when } from "jest-when";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("add new phone number", () => {
   it("adds a new phone number resource to the contact document", async () => {

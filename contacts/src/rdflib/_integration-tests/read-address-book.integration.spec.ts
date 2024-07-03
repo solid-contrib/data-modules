@@ -1,5 +1,5 @@
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
+import { mockTurtleResponse } from "../../test-support/mockResponses.js";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
 describe("read existing address book", () => {

@@ -1,6 +1,6 @@
 import { graph, st, sym } from "rdflib";
-import { vcard } from "../namespaces";
-import { removeEmailAddress } from "./removeEmailAddress";
+import { vcard } from "../namespaces.js";
+import { removeEmailAddress } from "./removeEmailAddress.js";
 
 describe("removeEmailAddress", () => {
   it("deletes any statement from the email address doc where the email address is the subject", () => {

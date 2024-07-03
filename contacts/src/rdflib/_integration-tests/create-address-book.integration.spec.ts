@@ -1,26 +1,23 @@
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
 import {
   mockNotFound,
   mockTurtleResponse,
-} from "../../test-support/mockResponses";
+} from "../../test-support/mockResponses.js";
 
-import { generateId as deprecatedGenId } from "../generate-id";
 import {
   expectPatchRequest,
   expectPutEmptyTurtleFile,
-} from "../../test-support/expectRequests";
+} from "../../test-support/expectRequests.js";
 import { Fetcher, graph, UpdateManager } from "rdflib";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-import { generateId } from "@solid-data-modules/rdflib-utils";
-
-jest.mock("../generate-id");
-jest.mock("@solid-data-modules/rdflib-utils/dist/identifier");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("create address book", () => {
   it("creates the address book resource", async () => {
     const authenticatedFetch = jest.fn();
 
-    (deprecatedGenId as jest.Mock).mockReturnValueOnce("n528gSMwTN");
+    (generateId as jest.Mock).mockReturnValueOnce("n528gSMwTN");
 
     const store = graph();
     const fetcher = new Fetcher(store, {
@@ -76,9 +73,9 @@ describe("create address book", () => {
   it("updates the private type index, if owner is given", async () => {
     const authenticatedFetch = jest.fn();
 
-    (deprecatedGenId as jest.Mock).mockReturnValueOnce("b6edf2b9");
-
-    (generateId as jest.Mock).mockReturnValueOnce("3b6e");
+    (generateId as jest.Mock)
+      .mockReturnValueOnce("b6edf2b9")
+      .mockReturnValueOnce("3b6e");
 
     const store = graph();
     const fetcher = new Fetcher(store, {

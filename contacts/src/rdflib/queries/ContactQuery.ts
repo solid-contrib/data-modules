@@ -1,7 +1,7 @@
 import { IndexedFormula, isNamedNode, NamedNode, Node, sym } from "rdflib";
 import { vcard } from "../namespaces.js";
 import { Email, PhoneNumber } from "../../index.js";
-import { Namespace } from "rdflib/lib/factories/factory-types";
+import { Namespace } from "rdflib/lib/factories/factory-types.js";
 
 const MAILTO_URI_SCHEME = "mailto:";
 const TEl_URI_SCHEME = "tel:";

@@ -1,10 +1,10 @@
-import { createAddressBook } from "./createAddressBook";
-import { generateId } from "../generate-id";
+import { createAddressBook } from "./createAddressBook.js";
 import { lit, st, sym } from "rdflib";
 import { dc, vcard } from "../namespaces.js";
 import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("createAddressBook", () => {
   it("generates a URI for the new address book based on the container and a random id", () => {

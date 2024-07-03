@@ -1,7 +1,7 @@
 import { IndexedFormula, isNamedNode, NamedNode, sym } from "rdflib";
 import { dc, vcard } from "../namespaces.js";
 import { Contact, Group } from "../../index.js";
-import { generateId } from "../generate-id.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 export class AddressBookQuery {
   private addressBookDoc: NamedNode;

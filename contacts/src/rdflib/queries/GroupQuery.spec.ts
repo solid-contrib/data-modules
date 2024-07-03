@@ -1,6 +1,6 @@
 import { graph, lit, sym } from "rdflib";
-import { GroupQuery } from "./GroupQuery";
-import { vcard } from "../namespaces";
+import { GroupQuery } from "./GroupQuery.js";
+import { vcard } from "../namespaces.js";
 import { rdf } from "@solid-data-modules/rdflib-utils";
 
 describe(GroupQuery.name, () => {

@@ -1,7 +1,7 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
-import { expectPatchRequest } from "../../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
+import { mockTurtleResponse } from "../../test-support/mockResponses.js";
+import { expectPatchRequest } from "../../test-support/expectRequests.js";
 
 describe("remove contact from group", () => {
   it("removes the contact reference from the group document", async () => {

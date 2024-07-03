@@ -1,7 +1,7 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
-import { expectPatchRequest } from "../../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
+import { mockTurtleResponse } from "../../test-support/mockResponses.js";
+import { expectPatchRequest } from "../../test-support/expectRequests.js";
 
 describe("add contact to group", () => {
   it("references the contact to the group document", async () => {

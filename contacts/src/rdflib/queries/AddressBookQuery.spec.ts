@@ -1,10 +1,9 @@
-import { AddressBookQuery } from "./AddressBookQuery";
+import { AddressBookQuery } from "./AddressBookQuery.js";
 import { graph, lit, sym } from "rdflib";
-import { dc, vcard } from "../namespaces";
+import { dc, vcard } from "../namespaces.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-import { generateId } from "../generate-id";
-
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("AddressBookQuery", () => {
   describe("query title", () => {

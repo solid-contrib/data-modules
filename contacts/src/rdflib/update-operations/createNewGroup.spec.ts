@@ -1,7 +1,7 @@
 import { lit, st, sym } from "rdflib";
-import { AddressBookQuery } from "../queries";
-import { createNewGroup } from "./createNewGroup";
-import { vcard } from "../namespaces";
+import { AddressBookQuery } from "../queries/index.js";
+import { createNewGroup } from "./createNewGroup.js";
+import { vcard } from "../namespaces.js";
 import { rdf } from "@solid-data-modules/rdflib-utils";
 
 describe("createNewGroup", () => {

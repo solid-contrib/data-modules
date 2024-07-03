@@ -2,8 +2,8 @@ import { lit, st, sym } from "rdflib";
 
 import { dc, vcard } from "../namespaces.js";
 
-import { generateId } from "../generate-id.js";
 import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 export function createAddressBook(
   container: string,

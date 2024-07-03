@@ -1,10 +1,10 @@
-import { addNewPhoneNumber } from "./addNewPhoneNumber";
+import { addNewPhoneNumber } from "./addNewPhoneNumber.js";
 import { st, sym } from "rdflib";
-import { generateId } from "../generate-id";
 import { when } from "jest-when";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("addNewPhoneNumber", () => {
   it("returns the newly minted URI for the phone number resource", () => {
