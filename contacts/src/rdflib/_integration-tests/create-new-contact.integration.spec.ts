@@ -1,12 +1,12 @@
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import {
-  mockNotFound,
-  mockTurtleResponse,
-} from "../../test-support/mockResponses.js";
 
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+import {
+  expectPatchRequest,
+  mockNotFound,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
@@ -27,7 +27,7 @@ describe("create new contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -43,7 +43,7 @@ describe("create new contact", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
       "",
@@ -67,9 +67,15 @@ describe("create new contact", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
-<https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Individual> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+        <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Individual> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 
@@ -89,7 +95,7 @@ describe("create new contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -105,7 +111,7 @@ describe("create new contact", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
       `
@@ -116,7 +122,7 @@ describe("create new contact", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/2/index.ttl",
       `
@@ -127,7 +133,7 @@ describe("create new contact", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
       "",
@@ -152,17 +158,29 @@ describe("create new contact", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> .
-<https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> .
+        <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+      };   a solid:InsertDeletePatch .`,
     );
 
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/2/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/2/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> .
-<https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/contacts/Group/2/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> .
+        <https://pod.test/alice/contacts/Person/82dfdfc0/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Bob" .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

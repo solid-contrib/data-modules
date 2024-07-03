@@ -1,6 +1,6 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
+import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("read group", () => {
   it("returns the group's name and uri", async () => {
@@ -17,7 +17,7 @@ describe("read group", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
       `
@@ -52,7 +52,7 @@ describe("read group", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
       `

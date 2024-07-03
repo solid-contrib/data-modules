@@ -1,7 +1,9 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("update email address", () => {
   it("updates the email address value statement", async () => {
@@ -18,7 +20,7 @@ describe("update email address", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -30,7 +32,7 @@ describe("update email address", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/email",
       `
@@ -49,10 +51,17 @@ describe("update email address", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/email",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:old-value@mail.test> .
- } 
- ; INSERT DATA { <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:new-value@mail.test> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:old-value@mail.test> .
+      };
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:new-value@mail.test> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

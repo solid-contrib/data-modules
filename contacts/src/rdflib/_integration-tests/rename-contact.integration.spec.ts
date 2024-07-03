@@ -1,7 +1,9 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("rename contact", () => {
   it("updates vcard:fn in the contacts document", async () => {
@@ -18,7 +20,7 @@ describe("rename contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -37,10 +39,17 @@ describe("rename contact", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
- } 
- ; INSERT DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Francisco Fernandez" .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
+      };
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Francisco Fernandez" .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 
@@ -58,7 +67,7 @@ describe("rename contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -74,7 +83,7 @@ describe("rename contact", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
       `@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
@@ -86,13 +95,13 @@ describe("rename contact", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/groups.ttl",
       "",
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -122,10 +131,17 @@ describe("rename contact", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
- } 
- ; INSERT DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Francisco Fernandez" .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
+      };
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Francisco Fernandez" .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

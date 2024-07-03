@@ -1,15 +1,13 @@
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import {
-  mockNotFound,
-  mockTurtleResponse,
-} from "../../test-support/mockResponses.js";
 
+import { Fetcher, graph, UpdateManager } from "rdflib";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import {
   expectPatchRequest,
   expectPutEmptyTurtleFile,
-} from "../../test-support/expectRequests.js";
-import { Fetcher, graph, UpdateManager } from "rdflib";
-import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+  mockNotFound,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
@@ -54,11 +52,17 @@ describe("create address book", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/n528gSMwTN/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#AddressBook> .
-<https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://purl.org/dc/elements/1.1/title> "My Contacts" .
-<https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://www.w3.org/2006/vcard/ns#nameEmailIndex> <https://pod.test/alice/n528gSMwTN/people.ttl> .
-<https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://www.w3.org/2006/vcard/ns#groupIndex> <https://pod.test/alice/n528gSMwTN/groups.ttl> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#AddressBook> .
+        <https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://purl.org/dc/elements/1.1/title> "My Contacts" .
+        <https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://www.w3.org/2006/vcard/ns#nameEmailIndex> <https://pod.test/alice/n528gSMwTN/people.ttl> .
+        <https://pod.test/alice/n528gSMwTN/index.ttl#this> <http://www.w3.org/2006/vcard/ns#groupIndex> <https://pod.test/alice/n528gSMwTN/groups.ttl> .
+      };   a solid:InsertDeletePatch .`,
     );
     expectPutEmptyTurtleFile(
       authenticatedFetch,
@@ -88,7 +92,7 @@ describe("create address book", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/profile/card",
       `
@@ -103,7 +107,7 @@ describe("create address book", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/settings/prefs.ttl",
       `
@@ -116,7 +120,7 @@ describe("create address book", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/settings/privateTypeIndex.ttl",
       ``,
@@ -144,10 +148,16 @@ describe("create address book", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/settings/privateTypeIndex.ttl",
-      `INSERT DATA { <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/solid/terms#TypeRegistration> .
-<https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook> .
-<https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/solid/terms#TypeRegistration> .
+        <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#forClass> <http://www.w3.org/2006/vcard/ns#AddressBook> .
+        <https://pod.test/alice/settings/privateTypeIndex.ttl#3b6e> <http://www.w3.org/ns/solid/terms#instance> <https://pod.test/alice/b6edf2b9/index.ttl#this> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

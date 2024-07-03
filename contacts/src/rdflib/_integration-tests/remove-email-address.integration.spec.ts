@@ -1,7 +1,9 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("remove email address", () => {
   it("removes the email address statements and link to contact", async () => {
@@ -18,7 +20,7 @@ describe("remove email address", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -30,7 +32,7 @@ describe("remove email address", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/email",
       `
@@ -49,15 +51,27 @@ describe("remove email address", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasEmail> <https://pod.test/alice/contacts/Person/1/email#this> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasEmail> <https://pod.test/alice/contacts/Person/1/email#this> .
+      };   a solid:InsertDeletePatch .`,
     );
 
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/email",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:bob@mail.test> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/email#this> <http://www.w3.org/2006/vcard/ns#value> <mailto:bob@mail.test> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

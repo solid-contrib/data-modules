@@ -1,7 +1,9 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("update phone number", () => {
   it("updates the phone number value statement", async () => {
@@ -18,7 +20,7 @@ describe("update phone number", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -30,7 +32,7 @@ describe("update phone number", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/phone",
       `
@@ -49,10 +51,17 @@ describe("update phone number", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/phone",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+123456> .
- } 
- ; INSERT DATA { <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+654321> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+123456> .
+      };
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+654321> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

@@ -1,7 +1,9 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("remove phone number", () => {
   it("removes the phone number statements and link to contact", async () => {
@@ -18,7 +20,7 @@ describe("remove phone number", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -30,7 +32,7 @@ describe("remove phone number", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/phone",
       `
@@ -49,15 +51,27 @@ describe("remove phone number", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasTelephone> <https://pod.test/alice/contacts/Person/1/phone#this> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasTelephone> <https://pod.test/alice/contacts/Person/1/phone#this> .
+      };   a solid:InsertDeletePatch .`,
     );
 
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/phone",
-      `DELETE DATA { <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+123456> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Person/1/phone#this> <http://www.w3.org/2006/vcard/ns#value> <tel:+123456> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

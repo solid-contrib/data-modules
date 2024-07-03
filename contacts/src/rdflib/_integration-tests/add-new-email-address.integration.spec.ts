@@ -1,9 +1,11 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
-import { expectPatchRequest } from "../../test-support/expectRequests.js";
 import { when } from "jest-when";
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
@@ -24,7 +26,7 @@ describe("add new email address", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -43,9 +45,15 @@ describe("add new email address", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasEmail> <https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> .
-<https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> <http://www.w3.org/2006/vcard/ns#value> <mailto:alice@mail.test> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasEmail> <https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> .
+        <https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> <http://www.w3.org/2006/vcard/ns#value> <mailto:alice@mail.test> .
+      };   a solid:InsertDeletePatch .`,
     );
 
     expect(uri).toEqual(

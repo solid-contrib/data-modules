@@ -1,7 +1,7 @@
 import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
-import { mockTurtleResponse } from "../../test-support/mockResponses.js";
 
 import { Fetcher, graph, UpdateManager } from "rdflib";
+import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("read contact", () => {
   it("returns the contact's name and uri", async () => {
@@ -18,7 +18,7 @@ describe("read contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -53,7 +53,7 @@ describe("read contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -99,7 +99,7 @@ describe("read contact", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
