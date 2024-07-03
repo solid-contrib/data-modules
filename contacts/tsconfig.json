@@ -4,7 +4,7 @@
     "target": "es2020",
     "lib": ["es2020", "DOM"],
     "module": "ES2020",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "bundler",
     "strict": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
