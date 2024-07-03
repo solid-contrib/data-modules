@@ -11,6 +11,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [ModuleSupport](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ModuleSupport.html)
 - [TypeIndexQuery](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.TypeIndexQuery.html)
 - [addInstanceToTypeIndex](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/index.addInstanceToTypeIndex.html)
+- helper functions to generate terms in common Solid namespaces: 
+  - [ldp](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/index.ldp.html)
+  - [pim](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/index.pim.html)
+  - [rdf](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/index.rdf.html)
+  - [solid](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/index.solid.html)
+
+### Breaking Change
+
+- [generateId](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/identifier.generateId.html): Moved to submodule 
 
 
 ## 0.1.1

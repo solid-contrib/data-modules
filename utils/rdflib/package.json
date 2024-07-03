@@ -4,10 +4,15 @@
   "description": "Utility functions for the development of Solid Data Modules for RDFLib.js",
   "type": "module",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./test-support": "./dist/test-support/index.js",
+    "./identifier": "./dist/identifier/index.js"
+  },
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "npm run clean && tsc",
-    "build:doc": "typedoc src/index.ts src/test-support/index.ts --out ../../gh-pages/rdflib-utils",
+    "build:doc": "typedoc src/index.ts src/test-support/index.ts src/identifier/index.ts --out ../../gh-pages/rdflib-utils",
     "test": "jest",
     "lint": "eslint  ./src/**"
   },
