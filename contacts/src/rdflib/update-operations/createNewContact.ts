@@ -1,9 +1,9 @@
 import { AddressBookQuery } from "../queries/AddressBookQuery.js";
 import { lit, st, sym } from "rdflib";
-import { rdf, vcard } from "../namespaces.js";
+import { vcard } from "../namespaces.js";
 
 import { NewContact } from "../../index.js";
-import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { rdf, UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function createNewContact(
   addressBook: AddressBookQuery,

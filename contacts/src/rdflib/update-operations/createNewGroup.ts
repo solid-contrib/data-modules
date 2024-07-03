@@ -1,7 +1,7 @@
 import { AddressBookQuery } from "../queries/index.js";
 import { lit, st } from "rdflib";
-import { rdf, vcard } from "../namespaces.js";
-import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { vcard } from "../namespaces.js";
+import { rdf, UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function createNewGroup(
   addressBook: AddressBookQuery,

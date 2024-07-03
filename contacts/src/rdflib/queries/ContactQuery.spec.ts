@@ -1,6 +1,7 @@
 import { ContactQuery } from "./ContactQuery";
 import { graph, lit, sym } from "rdflib";
-import { rdf, vcard } from "../namespaces";
+import { vcard } from "../namespaces";
+import { rdf } from "@solid-data-modules/rdflib-utils";
 
 describe("ContactQuery", () => {
   describe("query name", () => {

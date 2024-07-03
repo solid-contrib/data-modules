@@ -1,7 +1,8 @@
 import { lit, st, sym } from "rdflib";
 import { AddressBookQuery } from "../queries";
 import { createNewGroup } from "./createNewGroup";
-import { rdf, vcard } from "../namespaces";
+import { vcard } from "../namespaces";
+import { rdf } from "@solid-data-modules/rdflib-utils";
 
 describe("createNewGroup", () => {
   it("returns the uri of the new group", () => {
