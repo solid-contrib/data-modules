@@ -2,16 +2,15 @@
   "compilerOptions": {
     "outDir": "dist",
     "target": "es2020",
-    "lib": [
-      "es2020", "DOM"
-    ],
+    "lib": ["es2020", "DOM"],
     "module": "ES2020",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "strict": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true
+    "declaration": true,
+    "allowJs": true
   },
   "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts", "src/test-support", "src/e2e-tests"],
+  "exclude": ["**/*.spec.ts", "src/e2e-tests"]
 }
