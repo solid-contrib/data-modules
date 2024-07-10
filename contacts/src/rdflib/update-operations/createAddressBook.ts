@@ -2,14 +2,13 @@ import { lit, st, sym } from "rdflib";
 
 import { dc, vcard } from "../namespaces.js";
 
-import { generateId } from "../generate-id.js";
-
-import { UpdateOperation } from "./index.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 export function createAddressBook(
   container: string,
   name: string,
-): UpdateOperation {
+): UpdateOperation & { uri: string } {
   const id = generateId();
   const uri = `${container}${id}/index.ttl#this`;
   const nameEmailIndexUri = `${container}${id}/people.ttl`;
@@ -36,6 +35,6 @@ export function createAddressBook(
     uri,
     deletions: [],
     insertions,
-    filesToCreate: [{ uri: nameEmailIndexUri }, { uri: groupIndexUri }],
+    filesToCreate: [{ url: nameEmailIndexUri }, { url: groupIndexUri }],
   };
 }

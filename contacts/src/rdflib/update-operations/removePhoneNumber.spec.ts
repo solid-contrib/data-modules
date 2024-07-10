@@ -1,6 +1,6 @@
-import { removePhoneNumber } from "./removePhoneNumber";
+import { removePhoneNumber } from "./removePhoneNumber.js";
 import { graph, st, sym } from "rdflib";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 
 describe("removePhoneNumber", () => {
   it("deletes any statement from the phone doc where the phone number is the subject", () => {

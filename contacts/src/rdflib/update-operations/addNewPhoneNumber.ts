@@ -1,12 +1,12 @@
-import { UpdateOperation } from "./index.js";
 import { NamedNode, st, sym } from "rdflib";
-import { generateId } from "../generate-id.js";
 import { vcard } from "../namespaces.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 export function addNewPhoneNumber(
   contactNode: NamedNode,
   phoneNumber: string,
-): UpdateOperation {
+): UpdateOperation & { uri: string } {
   const id = generateId();
   const uri = `${contactNode.doc().uri}#${id}`;
   return {

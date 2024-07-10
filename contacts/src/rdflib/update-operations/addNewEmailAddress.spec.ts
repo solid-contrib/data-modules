@@ -1,10 +1,10 @@
-import { addNewEmailAddress } from "./addNewEmailAddress";
+import { addNewEmailAddress } from "./addNewEmailAddress.js";
 import { st, sym } from "rdflib";
-import { generateId } from "../generate-id";
 import { when } from "jest-when";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("addNewEmailAddress", () => {
   it("returns the newly minted URI for the email address resource", () => {

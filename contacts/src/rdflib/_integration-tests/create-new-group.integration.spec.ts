@@ -1,14 +1,13 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import {
+  expectPatchRequest,
   mockNotFound,
-  mockTurtleResponse,
-} from "../../test-support/mockResponses";
-import { expectPatchRequest } from "../../test-support/expectRequests";
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
-import { generateId } from "../generate-id";
-
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("create new group", () => {
   it("creates group resource", async () => {
@@ -27,7 +26,7 @@ describe("create new group", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -43,7 +42,7 @@ describe("create new group", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/groups.ttl",
       "",
@@ -65,9 +64,15 @@ describe("create new group", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "best friends" .
-<https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Group> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "best friends" .
+        <https://pod.test/alice/contacts/Group/b4e9fd85/index.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Group> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

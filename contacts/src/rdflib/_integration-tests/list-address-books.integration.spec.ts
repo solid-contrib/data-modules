@@ -1,8 +1,8 @@
+import { setupModule } from "../../test-support/setupModule.js";
 import {
   mockForbidden,
-  mockTurtleResponse,
-} from "../../test-support/mockResponses";
-import { setupModule } from "../../test-support/setupModule";
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("list address books", () => {
   it("lists all instances from public type index", async () => {
@@ -10,7 +10,7 @@ describe("list address books", () => {
 
     const contacts = setupModule(authenticatedFetch);
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/profile/card",
       `
@@ -24,7 +24,7 @@ describe("list address books", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/settings/publicTypeIndex.ttl",
       `
@@ -56,7 +56,7 @@ describe("list address books", () => {
 
     const contacts = setupModule(authenticatedFetch);
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/profile/card",
       `
@@ -71,7 +71,7 @@ describe("list address books", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/settings/prefs.ttl",
       `
@@ -84,7 +84,7 @@ describe("list address books", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/settings/privateTypeIndex.ttl",
       `
@@ -116,7 +116,7 @@ describe("list address books", () => {
 
     const contacts = setupModule(authenticatedFetch);
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/profile/card",
       `
@@ -132,7 +132,7 @@ describe("list address books", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/settings/publicTypeIndex.ttl",
       `

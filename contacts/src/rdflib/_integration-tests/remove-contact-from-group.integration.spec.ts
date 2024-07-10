@@ -1,7 +1,9 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
-import { expectPatchRequest } from "../../test-support/expectRequests";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("remove contact from group", () => {
   it("removes the contact reference from the group document", async () => {
@@ -18,7 +20,7 @@ describe("remove contact from group", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
       `
@@ -40,9 +42,15 @@ describe("remove contact from group", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Group/1/index.ttl",
-      `DELETE DATA { <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
-<https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:deletes {
+        <https://pod.test/alice/contacts/Group/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasMember> <https://pod.test/alice/contacts/Person/1/index.ttl#this> .
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#fn> "Finley Kim" .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

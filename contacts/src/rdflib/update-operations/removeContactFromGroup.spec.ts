@@ -1,8 +1,8 @@
-import { removeContactFromGroup } from "./removeContactFromGroup";
-import { ContactQuery } from "../queries";
-import { GroupQuery } from "../queries/GroupQuery";
+import { removeContactFromGroup } from "./removeContactFromGroup.js";
+import { ContactQuery } from "../queries/index.js";
+import { GroupQuery } from "../queries/GroupQuery.js";
 import { lit, st, sym } from "rdflib";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 
 describe("removeContactFromGroup", () => {
   it("removes the contact as a group member", () => {

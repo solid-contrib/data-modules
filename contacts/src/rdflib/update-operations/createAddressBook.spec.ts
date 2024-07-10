@@ -1,10 +1,10 @@
-import { createAddressBook } from "./createAddressBook";
-import { generateId } from "../generate-id";
+import { createAddressBook } from "./createAddressBook.js";
 import { lit, st, sym } from "rdflib";
 import { dc, vcard } from "../namespaces.js";
-import { UpdateOperation } from "./index.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("createAddressBook", () => {
   it("generates a URI for the new address book based on the container and a random id", () => {
@@ -28,7 +28,7 @@ describe("createAddressBook", () => {
   });
 
   describe("insertions", () => {
-    let result: UpdateOperation;
+    let result: UpdateOperation & { uri: string };
     beforeEach(() => {
       (generateId as jest.Mock).mockReturnValueOnce("e8Civ0HoDy");
       result = createAddressBook(
@@ -90,13 +90,13 @@ describe("createAddressBook", () => {
 
     it("include the name email index", () => {
       expect(result.filesToCreate).toContainEqual({
-        uri: "https://pod.test/container/iPjiGoHXAK/people.ttl",
+        url: "https://pod.test/container/iPjiGoHXAK/people.ttl",
       });
     });
 
     it("include the group index", () => {
       expect(result.filesToCreate).toContainEqual({
-        uri: "https://pod.test/container/iPjiGoHXAK/groups.ttl",
+        url: "https://pod.test/container/iPjiGoHXAK/groups.ttl",
       });
     });
   });

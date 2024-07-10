@@ -1,6 +1,6 @@
 import { graph, IndexedFormula, st, sym } from "rdflib";
-import { updatePhoneNumber } from "./updatePhoneNumber";
-import { vcard } from "../namespaces";
+import { updatePhoneNumber } from "./updatePhoneNumber.js";
+import { vcard } from "../namespaces.js";
 
 describe("updatePhoneNumber", () => {
   let store: IndexedFormula;

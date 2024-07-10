@@ -1,6 +1,6 @@
-import { UpdateOperation } from "./index.js";
 import { IndexedFormula, NamedNode, st, sym } from "rdflib";
 import { vcard } from "../namespaces.js";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function updatePhoneNumber(
   phoneNumberNode: NamedNode,
@@ -20,7 +20,6 @@ export function updatePhoneNumber(
     ),
   ];
   return {
-    uri: "",
     insertions,
     deletions,
     filesToCreate: [],

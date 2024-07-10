@@ -1,6 +1,6 @@
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
 import { Fetcher, graph, UpdateManager } from "rdflib";
+import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
 
 describe("read existing address book", () => {
   it("empty address book returns the title and uri but no contacts and groups", async () => {
@@ -10,7 +10,7 @@ describe("read existing address book", () => {
 
     const contacts = setupModule(authenticatedFetch);
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -25,13 +25,13 @@ describe("read existing address book", () => {
         vcard:groupIndex <groups.ttl>.
 `,
     );
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
       "",
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/groups.ttl",
       "",
@@ -53,7 +53,7 @@ describe("read existing address book", () => {
 
     const contacts = setupModule(authenticatedFetch);
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -68,7 +68,7 @@ describe("read existing address book", () => {
         vcard:groupIndex <groups.ttl>.
 `,
     );
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
       `@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
@@ -87,7 +87,7 @@ describe("read existing address book", () => {
 `,
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/groups.ttl",
       "",
@@ -117,7 +117,7 @@ describe("read existing address book", () => {
 
     const contacts = setupModule(authenticatedFetch);
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/index.ttl",
       `
@@ -132,13 +132,13 @@ describe("read existing address book", () => {
         vcard:groupIndex <groups.ttl>.
 `,
     );
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/people.ttl",
       "",
     );
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/groups.ttl",
       `

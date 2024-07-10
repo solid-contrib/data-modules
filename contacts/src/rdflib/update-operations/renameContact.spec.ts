@@ -1,4 +1,4 @@
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 import { graph, lit, st, sym } from "rdflib";
 import { renameContact } from "./renameContact.js";
 

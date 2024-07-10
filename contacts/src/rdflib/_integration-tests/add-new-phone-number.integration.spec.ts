@@ -1,11 +1,13 @@
 import { Fetcher, graph, UpdateManager } from "rdflib";
-import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib";
-import { mockTurtleResponse } from "../../test-support/mockResponses";
-import { expectPatchRequest } from "../../test-support/expectRequests";
-import { generateId } from "../generate-id";
+import { ContactsModuleRdfLib } from "../ContactsModuleRdfLib.js";
 import { when } from "jest-when";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+import {
+  expectPatchRequest,
+  mockTurtleDocument,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
-jest.mock("../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("add new phone number", () => {
   it("adds a new phone number resource to the contact document", async () => {
@@ -24,7 +26,7 @@ describe("add new phone number", () => {
       updater,
     });
 
-    mockTurtleResponse(
+    mockTurtleDocument(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
       `
@@ -43,9 +45,15 @@ describe("add new phone number", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/contacts/Person/1/index.ttl",
-      `INSERT DATA { <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasTelephone> <https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> .
-<https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> <http://www.w3.org/2006/vcard/ns#value> <tel:123456789> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/contacts/Person/1/index.ttl#this> <http://www.w3.org/2006/vcard/ns#hasTelephone> <https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> .
+        <https://pod.test/alice/contacts/Person/1/index.ttl#7ab73096> <http://www.w3.org/2006/vcard/ns#value> <tel:123456789> .
+      };   a solid:InsertDeletePatch .`,
     );
 
     expect(uri).toEqual(

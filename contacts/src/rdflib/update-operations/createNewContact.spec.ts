@@ -1,7 +1,8 @@
-import { createNewContact } from "./createNewContact";
-import { AddressBookQuery } from "../queries";
+import { createNewContact } from "./createNewContact.js";
+import { AddressBookQuery } from "../queries/index.js";
 import { lit, st, sym } from "rdflib";
-import { rdf, vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
+import { rdf } from "@solid-data-modules/rdflib-utils";
 
 describe("createNewContact", () => {
   it("returns the uri of the new contact", () => {

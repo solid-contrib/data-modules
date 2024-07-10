@@ -1,12 +1,12 @@
 import { AddressBookQuery } from "../queries/index.js";
-import { UpdateOperation } from "./index.js";
 import { lit, st } from "rdflib";
-import { rdf, vcard } from "../namespaces.js";
+import { vcard } from "../namespaces.js";
+import { rdf, UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function createNewGroup(
   addressBook: AddressBookQuery,
   groupName: string,
-): UpdateOperation {
+): UpdateOperation & { uri: string } {
   const groupIndex = addressBook.queryGroupIndex();
   if (!groupIndex) {
     throw new Error("group index is missing or invalid");

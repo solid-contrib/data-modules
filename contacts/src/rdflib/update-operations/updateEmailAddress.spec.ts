@@ -1,6 +1,6 @@
 import { graph, IndexedFormula, st, sym } from "rdflib";
-import { updateEmailAddress } from "./updateEmailAddress";
-import { vcard } from "../namespaces";
+import { updateEmailAddress } from "./updateEmailAddress.js";
+import { vcard } from "../namespaces.js";
 
 describe("updateEmailAddress", () => {
   let store: IndexedFormula;
