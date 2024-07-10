@@ -1,10 +1,11 @@
 import { lit, st, sym } from "rdflib";
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function createBookmark(
   bookmarkUri: string,
   title: string,
   url: string,
-) {
+): UpdateOperation & { uri: string } {
   const bookmarkNode = sym(bookmarkUri);
   return {
     uri: bookmarkUri,
