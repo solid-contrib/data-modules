@@ -4,8 +4,7 @@ import {
   createBookmarkWithinContainer,
   createBookmarkWithinDocument,
 } from "./update-operations/index.js";
-import { ldp, rdf } from "./namespaces.js";
-import { executeUpdate } from "@solid-data-modules/rdflib-utils";
+import { executeUpdate, ldp, rdf } from "@solid-data-modules/rdflib-utils";
 
 interface ModuleConfig {
   store: IndexedFormula;
