@@ -16,21 +16,28 @@ export class TypeIndexQuery {
    * @returns A list of the URIs of the found instances
    */
   queryInstancesForClass(type: NamedNode) {
-    const registrations = this.store.each(
-      null,
-      solid("forClass"),
-      type,
-      this.typeIndexDoc,
-    );
-    return registrations.flatMap((registration) => {
-      if (!isNamedNode(registration)) return [];
-      return this.getInstanceValues(registration as NamedNode);
-    });
+    return this.queryRegistrationsForType(type).instances;
   }
 
   private getInstanceValues(registration: NamedNode) {
     return this.store
       .each(registration, solid("instance"), null, this.typeIndexDoc)
       .map((it) => it.value);
+  }
+
+  queryRegistrationsForType(type: NamedNode) {
+    const registrations = this.store.each(
+      null,
+      solid("forClass"),
+      type,
+      this.typeIndexDoc,
+    );
+    const instances = registrations.flatMap((registration) => {
+      if (!isNamedNode(registration)) return [];
+      return this.getInstanceValues(registration as NamedNode);
+    });
+    return {
+      instances,
+    };
   }
 }
