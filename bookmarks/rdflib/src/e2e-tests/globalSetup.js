@@ -1,8 +1,7 @@
-import { startServer } from "./start-server";
-import { generateId } from "../generate-id";
-import { App } from "@solid/community-server";
+import { startServer } from "./start-server.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-export let server: App;
+export let server;
 
 export default async function () {
   const testId = generateId();

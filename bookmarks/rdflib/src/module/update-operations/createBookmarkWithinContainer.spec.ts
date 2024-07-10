@@ -1,10 +1,12 @@
 import { createBookmarkWithinContainer } from "./createBookmarkWithinContainer";
 
 import { when } from "jest-when";
-import { generateId } from "../../generate-id";
 import { lit, st, sym } from "rdflib";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+import { rdf } from "@solid-data-modules/rdflib-utils";
+import { bookm, dct, xsd } from "../namespaces";
 
-jest.mock("../../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("createBookmarkWithinContainer", () => {
   it("mints a new URI for the bookmark", () => {
@@ -27,8 +29,8 @@ describe("createBookmarkWithinContainer", () => {
     expect(result.insertions).toContainEqual(
       st(
         sym("https://alice.test/bookmarks/abc123#it"),
-        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("http://www.w3.org/2002/01/bookmark#Bookmark"),
+        rdf("type"),
+        bookm("Bookmark"),
         sym("https://alice.test/bookmarks/abc123"),
       ),
     );
@@ -44,7 +46,7 @@ describe("createBookmarkWithinContainer", () => {
     expect(result.insertions).toContainEqual(
       st(
         sym("https://alice.test/bookmarks/abc123#it"),
-        sym("http://purl.org/dc/terms/title"),
+        dct("title"),
         lit("My favorite website"),
         sym("https://alice.test/bookmarks/abc123"),
       ),
@@ -61,7 +63,7 @@ describe("createBookmarkWithinContainer", () => {
     expect(result.insertions).toContainEqual(
       st(
         sym("https://alice.test/bookmarks/abc123#it"),
-        sym("http://www.w3.org/2002/01/bookmark#recalls"),
+        bookm("recalls"),
         sym("https://site.test"),
         sym("https://alice.test/bookmarks/abc123"),
       ),
@@ -80,12 +82,8 @@ describe("createBookmarkWithinContainer", () => {
     expect(result.insertions).toContainEqual(
       st(
         sym("https://alice.test/bookmarks/abc123#it"),
-        sym("http://purl.org/dc/terms/created"),
-        lit(
-          "2024-01-02T03:04:05.123Z",
-          undefined,
-          sym("http://www.w3.org/2001/XMLSchema#dateTime"),
-        ),
+        dct("created"),
+        lit("2024-01-02T03:04:05.123Z", undefined, xsd("dateTime")),
         sym("https://alice.test/bookmarks/abc123"),
       ),
     );

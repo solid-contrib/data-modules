@@ -60,6 +60,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "short-unique-id": "^5.2.0"
+    "@solid-data-modules/rdflib-utils": "^0.2.0"
   }
 }

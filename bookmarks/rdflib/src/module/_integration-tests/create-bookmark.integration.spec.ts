@@ -1,16 +1,17 @@
 import { BookmarksModuleRdfLib } from "../BookmarksModuleRdfLib";
 
-import { generateId } from "../../generate-id";
-import { expectPatchRequest } from "../../test-support/expectRequests";
-import { Fetcher, graph, UpdateManager } from "rdflib";
 import {
+  expectPatchRequest,
   mockLdpContainer,
   mockNotFound,
   mockTurtleDocument,
-} from "../../test-support/mockResponses";
-import { when } from "jest-when";
+} from "@solid-data-modules/rdflib-utils/test-support";
+import { Fetcher, graph, UpdateManager } from "rdflib";
 
-jest.mock("../../generate-id");
+import { when } from "jest-when";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("create bookmark", () => {
   it("creates a new document for the bookmark in the target container", async () => {
@@ -48,11 +49,17 @@ describe("create bookmark", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/bookmarks/70501305",
-      `INSERT DATA { <https://pod.test/alice/bookmarks/70501305#it> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/01/bookmark#Bookmark> .
-<https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/title> "My favorite website" .
-<https://pod.test/alice/bookmarks/70501305#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://favorite.example> .
-<https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/created> "2024-01-02T03:04:05.678Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/bookmarks/70501305#it> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/01/bookmark#Bookmark> .
+        <https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/title> "My favorite website" .
+        <https://pod.test/alice/bookmarks/70501305#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://favorite.example> .
+        <https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/created> "2024-01-02T03:04:05.678Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 
@@ -90,11 +97,17 @@ describe("create bookmark", () => {
     expectPatchRequest(
       authenticatedFetch,
       "https://pod.test/alice/bookmarks",
-      `INSERT DATA { <https://pod.test/alice/bookmarks#f7a4eeb7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/01/bookmark#Bookmark> .
-<https://pod.test/alice/bookmarks#f7a4eeb7> <http://purl.org/dc/terms/title> "My favorite website" .
-<https://pod.test/alice/bookmarks#f7a4eeb7> <http://www.w3.org/2002/01/bookmark#recalls> <https://favorite.example> .
-<https://pod.test/alice/bookmarks#f7a4eeb7> <http://purl.org/dc/terms/created> "2024-01-02T03:04:05.678Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
- }`,
+      `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.test/alice/bookmarks#f7a4eeb7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/01/bookmark#Bookmark> .
+        <https://pod.test/alice/bookmarks#f7a4eeb7> <http://purl.org/dc/terms/title> "My favorite website" .
+        <https://pod.test/alice/bookmarks#f7a4eeb7> <http://www.w3.org/2002/01/bookmark#recalls> <https://favorite.example> .
+        <https://pod.test/alice/bookmarks#f7a4eeb7> <http://purl.org/dc/terms/created> "2024-01-02T03:04:05.678Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+      };   a solid:InsertDeletePatch .`,
     );
   });
 });

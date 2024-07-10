@@ -6,8 +6,8 @@ const config: Config = {
   rootDir: "src/e2e-tests",
   testTimeout: 60000,
   detectOpenHandles: true,
-  globalSetup: "<rootDir>/globalSetup.ts",
-  globalTeardown: "<rootDir>/globalTeardown.ts",
+  globalSetup: "<rootDir>/globalSetup.js",
+  globalTeardown: "<rootDir>/globalTeardown.js",
   forceExit: true,
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
@@ -16,13 +16,14 @@ const config: Config = {
   transform: {
     // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
     // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
-    "^.+\\.ts$": [
+    "^.+\\.[tj]s$": [
       "ts-jest",
       {
         useESM: true,
       },
     ],
   },
+  transformIgnorePatterns: ["node_modules/(?!(@solid-data-modules)/)"],
 };
 
 export default config;
