@@ -19,9 +19,12 @@ export class TypeIndexQuery {
     return this.queryRegistrationsForType(type).instances;
   }
 
-  private getInstanceValues(registration: NamedNode) {
+  private getValuesOf(
+    which: "instance" | "instanceContainer",
+    registration: NamedNode,
+  ) {
     return this.store
-      .each(registration, solid("instance"), null, this.typeIndexDoc)
+      .each(registration, solid(which), null, this.typeIndexDoc)
       .map((it) => it.value);
   }
 
@@ -32,13 +35,26 @@ export class TypeIndexQuery {
       type,
       this.typeIndexDoc,
     );
-    const instances = registrations.flatMap((registration) => {
-      if (!isNamedNode(registration)) return [];
-      return this.getInstanceValues(registration as NamedNode);
-    });
-    return {
-      instances,
-      instanceContainers: [],
-    };
+    return registrations
+      .filter((it) => isNamedNode(it))
+      .map((registration: NamedNode) => {
+        return {
+          instances: this.getValuesOf("instance", registration),
+          instanceContainers: this.getValuesOf(
+            "instanceContainer",
+            registration,
+          ),
+        };
+      })
+      .reduce(
+        (acc, current) => ({
+          instances: [...acc.instances, ...current.instances],
+          instanceContainers: [
+            ...acc.instanceContainers,
+            ...current.instanceContainers,
+          ],
+        }),
+        { instanceContainers: [], instances: [] },
+      );
   }
 }

@@ -182,7 +182,40 @@ describe("TypeIndexQuery", () => {
       });
     });
 
-    it("combines instances from multiple type registrations for given class", () => {
+    it("returns all instance containers listed in the type registration for given class", () => {
+      const store = graph();
+
+      parse(
+        `
+      @prefix : <#>.
+      @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+      @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+      
+      :registration-1 a solid:TypeRegistration ;
+         solid:forClass vcard:AddressBook ;
+         solid:instanceContainer <https://pod.test/alice/contacts/>, <https://pod.test/alice/address-books/> ;
+         .
+      
+      `,
+        store,
+        "https://pod.test/alice/setting/publicTypeIndex.ttl",
+      );
+
+      const query = new TypeIndexQuery(
+        store,
+        sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
+      );
+      const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
+      expect(result).toEqual({
+        instances: [],
+        instanceContainers: [
+          "https://pod.test/alice/contacts/",
+          "https://pod.test/alice/address-books/",
+        ],
+      });
+    });
+
+    it("combines instances and containers from multiple type registrations for given class", () => {
       // see https://github.com/solid/type-indexes/issues/32#issuecomment-2013540668
       const store = graph();
 
@@ -203,6 +236,18 @@ describe("TypeIndexQuery", () => {
       :registration-3 a solid:TypeRegistration ;
          solid:forClass :SomeThingElse ;
          solid:instance <https://pod.test/alice/something/else/index.ttl#this> .
+         
+      :registration-4 a solid:TypeRegistration ;
+         solid:forClass vcard:AddressBook ;
+         solid:instanceContainer <https://pod.test/alice/contacts-container-1/> .
+         
+      :registration-5 a solid:TypeRegistration ;
+         solid:forClass vcard:AddressBook ;
+         solid:instanceContainer <https://pod.test/alice/contacts-container-2/> .
+         
+      :registration-6 a solid:TypeRegistration ;
+         solid:forClass :SomeThingElse ;
+         solid:instanceContainer <https://pod.test/alice/other-container/> .
       
       `,
         store,
@@ -219,7 +264,10 @@ describe("TypeIndexQuery", () => {
           "https://pod.test/alice/contacts/1/index.ttl#this",
           "https://pod.test/alice/contacts/2/index.ttl#this",
         ],
-        instanceContainers: [],
+        instanceContainers: [
+          "https://pod.test/alice/contacts-container-1/",
+          "https://pod.test/alice/contacts-container-2/",
+        ],
       });
     });
 
@@ -253,6 +301,7 @@ describe("TypeIndexQuery", () => {
       :registration-1 a solid:TypeRegistration ;
          solid:forClass vcard:AddressBook ;
          solid:instance <https://pod.test/alice/contacts/1/index.ttl#this>, <https://pod.test/alice/contacts/2/index.ttl#this> ;
+         solid:instanceContainer <https://pod.test/alice/contacts-container/> ;
          .
       
       `,
@@ -270,7 +319,7 @@ describe("TypeIndexQuery", () => {
             "https://pod.test/alice/contacts/1/index.ttl#this",
             "https://pod.test/alice/contacts/2/index.ttl#this",
           ],
-          instanceContainers: [],
+          instanceContainers: ["https://pod.test/alice/contacts-container/"],
         });
       });
 
