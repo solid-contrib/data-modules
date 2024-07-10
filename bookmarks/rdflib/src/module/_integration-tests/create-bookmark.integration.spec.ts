@@ -1,6 +1,5 @@
 import { BookmarksModuleRdfLib } from "../BookmarksModuleRdfLib";
 
-import { generateId } from "../../generate-id";
 import {
   expectPatchRequest,
   mockLdpContainer,
@@ -10,8 +9,9 @@ import {
 import { Fetcher, graph, UpdateManager } from "rdflib";
 
 import { when } from "jest-when";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("create bookmark", () => {
   it("creates a new document for the bookmark in the target container", async () => {

@@ -1,8 +1,13 @@
 import { AppRunner, joinFilePath } from "@solid/community-server";
 
 import { cp } from "fs/promises";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
-export async function startServer(id: string) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export async function startServer(id) {
   const testDataPath = joinFilePath(__dirname, "test-data");
   const rootFilePath = joinFilePath(__dirname, ".test-data", id);
   const app = await new AppRunner().create({

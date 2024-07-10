@@ -1,10 +1,10 @@
 import { createBookmarkWithinContainer } from "./createBookmarkWithinContainer";
 
 import { when } from "jest-when";
-import { generateId } from "../../generate-id";
 import { lit, st, sym } from "rdflib";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
-jest.mock("../../generate-id");
+jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("createBookmarkWithinContainer", () => {
   it("mints a new URI for the bookmark", () => {
