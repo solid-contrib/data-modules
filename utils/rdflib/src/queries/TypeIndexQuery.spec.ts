@@ -43,22 +43,23 @@ describe("TypeIndexQuery", () => {
   });
 
   describe("query registrations for type", () => {
-    it("returns nothing if store is empty", () => {
-      const store = graph();
+    describe("returns nothing", () => {
+      it("if store is empty", () => {
+        const store = graph();
 
-      const query = new TypeIndexQuery(
-        store,
-        sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
-      );
-      const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
-      expect(result).toEqual({ instances: [] });
-    });
+        const query = new TypeIndexQuery(
+          store,
+          sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
+        );
+        const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
+        expect(result).toEqual({ instances: [], instanceContainers: [] });
+      });
 
-    it("returns nothing if type registration does not list anything", () => {
-      const store = graph();
+      it("if type registration does not list anything", () => {
+        const store = graph();
 
-      parse(
-        `
+        parse(
+          `
       @prefix : <#>.
       @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
       @prefix solid: <http://www.w3.org/ns/solid/terms#>.
@@ -67,25 +68,26 @@ describe("TypeIndexQuery", () => {
          solid:forClass vcard:AddressBook .
       
       `,
-        store,
-        "https://pod.test/alice/setting/publicTypeIndex.ttl",
-      );
+          store,
+          "https://pod.test/alice/setting/publicTypeIndex.ttl",
+        );
 
-      const query = new TypeIndexQuery(
-        store,
-        sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
-      );
-      const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
-      expect(result).toEqual({
-        instances: [],
+        const query = new TypeIndexQuery(
+          store,
+          sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
+        );
+        const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
+        expect(result).toEqual({
+          instances: [],
+          instanceContainers: [],
+        });
       });
-    });
 
-    it("returns nothing if registration is for wrong class", () => {
-      const store = graph();
+      it("if registration is for wrong class", () => {
+        const store = graph();
 
-      parse(
-        `
+        parse(
+          `
       @prefix : <#>.
       @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
       @prefix solid: <http://www.w3.org/ns/solid/terms#>.
@@ -93,20 +95,23 @@ describe("TypeIndexQuery", () => {
       :registration-1 a solid:TypeRegistration ;
          solid:forClass :Anything ;
          solid:instance <https://pod.test/alice/contacts/1/index.ttl#this>, <https://pod.test/alice/contacts/2/index.ttl#this> ;
+         solid:instanceContainer <https://pod.test/alice/contacts/> ;
          .
       
       `,
-        store,
-        "https://pod.test/alice/setting/publicTypeIndex.ttl",
-      );
+          store,
+          "https://pod.test/alice/setting/publicTypeIndex.ttl",
+        );
 
-      const query = new TypeIndexQuery(
-        store,
-        sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
-      );
-      const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
-      expect(result).toEqual({
-        instances: [],
+        const query = new TypeIndexQuery(
+          store,
+          sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
+        );
+        const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
+        expect(result).toEqual({
+          instances: [],
+          instanceContainers: [],
+        });
       });
     });
 
@@ -140,6 +145,7 @@ describe("TypeIndexQuery", () => {
           "https://pod.test/alice/contacts/1/index.ttl#this",
           "https://pod.test/alice/contacts/2/index.ttl#this",
         ],
+        instanceContainers: [],
       });
     });
 
@@ -172,6 +178,7 @@ describe("TypeIndexQuery", () => {
           "https://pod.test/alice/contacts/1/index.ttl#this",
           "https://pod.test/alice/contacts/2/index.ttl#this",
         ],
+        instanceContainers: [],
       });
     });
 
@@ -212,11 +219,12 @@ describe("TypeIndexQuery", () => {
           "https://pod.test/alice/contacts/1/index.ttl#this",
           "https://pod.test/alice/contacts/2/index.ttl#this",
         ],
+        instanceContainers: [],
       });
     });
 
     describe("use correct source documents", () => {
-      it("returns no instances from a wrong document", () => {
+      it("returns no instances or containers from a wrong document", () => {
         const store = graph();
 
         parse(
@@ -228,6 +236,7 @@ describe("TypeIndexQuery", () => {
       <https://pod.test/alice/setting/publicTypeIndex.ttl#registration-1> a solid:TypeRegistration ;
          solid:forClass vcard:AddressBook ;
          solid:instance <https://pod.test/alice/contacts/3/index.ttl#this>, <https://pod.test/alice/contacts/4/index.ttl#this> ;
+         solid:instanceContainer <https://pod.test/alice/wrong-contacts/> ;
          .
       
       `,
@@ -261,6 +270,7 @@ describe("TypeIndexQuery", () => {
             "https://pod.test/alice/contacts/1/index.ttl#this",
             "https://pod.test/alice/contacts/2/index.ttl#this",
           ],
+          instanceContainers: [],
         });
       });
 
@@ -301,7 +311,7 @@ describe("TypeIndexQuery", () => {
           sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
         );
         const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
-        expect(result).toEqual({ instances: [] });
+        expect(result).toEqual({ instances: [], instanceContainers: [] });
       });
     });
   });

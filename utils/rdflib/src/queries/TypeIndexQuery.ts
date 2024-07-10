@@ -38,6 +38,7 @@ export class TypeIndexQuery {
     });
     return {
       instances,
+      instanceContainers: [],
     };
   }
 }
