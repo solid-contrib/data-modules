@@ -37,6 +37,7 @@ export class TypeIndexQuery {
     );
     return registrations
       .filter((it) => isNamedNode(it))
+      .map((it) => it as NamedNode)
       .map((registration: NamedNode) => {
         return {
           instances: this.getValuesOf("instance", registration),
