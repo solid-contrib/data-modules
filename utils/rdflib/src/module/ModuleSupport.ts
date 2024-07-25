@@ -39,6 +39,11 @@ export class ModuleSupport {
     return Promise.all(nodes.map((it) => this.fetchNode(it)));
   }
 
+  /**
+   * Discover storage locations (instances or instance containers) for a given type by fetching and querying private and public type indexes
+   * @param webId - The WebID to search for type indexes
+   * @param typeNode - a NamedNode representing the type to discover
+   */
   async discoverType(
     webId: NamedNode,
     typeNode: NamedNode,

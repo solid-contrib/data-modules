@@ -12,11 +12,17 @@ export interface ModuleConfig {
   updater: UpdateManager;
 }
 
+/**
+ * Lists instances and containers found in a type index
+ */
 export interface TypeRegistrations {
   instanceContainers: NamedNode[];
   instances: NamedNode[];
 }
 
+/**
+ * Type registrations grouped by whether they have been discovered in private or public type index.
+ */
 export interface TypeRegistrationsByVisibility {
   public: TypeRegistrations;
   private: TypeRegistrations;
