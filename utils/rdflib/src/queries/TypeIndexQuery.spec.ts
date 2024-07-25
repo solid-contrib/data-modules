@@ -35,9 +35,9 @@ describe("TypeIndexQuery", () => {
       );
       const result = query.queryInstancesForClass(VCARD_ADDRESS_BOOK);
       expect(result).toEqual([
-        "https://pod.test/alice/contacts/1/index.ttl#this",
-        "https://pod.test/alice/contacts/2/index.ttl#this",
-        "https://pod.test/alice/contacts/3/index.ttl#this",
+        sym("https://pod.test/alice/contacts/1/index.ttl#this"),
+        sym("https://pod.test/alice/contacts/2/index.ttl#this"),
+        sym("https://pod.test/alice/contacts/3/index.ttl#this"),
       ]);
     });
   });
@@ -142,8 +142,8 @@ describe("TypeIndexQuery", () => {
       const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
       expect(result).toEqual({
         instances: [
-          "https://pod.test/alice/contacts/1/index.ttl#this",
-          "https://pod.test/alice/contacts/2/index.ttl#this",
+          sym("https://pod.test/alice/contacts/1/index.ttl#this"),
+          sym("https://pod.test/alice/contacts/2/index.ttl#this"),
         ],
         instanceContainers: [],
       });
@@ -175,9 +175,40 @@ describe("TypeIndexQuery", () => {
       const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
       expect(result).toEqual({
         instances: [
-          "https://pod.test/alice/contacts/1/index.ttl#this",
-          "https://pod.test/alice/contacts/2/index.ttl#this",
+          sym("https://pod.test/alice/contacts/1/index.ttl#this"),
+          sym("https://pod.test/alice/contacts/2/index.ttl#this"),
         ],
+        instanceContainers: [],
+      });
+    });
+
+    it("does not return instances or containers that are not a named node", () => {
+      const store = graph();
+
+      parse(
+        `
+      @prefix : <#>.
+      @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+      @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+      
+      :registration-1 a solid:TypeRegistration ;
+         solid:forClass vcard:AddressBook ;
+         solid:instanceContainer "literal" ;
+         solid:instance "literal" ;
+         .
+      
+      `,
+        store,
+        "https://pod.test/alice/setting/publicTypeIndex.ttl",
+      );
+
+      const query = new TypeIndexQuery(
+        store,
+        sym("https://pod.test/alice/setting/publicTypeIndex.ttl"),
+      );
+      const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
+      expect(result).toEqual({
+        instances: [],
         instanceContainers: [],
       });
     });
@@ -209,8 +240,8 @@ describe("TypeIndexQuery", () => {
       expect(result).toEqual({
         instances: [],
         instanceContainers: [
-          "https://pod.test/alice/contacts/",
-          "https://pod.test/alice/address-books/",
+          sym("https://pod.test/alice/contacts/"),
+          sym("https://pod.test/alice/address-books/"),
         ],
       });
     });
@@ -261,12 +292,12 @@ describe("TypeIndexQuery", () => {
       const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
       expect(result).toEqual({
         instances: [
-          "https://pod.test/alice/contacts/1/index.ttl#this",
-          "https://pod.test/alice/contacts/2/index.ttl#this",
+          sym("https://pod.test/alice/contacts/1/index.ttl#this"),
+          sym("https://pod.test/alice/contacts/2/index.ttl#this"),
         ],
         instanceContainers: [
-          "https://pod.test/alice/contacts-container-1/",
-          "https://pod.test/alice/contacts-container-2/",
+          sym("https://pod.test/alice/contacts-container-1/"),
+          sym("https://pod.test/alice/contacts-container-2/"),
         ],
       });
     });
@@ -316,10 +347,12 @@ describe("TypeIndexQuery", () => {
         const result = query.queryRegistrationsForType(VCARD_ADDRESS_BOOK);
         expect(result).toEqual({
           instances: [
-            "https://pod.test/alice/contacts/1/index.ttl#this",
-            "https://pod.test/alice/contacts/2/index.ttl#this",
+            sym("https://pod.test/alice/contacts/1/index.ttl#this"),
+            sym("https://pod.test/alice/contacts/2/index.ttl#this"),
           ],
-          instanceContainers: ["https://pod.test/alice/contacts-container/"],
+          instanceContainers: [
+            sym("https://pod.test/alice/contacts-container/"),
+          ],
         });
       });
 

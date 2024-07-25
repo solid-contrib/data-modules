@@ -1,6 +1,11 @@
 import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
 import { solid } from "../namespaces/index.js";
 
+interface TypeRegistrations {
+  instanceContainers: NamedNode[];
+  instances: NamedNode[];
+}
+
 /**
  * Used query data from a type index document
  */
@@ -19,16 +24,17 @@ export class TypeIndexQuery {
     return this.queryRegistrationsForType(type).instances;
   }
 
-  private getValuesOf(
+  private getNamedNodes(
     which: "instance" | "instanceContainer",
     registration: NamedNode,
-  ) {
+  ): NamedNode[] {
     return this.store
       .each(registration, solid(which), null, this.typeIndexDoc)
-      .map((it) => it.value);
+      .filter(it => isNamedNode(it))
+      .map((it) => it as NamedNode);
   }
 
-  queryRegistrationsForType(type: NamedNode) {
+  queryRegistrationsForType(type: NamedNode): TypeRegistrations {
     const registrations = this.store.each(
       null,
       solid("forClass"),
@@ -40,8 +46,8 @@ export class TypeIndexQuery {
       .map((it) => it as NamedNode)
       .map((registration: NamedNode) => {
         return {
-          instances: this.getValuesOf("instance", registration),
-          instanceContainers: this.getValuesOf(
+          instances: this.getNamedNodes("instance", registration),
+          instanceContainers: this.getNamedNodes(
             "instanceContainer",
             registration,
           ),
