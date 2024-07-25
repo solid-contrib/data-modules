@@ -3,6 +3,8 @@
 @prefix bookm: <http://www.w3.org/2002/01/bookmark#>.
 
 <#Bookmark>
-    a              terms:TypeRegistration ;
-    terms:forClass bookm:Bookmark ;
-    terms:instance </alice/bookmarks/index.ttl> .
+    a                       terms:TypeRegistration ;
+    terms:forClass          bookm:Bookmark ;
+    terms:instance          </alice/bookmarks/index.ttl> ;
+    terms:instanceContainer </alice/bookmarks/> ;
+.
