@@ -1,11 +1,20 @@
-import { BookmarkStorage, BookmarksModule, CreateBookmarkCommand } from "../index.js";
+import {
+  BookmarksModule,
+  BookmarkStorage,
+  CreateBookmarkCommand,
+} from "../index.js";
 import { Fetcher, IndexedFormula, NamedNode, sym, UpdateManager } from "rdflib";
 import {
   createBookmarkWithinContainer,
-  createBookmarkWithinDocument
+  createBookmarkWithinDocument,
 } from "./update-operations/index.js";
-import { executeUpdate, ldp, ModuleSupport, rdf } from "@solid-data-modules/rdflib-utils";
-import { bookm } from "./namespaces";
+import {
+  executeUpdate,
+  ldp,
+  ModuleSupport,
+  rdf,
+} from "@solid-data-modules/rdflib-utils";
+import { bookm } from "./namespaces.js";
 
 const BOOKM_BOOKMARK = bookm("Bookmark") as NamedNode;
 
@@ -29,18 +38,21 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
   }
 
   async discoverStorage(webId: string): Promise<BookmarkStorage> {
-    const registrations = await this.support.discoverType(sym(webId), BOOKM_BOOKMARK);
-        return {
-          private: {
-            documentUrls: [],
-            containerUrls: registrations.private.instanceContainers.map(it => it.uri)
-          },
-          public: {
-            documentUrls: registrations.public.instances.map(it => it.uri),
-            containerUrls: []
-          },
-        }
-    }
+    const registrations = await this.support.discoverType(
+      sym(webId),
+      BOOKM_BOOKMARK,
+    );
+    return {
+      private: {
+        documentUrls: urisOf(registrations.private.instances),
+        containerUrls: urisOf(registrations.private.instanceContainers),
+      },
+      public: {
+        documentUrls: urisOf(registrations.public.instances),
+        containerUrls: urisOf(registrations.public.instanceContainers),
+      },
+    };
+  }
 
   async createBookmark({
     storageUrl,
@@ -63,4 +75,8 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
+}
+
+function urisOf(nodes: NamedNode[]) {
+  return nodes.map((it) => it.uri);
 }
