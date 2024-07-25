@@ -43,14 +43,14 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
       BOOKM_BOOKMARK,
     );
     return {
-      private: {
-        documentUrls: urisOf(registrations.private.instances),
-        containerUrls: urisOf(registrations.private.instanceContainers),
-      },
-      public: {
-        documentUrls: urisOf(registrations.public.instances),
-        containerUrls: urisOf(registrations.public.instanceContainers),
-      },
+      privateUrls: urisOf([
+        ...registrations.private.instances,
+        ...registrations.private.instanceContainers,
+      ]),
+      publicUrls: urisOf([
+        ...registrations.public.instances,
+        ...registrations.public.instanceContainers,
+      ]),
     };
   }
 

@@ -94,20 +94,16 @@ describe("discover storage", () => {
     );
 
     expect(result).toEqual({
-      private: {
-        containerUrls: ["https://pod.test/private/read-it-later/"],
-        documentUrls: [
-          "https://pod.test/alice/private/bookmarks.ttl",
-          "https://pod.test/alice/private/more-bookmarks",
-        ],
-      },
-      public: {
-        containerUrls: ["https://pod.test/alice/public/recommended-readings/"],
-        documentUrls: [
-          "https://pod.test/alice/public/bookmarks.ttl",
-          "https://pod.test/alice/public/more-bookmarks",
-        ],
-      },
+      privateUrls: [
+        "https://pod.test/alice/private/bookmarks.ttl",
+        "https://pod.test/alice/private/more-bookmarks",
+        "https://pod.test/private/read-it-later/",
+      ],
+      publicUrls: [
+        "https://pod.test/alice/public/bookmarks.ttl",
+        "https://pod.test/alice/public/more-bookmarks",
+        "https://pod.test/alice/public/recommended-readings/",
+      ],
     });
   });
 });

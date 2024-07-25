@@ -21,20 +21,6 @@ export interface CreateBookmarkCommand {
 }
 
 /**
- * URLs of potential bookmark storages (documents and/or containers)
- */
-export interface StorageLocations {
-  /**
-   * List of URLs pointing to documents containing bookmarks
-   */
-  documentUrls: string[];
-  /**
-   * List of URLs pointing to containers containing bookmarks
-   */
-  containerUrls: string[];
-}
-
-/**
  * Object describing potential storage locations for bookmarks.
  *
  */
@@ -42,11 +28,11 @@ export interface BookmarkStorage {
   /**
    * locations for personal use, not listed publicly
    */
-  private: StorageLocations;
+  privateUrls: string[];
   /**
    * Locations that can be discovered by the public
    */
-  public: StorageLocations;
+  publicUrls: string[];
 }
 
 export interface BookmarksModule {

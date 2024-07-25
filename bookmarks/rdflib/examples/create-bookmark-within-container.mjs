@@ -1,21 +1,15 @@
-import BookmarksModule from "../dist/index.js";
-import { Fetcher, graph, UpdateManager } from "rdflib";
+import BookmarksModule from '../dist/index.js';
+import {Fetcher, graph, UpdateManager} from "rdflib";
 
-const store = graph();
-const fetcher = new Fetcher(store);
-const updater = new UpdateManager(store);
-const bookmarks = new BookmarksModule({ store, fetcher, updater });
-
-const storages = await bookmarks.discoverStorage("http://localhost:3000/alice/profile/card#me");
-const privateContainerUrl = storages.private.containerUrls[0];
-if (!privateContainerUrl) {
-  throw new Error("there is no private container for bookmarks");
-}
+const store = graph()
+const fetcher = new Fetcher(store)
+const updater = new UpdateManager(store)
+const bookmarks = new BookmarksModule({store, fetcher, updater})
 
 const uri = await bookmarks.createBookmark({
-  storageUrl: privateContainerUrl,
+  storageUrl: "http://localhost:3000/alice/bookmarks/",
   title: "My favorite website",
   url: "https://favorite.example"
-});
+})
 
-console.log("new bookmark: " + uri);
+console.log("new bookmark: "  + uri)
