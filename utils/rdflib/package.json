@@ -1,6 +1,6 @@
 {
   "name": "@solid-data-modules/rdflib-utils",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Utility functions for the development of Solid Data Modules for RDFLib.js",
   "type": "module",
   "main": "dist/index.js",
