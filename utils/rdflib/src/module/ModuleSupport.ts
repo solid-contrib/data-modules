@@ -1,5 +1,5 @@
-import { Fetcher, IndexedFormula, Node, sym, UpdateManager } from "rdflib";
-import { fetchNode, ModuleConfig } from "../index.js";
+import { Fetcher, IndexedFormula, NamedNode, Node, sym, UpdateManager } from "rdflib";
+import { fetchNode, ModuleConfig, ProfileQuery, TypeIndexQuery, TypeRegistrationsByVisibility } from "../index.js";
 import { ldp, rdf } from "../namespaces/index.js";
 
 /**
@@ -30,6 +30,40 @@ export class ModuleSupport {
    */
   async fetchAll(nodes: (Node | null)[]) {
     return Promise.all(nodes.map((it) => this.fetchNode(it)));
+  }
+
+  async discoverType(
+    webId: NamedNode,
+    typeUri: NamedNode,
+  ): Promise<TypeRegistrationsByVisibility> {
+    // 1. fetch webId
+    //   2.1 query profile for public type index
+    //     3.1 fetch public type index
+    //       4.1 query registrations
+    //   2.2 query profile for settings document
+    //     3.2 fetch settings document
+    //       4.2 query settings document for private type index
+    //         5. fetch private type index
+    //           6. query registrations
+
+    // 1.
+    await this.fetchNode(webId);
+    // 2.1
+    const publicTypeIndex = new ProfileQuery(
+      webId,
+      this.store,
+    ).queryPublicTypeIndex();
+    // 3.1
+    await this.fetchNode(publicTypeIndex);
+    // 4.1
+    const publicRegistrations = new TypeIndexQuery(
+      this.store,
+      publicTypeIndex!,
+    ).queryRegistrationsForType(typeUri);
+    return {
+      private: { instanceContainers: [], instances: [] },
+      public: publicRegistrations,
+    };
   }
 
   /**

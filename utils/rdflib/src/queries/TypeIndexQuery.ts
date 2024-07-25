@@ -1,10 +1,6 @@
 import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
 import { solid } from "../namespaces/index.js";
-
-interface TypeRegistrations {
-  instanceContainers: NamedNode[];
-  instances: NamedNode[];
-}
+import { TypeRegistrations } from "../index";
 
 /**
  * Used query data from a type index document
@@ -30,7 +26,7 @@ export class TypeIndexQuery {
   ): NamedNode[] {
     return this.store
       .each(registration, solid(which), null, this.typeIndexDoc)
-      .filter(it => isNamedNode(it))
+      .filter((it) => isNamedNode(it))
       .map((it) => it as NamedNode);
   }
 
