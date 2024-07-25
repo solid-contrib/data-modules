@@ -1,5 +1,12 @@
 import { Fetcher, IndexedFormula, NamedNode, Node, sym, UpdateManager } from "rdflib";
-import { fetchNode, ModuleConfig, ProfileQuery, TypeIndexQuery, TypeRegistrationsByVisibility } from "../index.js";
+import {
+  fetchNode,
+  ModuleConfig,
+  PreferencesQuery,
+  ProfileQuery,
+  TypeIndexQuery,
+  TypeRegistrationsByVisibility
+} from "../index.js";
 import { ldp, rdf } from "../namespaces/index.js";
 
 /**
@@ -34,34 +41,55 @@ export class ModuleSupport {
 
   async discoverType(
     webId: NamedNode,
-    typeUri: NamedNode,
+    typeNode: NamedNode,
   ): Promise<TypeRegistrationsByVisibility> {
     // 1. fetch webId
     //   2.1 query profile for public type index
     //     3.1 fetch public type index
     //       4.1 query registrations
-    //   2.2 query profile for settings document
-    //     3.2 fetch settings document
+    //   2.2 query profile for preferences file
+    //     3.2 fetch preferences file
     //       4.2 query settings document for private type index
     //         5. fetch private type index
     //           6. query registrations
 
     // 1.
     await this.fetchNode(webId);
-    // 2.1
-    const publicTypeIndex = new ProfileQuery(
-      webId,
-      this.store,
-    ).queryPublicTypeIndex();
-    // 3.1
-    await this.fetchNode(publicTypeIndex);
+    // 2.
+    const profileQuery = new ProfileQuery(webId, this.store);
+    const publicTypeIndex = profileQuery.queryPublicTypeIndex();
+    const preferencesFile = profileQuery.queryPreferencesFile();
+    // 3.
+    await Promise.allSettled([
+      this.fetchNode(publicTypeIndex),
+      this.fetchNode(preferencesFile),
+    ]);
     // 4.1
-    const publicRegistrations = new TypeIndexQuery(
-      this.store,
-      publicTypeIndex!,
-    ).queryRegistrationsForType(typeUri);
+    const noRegistrations = { instances: [], instanceContainers: [] };
+    const publicRegistrations = publicTypeIndex
+      ? new TypeIndexQuery(
+          this.store,
+          publicTypeIndex,
+        ).queryRegistrationsForType(typeNode)
+      : noRegistrations;
+    // 4.2
+    const privateTypeIndex = preferencesFile
+      ? new PreferencesQuery(
+          this.store,
+          webId,
+          preferencesFile,
+        ).queryPrivateTypeIndex()
+      : null;
+    // 5.
+    await this.fetchNode(privateTypeIndex);
+    const privateRegistrations = privateTypeIndex
+      ? new TypeIndexQuery(
+          this.store,
+          privateTypeIndex,
+        ).queryRegistrationsForType(typeNode)
+      : noRegistrations;
     return {
-      private: { instanceContainers: [], instances: [] },
+      private: privateRegistrations,
       public: publicRegistrations,
     };
   }
