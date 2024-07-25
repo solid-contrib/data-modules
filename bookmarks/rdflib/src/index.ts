@@ -20,23 +20,51 @@ export interface CreateBookmarkCommand {
   url: string;
 }
 
-export interface BookmarksModule {
-  discoverStorage(webId: string): Promise<BookmarkStorage>;
-
-  createBookmark({
-                   storageUrl,
-                   title,
-                   url
-                 }: CreateBookmarkCommand): Promise<string>;
+/**
+ * URLs of potential bookmark storages (documents and/or containers)
+ */
+export interface StorageLocations {
+  /**
+   * List of URLs pointing to documents containing bookmarks
+   */
+  documentUrls: string[];
+  /**
+   * List of URLs pointing to containers containing bookmarks
+   */
+  containerUrls: string[];
 }
 
+/**
+ * Object describing potential storage locations for bookmarks.
+ *
+ */
 export interface BookmarkStorage {
-  private: {
-    documentUrls: string[],
-    containerUrls: string[]
-  },
-  public: {
-    documentUrls: string[],
-    containerUrls: string[]
-  }
+  /**
+   * locations for personal use, not listed publicly
+   */
+  private: StorageLocations;
+  /**
+   * Locations that can be discovered by the public
+   */
+  public: StorageLocations;
+}
+
+export interface BookmarksModule {
+  /**
+   * Discover configured storages for Bookmarks (containers and/or documents) from private and public type indexes of the given WebID
+   * @param webId - The WebID whose indexes to search
+   */
+  discoverStorage(webId: string): Promise<BookmarkStorage>;
+
+  /**
+   * Create a new bookmark at the given storage. Potential storage URLs can be discovered using {@link discoverStorage}.
+   * @param storageUrl
+   * @param title
+   * @param url
+   */
+  createBookmark({
+    storageUrl,
+    title,
+    url,
+  }: CreateBookmarkCommand): Promise<string>;
 }
