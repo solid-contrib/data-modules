@@ -21,9 +21,22 @@ export interface CreateBookmarkCommand {
 }
 
 export interface BookmarksModule {
+  discoverStorage(webId: string): Promise<BookmarkStorage>;
+
   createBookmark({
-    storageUrl,
-    title,
-    url,
-  }: CreateBookmarkCommand): Promise<string>;
+                   storageUrl,
+                   title,
+                   url
+                 }: CreateBookmarkCommand): Promise<string>;
+}
+
+export interface BookmarkStorage {
+  private: {
+    documentUrls: string[],
+    containerUrls: string[]
+  },
+  public: {
+    documentUrls: string[],
+    containerUrls: string[]
+  }
 }

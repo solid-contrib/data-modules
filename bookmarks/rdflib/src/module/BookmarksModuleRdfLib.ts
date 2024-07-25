@@ -1,8 +1,8 @@
-import { BookmarksModule, CreateBookmarkCommand } from "../index.js";
+import { BookmarkStorage, BookmarksModule, CreateBookmarkCommand } from "../index.js";
 import { Fetcher, IndexedFormula, sym, UpdateManager } from "rdflib";
 import {
   createBookmarkWithinContainer,
-  createBookmarkWithinDocument,
+  createBookmarkWithinDocument
 } from "./update-operations/index.js";
 import { executeUpdate, ldp, rdf } from "@solid-data-modules/rdflib-utils";
 
@@ -22,6 +22,19 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     this.fetcher = config.fetcher;
     this.updater = config.updater;
   }
+
+  async discoverStorage(webId: string): Promise<BookmarkStorage> {
+        return {
+          private: {
+            documentUrls: [],
+            containerUrls: []
+          },
+          public: {
+            documentUrls: [],
+            containerUrls: []
+          },
+        }
+    }
 
   async createBookmark({
     storageUrl,

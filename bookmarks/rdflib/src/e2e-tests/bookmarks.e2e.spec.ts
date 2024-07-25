@@ -1,6 +1,22 @@
 import { setupModule } from "../test-support/setupModule.js";
 
 describe("bookmarks", () => {
+
+  it("can discover bookmark storages", async () => {
+    const bookmarks = setupModule();
+    const result = await bookmarks.discoverStorage("http://localhost:3456/profile/card#me");
+    expect(result).toEqual({
+      private: {
+        documentUrls: [],
+        containerUrls: ["http://localhost:3456/bookmarks/"]
+      },
+      public: {
+        documentUrls: ["http://localhost:3456/public/bookmarks"],
+        containerUrls: []
+      },
+    })
+  });
+
   it("can create a new bookmark in a container", async () => {
     const bookmarks = setupModule();
     const uri = await bookmarks.createBookmark({
