@@ -1,6 +1,6 @@
 import { IndexedFormula, isNamedNode, NamedNode } from "rdflib";
 import { solid } from "../namespaces/index.js";
-import { TypeRegistrations } from "../index";
+import { TypeRegistrations } from "../index.js";
 
 /**
  * Used query data from a type index document
