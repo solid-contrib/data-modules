@@ -77,11 +77,12 @@ describe(BookmarkQuery.name, () => {
       ]);
     });
 
-    it("only returns bookmarks from the original document", () => {
-      const store = graph();
+    describe("data in wrong documents", () => {
+      it("only returns bookmarks from the original document", () => {
+        const store = graph();
 
-      parse(
-        `
+        parse(
+          `
         @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
         @prefix dct:   <http://purl.org/dc/terms/> .
         
@@ -90,12 +91,12 @@ describe(BookmarkQuery.name, () => {
              bookm:recalls <https://bookmarked-url-1.test> .
         
       `,
-        store,
-        "https://pod.test/bookmarks.ttl",
-      );
+          store,
+          "https://pod.test/bookmarks.ttl",
+        );
 
-      parse(
-        `
+        parse(
+          `
         @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
         @prefix dct:   <http://purl.org/dc/terms/> .
         
@@ -103,28 +104,28 @@ describe(BookmarkQuery.name, () => {
              dct:title     "Bookmark 2" ;
              bookm:recalls <https://bookmarked-url-2.test> .
       `,
-        store,
-        "https://pod.test/wrong-document.ttl",
-      );
+          store,
+          "https://pod.test/wrong-document.ttl",
+        );
 
-      const result = new BookmarkQuery(
-        sym("https://pod.test/bookmarks.ttl"),
-        store,
-      ).queryBookmarks();
-      expect(result).toEqual([
-        {
-          uri: "https://pod.test/bookmarks.ttl#1",
-          title: "Bookmark 1",
-          bookmarkedUrl: "https://bookmarked-url-1.test",
-        },
-      ]);
-    });
+        const result = new BookmarkQuery(
+          sym("https://pod.test/bookmarks.ttl"),
+          store,
+        ).queryBookmarks();
+        expect(result).toEqual([
+          {
+            uri: "https://pod.test/bookmarks.ttl#1",
+            title: "Bookmark 1",
+            bookmarkedUrl: "https://bookmarked-url-1.test",
+          },
+        ]);
+      });
 
-    it("only returns data from the original document", () => {
-      const store = graph();
+      it("only returns data from the original document", () => {
+        const store = graph();
 
-      parse(
-        `
+        parse(
+          `
         @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
         @prefix dct:   <http://purl.org/dc/terms/> .
         
@@ -132,12 +133,12 @@ describe(BookmarkQuery.name, () => {
              
         
       `,
-        store,
-        "https://pod.test/bookmarks.ttl",
-      );
+          store,
+          "https://pod.test/bookmarks.ttl",
+        );
 
-      parse(
-        `
+        parse(
+          `
         @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
         @prefix dct:   <http://purl.org/dc/terms/> .
         
@@ -145,21 +146,56 @@ describe(BookmarkQuery.name, () => {
              dct:title     "Wrong Title" ;
              bookm:recalls <https://wrong-url.test> .
       `,
-        store,
-        "https://pod.test/fake-document.ttl",
-      );
+          store,
+          "https://pod.test/fake-document.ttl",
+        );
 
-      const result = new BookmarkQuery(
-        sym("https://pod.test/bookmarks.ttl"),
-        store,
-      ).queryBookmarks();
-      expect(result).toEqual([
-        {
-          uri: "https://pod.test/bookmarks.ttl#1",
-          title: "",
-          bookmarkedUrl: "",
-        },
-      ]);
+        const result = new BookmarkQuery(
+          sym("https://pod.test/bookmarks.ttl"),
+          store,
+        ).queryBookmarks();
+        expect(result).toEqual([]);
+      });
+    });
+    describe("invalid bookmarks", () => {
+      it("ignores bookmark without a title", () => {
+        const store = graph();
+        parse(
+          `
+      @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
+      @prefix dct:   <http://purl.org/dc/terms/> .
+      
+      <#1> a             bookm:Bookmark ;
+           bookm:recalls <https://no-title.test> .
+      `,
+          store,
+          "https://pod.test/bookmarks.ttl",
+        );
+        const result = new BookmarkQuery(
+          sym("https://pod.test/bookmarks.ttl"),
+          store,
+        ).queryBookmarks();
+        expect(result).toEqual([]);
+      });
+      it("ignores bookmark without a url", () => {
+        const store = graph();
+        parse(
+          `
+      @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
+      @prefix dct:   <http://purl.org/dc/terms/> .
+      
+      <#1> a             bookm:Bookmark ;
+           dct:title     "Title Only" .
+      `,
+          store,
+          "https://pod.test/bookmarks.ttl",
+        );
+        const result = new BookmarkQuery(
+          sym("https://pod.test/bookmarks.ttl"),
+          store,
+        ).queryBookmarks();
+        expect(result).toEqual([]);
+      });
     });
   });
 });

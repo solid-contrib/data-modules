@@ -25,17 +25,24 @@ export class BookmarkQuery {
           undefined,
           this.bookmarkDoc,
         );
+        if (!title) return null;
         const bookmarkedUrl = this.store.anyValue(
           it,
           bookm("recalls"),
           undefined,
           this.bookmarkDoc,
         );
+        if (!bookmarkedUrl) return null;
         return {
           uri: it.uri,
-          title: title ?? "",
-          bookmarkedUrl: bookmarkedUrl ?? "",
+          title,
+          bookmarkedUrl: bookmarkedUrl,
         };
-      });
+      })
+      .filter(nonNull);
   }
+}
+
+function nonNull<T>(value: T | null): value is T {
+  return value !== null;
 }
