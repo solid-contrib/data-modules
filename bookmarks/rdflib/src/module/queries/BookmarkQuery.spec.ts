@@ -1,7 +1,5 @@
 import { BookmarkQuery } from "./BookmarkQuery";
-import { graph, lit, sym } from "rdflib";
-import { bookm, dct } from "../namespaces";
-import { rdf } from "@solid-data-modules/rdflib-utils";
+import { graph, parse, sym } from "rdflib";
 
 describe(BookmarkQuery.name, () => {
   describe("queryBookmarks", () => {
@@ -16,23 +14,17 @@ describe(BookmarkQuery.name, () => {
 
     it("returns a single bookmark", () => {
       const store = graph();
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#1"),
-        rdf("type"),
-        bookm("Bookmark"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#1"),
-        dct("title"),
-        lit("Bookmark Title"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#1"),
-        bookm("recalls"),
-        sym("https://bookmarked-url.test"),
-        sym("https://pod.test/bookmarks.ttl"),
+      parse(
+        `
+      @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
+      @prefix dct:   <http://purl.org/dc/terms/> .
+      
+      <#1> a             bookm:Bookmark ;
+           dct:title     "Bookmark Title" ;
+           bookm:recalls <https://bookmarked-url.test> .
+      `,
+        store,
+        "https://pod.test/bookmarks.ttl",
       );
       const result = new BookmarkQuery(
         sym("https://pod.test/bookmarks.ttl"),
@@ -49,42 +41,24 @@ describe(BookmarkQuery.name, () => {
 
     it("returns multiple bookmarks", () => {
       const store = graph();
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#1"),
-        rdf("type"),
-        bookm("Bookmark"),
-        sym("https://pod.test/bookmarks.ttl"),
+
+      parse(
+        `
+        @prefix bookm: <http://www.w3.org/2002/01/bookmark#> .
+        @prefix dct:   <http://purl.org/dc/terms/> .
+        
+        <#1> a             bookm:Bookmark ;
+             dct:title     "Bookmark 1" ;
+             bookm:recalls <https://bookmarked-url-1.test> .
+        
+        <#2> a             bookm:Bookmark ;
+             dct:title     "Bookmark 2" ;
+             bookm:recalls <https://bookmarked-url-2.test> .
+      `,
+        store,
+        "https://pod.test/bookmarks.ttl",
       );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#1"),
-        dct("title"),
-        lit("Bookmark 1"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#1"),
-        bookm("recalls"),
-        sym("https://bookmarked-url-1.test"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#2"),
-        rdf("type"),
-        bookm("Bookmark"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#2"),
-        dct("title"),
-        lit("Bookmark 2"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
-      store.add(
-        sym("https://pod.test/bookmarks.ttl#2"),
-        bookm("recalls"),
-        sym("https://bookmarked-url-2.test"),
-        sym("https://pod.test/bookmarks.ttl"),
-      );
+
       const result = new BookmarkQuery(
         sym("https://pod.test/bookmarks.ttl"),
         store,
