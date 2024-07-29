@@ -14,12 +14,23 @@ export class BookmarkQuery {
       undefined,
       rdf("type"),
       bookm("Bookmark"),
+      this.bookmarkDoc,
     );
     return bookmarks
       .map((it) => it as NamedNode)
       .map((it) => {
-        const title = this.store.anyValue(it, dct("title"));
-        const bookmarkedUrl = this.store.anyValue(it, bookm("recalls"));
+        const title = this.store.anyValue(
+          it,
+          dct("title"),
+          undefined,
+          this.bookmarkDoc,
+        );
+        const bookmarkedUrl = this.store.anyValue(
+          it,
+          bookm("recalls"),
+          undefined,
+          this.bookmarkDoc,
+        );
         return {
           uri: it.uri,
           title: title ?? "",
