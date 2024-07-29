@@ -1,15 +1,13 @@
-import { BookmarksModuleRdfLib } from "../BookmarksModuleRdfLib";
-
 import {
   expectPatchRequest,
   mockLdpContainer,
   mockNotFound,
   mockTurtleDocument,
 } from "@solid-data-modules/rdflib-utils/test-support";
-import { Fetcher, graph, UpdateManager } from "rdflib";
 
 import { when } from "jest-when";
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
+import { setupModule } from "../../test-support/setupModule";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
@@ -21,16 +19,7 @@ describe("create bookmark", () => {
 
     jest.useFakeTimers().setSystemTime(new Date("2024-01-02T03:04:05.678Z"));
 
-    const store = graph();
-    const fetcher = new Fetcher(store, {
-      fetch: authenticatedFetch,
-    });
-    const updater = new UpdateManager(store);
-    const bookmarks = new BookmarksModuleRdfLib({
-      store,
-      fetcher,
-      updater,
-    });
+    const bookmarks = setupModule(authenticatedFetch);
 
     mockLdpContainer(authenticatedFetch, "https://pod.test/alice/bookmarks/");
 
@@ -70,16 +59,7 @@ _:patch
 
     jest.useFakeTimers().setSystemTime(new Date("2024-01-02T03:04:05.678Z"));
 
-    const store = graph();
-    const fetcher = new Fetcher(store, {
-      fetch: authenticatedFetch,
-    });
-    const updater = new UpdateManager(store);
-    const bookmarks = new BookmarksModuleRdfLib({
-      store,
-      fetcher,
-      updater,
-    });
+    const bookmarks = setupModule(authenticatedFetch);
 
     mockTurtleDocument(
       authenticatedFetch,

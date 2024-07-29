@@ -39,7 +39,18 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
   }
 
   async listBookmarks(storageUrl: string): Promise<Bookmark[]> {
-    return [];
+    return [
+      {
+        uri: "https://pod.test/alice/bookmarks.ttl#1",
+        title: "Bookmark One",
+        bookmarkedUrl: "https://one.test",
+      },
+      {
+        uri: "https://pod.test/alice/bookmarks.ttl#2",
+        title: "Bookmark Two",
+        bookmarkedUrl: "https://two.test",
+      },
+    ];
   }
 
   async discoverStorage(webId: string): Promise<BookmarkStorage> {
