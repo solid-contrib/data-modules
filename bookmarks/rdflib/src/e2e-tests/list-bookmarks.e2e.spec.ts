@@ -18,4 +18,22 @@ describe("list bookmarks", () => {
     });
     expect(result).toHaveLength(2);
   });
+
+  it("lists all bookmarks in a container", async () => {
+    const bookmarks = setupModule();
+    const result = await bookmarks.listBookmarks(
+      "http://localhost:3456/bookmarks/",
+    );
+    expect(result).toContainEqual({
+      uri: "http://localhost:3456/bookmarks/7I6dK9#it",
+      title: "Some Bookmark",
+      bookmarkedUrl: "https://nice-page.example",
+    });
+    expect(result).toContainEqual({
+      uri: "http://localhost:3456/bookmarks/8beCSQ#it",
+      title: "Existing bookmark",
+      bookmarkedUrl: "https://existing-bookmark.example",
+    });
+    expect(result).toHaveLength(2);
+  });
 });
