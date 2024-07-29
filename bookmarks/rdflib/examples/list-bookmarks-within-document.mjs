@@ -8,4 +8,4 @@ const bookmarks = new BookmarksModule({ store, fetcher, updater });
 
 const result = await bookmarks.listBookmarks("http://localhost:3000/alice/public/bookmarks");
 
-console.log("bookmarks: ", result);
+console.table(result);
