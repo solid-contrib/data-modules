@@ -1,4 +1,5 @@
 import {
+  Bookmark,
   BookmarksModule,
   BookmarkStorage,
   CreateBookmarkCommand,
@@ -9,12 +10,14 @@ import {
   createBookmarkWithinDocument,
 } from "./update-operations/index.js";
 import {
+  ContainerQuery,
   executeUpdate,
   ldp,
   ModuleSupport,
   rdf,
 } from "@solid-data-modules/rdflib-utils";
 import { bookm } from "./namespaces.js";
+import { BookmarkQuery } from "./queries/index.js";
 
 const BOOKM_BOOKMARK = bookm("Bookmark") as NamedNode;
 
@@ -35,6 +38,23 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     this.fetcher = config.fetcher;
     this.updater = config.updater;
     this.support = new ModuleSupport(config);
+  }
+
+  async listBookmarks(storageUrl: string): Promise<Bookmark[]> {
+    if (await this.support.isContainer(storageUrl)) {
+      const containerNode = sym(storageUrl);
+      const contents = new ContainerQuery(
+        containerNode,
+        this.store,
+      ).queryContents();
+      await this.support.fetchAll(contents);
+      return contents.flatMap((document) =>
+        new BookmarkQuery(document, this.store).queryBookmarks(),
+      );
+    } else {
+      const bookmarkDoc = sym(storageUrl);
+      return new BookmarkQuery(bookmarkDoc, this.store).queryBookmarks();
+    }
   }
 
   async discoverStorage(webId: string): Promise<BookmarkStorage> {

@@ -1,7 +1,5 @@
-import { BookmarksModuleRdfLib } from "../BookmarksModuleRdfLib";
-
 import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
-import { Fetcher, graph, UpdateManager } from "rdflib";
+import { setupModule } from "../../test-support/setupModule";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
@@ -9,16 +7,7 @@ describe("discover storage", () => {
   it("discovers all documents and containers", async () => {
     const authenticatedFetch = jest.fn();
 
-    const store = graph();
-    const fetcher = new Fetcher(store, {
-      fetch: authenticatedFetch,
-    });
-    const updater = new UpdateManager(store);
-    const bookmarks = new BookmarksModuleRdfLib({
-      store,
-      fetcher,
-      updater,
-    });
+    const bookmarks = setupModule(authenticatedFetch);
 
     mockTurtleDocument(
       authenticatedFetch,
