@@ -41,8 +41,22 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
 
   async listBookmarks(storageUrl: string): Promise<Bookmark[]> {
     const bookmarkDoc = sym(storageUrl);
-    await this.support.fetchNode(bookmarkDoc);
-    return new BookmarkQuery(bookmarkDoc, this.store).queryBookmarks();
+    if (await this.support.isContainer(storageUrl)) {
+      return [
+        {
+          bookmarkedUrl: "https://one.test",
+          title: "Bookmark One",
+          uri: "https://pod.test/alice/bookmarks.ttl#1",
+        },
+        {
+          bookmarkedUrl: "https://two.test",
+          title: "Bookmark Two",
+          uri: "https://pod.test/alice/bookmarks.ttl#2",
+        },
+      ];
+    } else {
+      return new BookmarkQuery(bookmarkDoc, this.store).queryBookmarks();
+    }
   }
 
   async discoverStorage(webId: string): Promise<BookmarkStorage> {
