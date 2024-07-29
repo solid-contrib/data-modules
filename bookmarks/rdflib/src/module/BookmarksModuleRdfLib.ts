@@ -1,4 +1,5 @@
 import {
+  Bookmark,
   BookmarksModule,
   BookmarkStorage,
   CreateBookmarkCommand,
@@ -35,6 +36,10 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     this.fetcher = config.fetcher;
     this.updater = config.updater;
     this.support = new ModuleSupport(config);
+  }
+
+  async listBookmarks(storageUrl: string): Promise<Bookmark[]> {
+    return [];
   }
 
   async discoverStorage(webId: string): Promise<BookmarkStorage> {
