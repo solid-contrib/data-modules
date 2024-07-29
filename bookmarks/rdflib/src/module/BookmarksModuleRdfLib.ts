@@ -16,6 +16,7 @@ import {
   rdf,
 } from "@solid-data-modules/rdflib-utils";
 import { bookm } from "./namespaces.js";
+import { BookmarkQuery } from "./queries/index.js";
 
 const BOOKM_BOOKMARK = bookm("Bookmark") as NamedNode;
 
@@ -39,18 +40,9 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
   }
 
   async listBookmarks(storageUrl: string): Promise<Bookmark[]> {
-    return [
-      {
-        uri: "https://pod.test/alice/bookmarks.ttl#1",
-        title: "Bookmark One",
-        bookmarkedUrl: "https://one.test",
-      },
-      {
-        uri: "https://pod.test/alice/bookmarks.ttl#2",
-        title: "Bookmark Two",
-        bookmarkedUrl: "https://two.test",
-      },
-    ];
+    const bookmarkDoc = sym(storageUrl);
+    await this.support.fetchNode(bookmarkDoc);
+    return new BookmarkQuery(bookmarkDoc, this.store).queryBookmarks();
   }
 
   async discoverStorage(webId: string): Promise<BookmarkStorage> {

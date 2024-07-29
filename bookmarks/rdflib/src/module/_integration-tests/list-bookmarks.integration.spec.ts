@@ -24,7 +24,7 @@ describe("list bookmarks", () => {
           <#2>
               a             bookm:Bookmark ;
               terms:title   "Bookmark Two" ;
-              bookm:recalls <https://two.test> .
+              bookm:recalls <https://two.test> . 
     `,
     );
 
