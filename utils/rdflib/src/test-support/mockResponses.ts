@@ -27,8 +27,13 @@ export function mockTurtleDocument(fetch: jest.Mock, url: string, ttl: string) {
  * Mock a LDP container at the given URL
  * @param fetch - A mocked fetch function
  * @param url - The URL to mock
+ * @param contains - List of URLs of documents contained in this container
  */
-export function mockLdpContainer(fetch: jest.Mock, url: string) {
+export function mockLdpContainer(
+  fetch: jest.Mock,
+  url: string,
+  contains: string[] = [],
+) {
   when(fetch)
     .calledWith(url, expect.anything())
     .mockResolvedValue({
@@ -47,7 +52,9 @@ export function mockLdpContainer(fetch: jest.Mock, url: string) {
       @prefix ldp: <http://www.w3.org/ns/ldp#>.
       @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
       
-      <> a ldp:Container, ldp:BasicContainer, ldp:Resource .
+      <> a ldp:Container, ldp:BasicContainer, ldp:Resource ;
+        ${contains.map((it) => `ldp:contains <${it}>`).join("; ")}
+      .
 `),
     } as Response);
 }
