@@ -22,7 +22,6 @@ export interface CreateBookmarkCommand {
 
 /**
  * Object describing potential storage locations for bookmarks.
- *
  */
 export interface BookmarkStorage {
   /**
@@ -35,6 +34,9 @@ export interface BookmarkStorage {
   publicUrls: string[];
 }
 
+/**
+ * A bookmark stored in a Pod
+ */
 export interface Bookmark {
   /**
    * ID of the bookmark
@@ -57,6 +59,10 @@ export interface BookmarksModule {
    */
   discoverStorage(webId: string): Promise<BookmarkStorage>;
 
+  /**
+   * List all bookmarks stored at the given location
+   * @param storageUrl - The URL of the container or document to look into for bookmarks
+   */
   listBookmarks(storageUrl: string): Promise<Bookmark[]>;
 
   /**

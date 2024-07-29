@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - [discoverStorage](https://solid-contrib.github.io/data-modules/bookmarks-rdflib-api/interfaces/BookmarksModule.html#discoverStorage)
+- [listBookmarks](https://solid-contrib.github.io/data-modules/bookmarks-rdflib-api/interfaces/BookmarksModule.html#listBookmarks)
 
 ## 0.1.0
 
