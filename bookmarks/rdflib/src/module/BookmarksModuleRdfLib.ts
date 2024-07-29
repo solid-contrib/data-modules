@@ -10,6 +10,7 @@ import {
   createBookmarkWithinDocument,
 } from "./update-operations/index.js";
 import {
+  ContainerQuery,
   executeUpdate,
   ldp,
   ModuleSupport,
@@ -40,21 +41,18 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
   }
 
   async listBookmarks(storageUrl: string): Promise<Bookmark[]> {
-    const bookmarkDoc = sym(storageUrl);
     if (await this.support.isContainer(storageUrl)) {
-      return [
-        {
-          bookmarkedUrl: "https://one.test",
-          title: "Bookmark One",
-          uri: "https://pod.test/alice/bookmarks.ttl#1",
-        },
-        {
-          bookmarkedUrl: "https://two.test",
-          title: "Bookmark Two",
-          uri: "https://pod.test/alice/bookmarks.ttl#2",
-        },
-      ];
+      const containerNode = sym(storageUrl);
+      const contents = new ContainerQuery(
+        containerNode,
+        this.store,
+      ).queryContents();
+      await this.support.fetchAll(contents);
+      return contents.flatMap((document) =>
+        new BookmarkQuery(document, this.store).queryBookmarks(),
+      );
     } else {
+      const bookmarkDoc = sym(storageUrl);
       return new BookmarkQuery(bookmarkDoc, this.store).queryBookmarks();
     }
   }
