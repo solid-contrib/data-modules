@@ -38,4 +38,35 @@ describe("update bookmark", () => {
       bookmarkedUrl: "https://old-site.example",
     });
   });
+
+  it("delete a bookmark", async () => {
+    const bookmarks = setupModule();
+
+    // given a storage containing a bookmark
+    const oldList = await bookmarks.listBookmarks(
+      "http://localhost:3456/public/edit-bookmarks",
+    );
+    expect(oldList).toContainEqual({
+      uri: "http://localhost:3456/public/edit-bookmarks#eb282827",
+      title: "Delete me",
+      bookmarkedUrl: "https://soon-gone.example",
+    });
+
+    // when the bookmark is deleted
+    await bookmarks.deleteBookmark(
+      "http://localhost:3456/public/edit-bookmarks#eb282827",
+    );
+
+    // then the storage does not contain this bookmark anymore
+    const newList = await bookmarks.listBookmarks(
+      "http://localhost:3456/public/edit-bookmarks",
+    );
+
+    // and the old values are gone
+    expect(newList).not.toContainEqual(
+      expect.objectContaining({
+        uri: "http://localhost:3456/public/edit-bookmarks#eb282827",
+      }),
+    );
+  });
 });

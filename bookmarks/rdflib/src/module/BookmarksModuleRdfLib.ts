@@ -109,6 +109,8 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     );
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  async deleteBookmark(bookmarkUri: string): Promise<void> {}
 }
 
 function urisOf(nodes: NamedNode[]) {
