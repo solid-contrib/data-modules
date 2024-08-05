@@ -21,6 +21,25 @@ export interface CreateBookmarkCommand {
 }
 
 /**
+ * Data needed to update a bookmark
+ */
+export interface UpdateBookmarkCommand {
+  /**
+   * The URI of the bookmark resource to update
+   */
+  uri: string;
+
+  /**
+   * The new human-readable title of the bookmark
+   */
+  newTitle: string | undefined;
+  /**
+   * The new URL the bookmark refers to
+   */
+  newUrl: string | undefined;
+}
+
+/**
  * Object describing potential storage locations for bookmarks.
  */
 export interface BookmarkStorage {

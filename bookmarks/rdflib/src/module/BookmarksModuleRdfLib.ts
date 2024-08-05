@@ -3,6 +3,7 @@ import {
   BookmarksModule,
   BookmarkStorage,
   CreateBookmarkCommand,
+  UpdateBookmarkCommand,
 } from "../index.js";
 import { Fetcher, IndexedFormula, NamedNode, sym, UpdateManager } from "rdflib";
 import {
@@ -95,6 +96,8 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     await executeUpdate(this.fetcher, this.updater, operation);
     return operation.uri;
   }
+
+  async updateBookmark({ uri, newUrl, newTitle }: UpdateBookmarkCommand) {}
 }
 
 function urisOf(nodes: NamedNode[]) {
