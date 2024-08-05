@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - [updateBookmark](https://solid-contrib.github.io/data-modules/bookmarks-rdflib-api/interfaces/BookmarksModule.html#updateBookmark)
+- [deleteBookmark](https://solid-contrib.github.io/data-modules/bookmarks-rdflib-api/interfaces/BookmarksModule.html#deleteBookmark)
 
 ## 0.2.0
 
