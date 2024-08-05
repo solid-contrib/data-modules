@@ -95,4 +95,10 @@ export interface BookmarksModule {
    * @param command
    */
   updateBookmark(command: UpdateBookmarkCommand): Promise<void>;
+
+  /**
+   * Deletes the given bookmark
+   * @param bookmarkUri - The URI of the bookmark resource to delete
+   */
+  deleteBookmark(bookmarkUri: string): Promise<void>;
 }
