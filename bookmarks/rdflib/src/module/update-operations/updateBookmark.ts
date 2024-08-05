@@ -9,6 +9,19 @@ export function updateBookmark(
   newUrl?: string,
 ): UpdateOperation {
   const insertions = [];
+
+  const titleDeletions = store.statementsMatching(
+    bookmarkNode,
+    dct("title"),
+    null,
+    bookmarkNode.doc(),
+  );
+  const urlDeletions = store.statementsMatching(
+    bookmarkNode,
+    bookm("recalls"),
+    null,
+    bookmarkNode.doc(),
+  );
   if (newTitle) {
     insertions.push(
       st(bookmarkNode, dct("title"), lit(newTitle), bookmarkNode.doc()),
@@ -21,7 +34,7 @@ export function updateBookmark(
   }
   return {
     insertions,
-    deletions: [],
+    deletions: [...titleDeletions, ...urlDeletions],
     filesToCreate: [],
   };
 }

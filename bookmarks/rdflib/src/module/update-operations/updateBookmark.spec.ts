@@ -37,4 +37,50 @@ describe(updateBookmark.name, () => {
       ),
     );
   });
+
+  it("deletes the old title from the document", () => {
+    const store = graph();
+    store.add(
+      sym("https://pod.example/bookmark#it"),
+      bookm("recalls"),
+      sym("https://old.url.test"),
+      sym("https://pod.example/bookmark"),
+    );
+    const result = updateBookmark(
+      store,
+      sym("https://pod.example/bookmark#it"),
+      "new title",
+    );
+    expect(result.deletions).toContainEqual(
+      st(
+        sym("https://pod.example/bookmark#it"),
+        bookm("recalls"),
+        sym("https://old.url.test"),
+        sym("https://pod.example/bookmark"),
+      ),
+    );
+  });
+
+  it("deletes the old url from the document", () => {
+    const store = graph();
+    store.add(
+      sym("https://pod.example/bookmark#it"),
+      dct("title"),
+      lit("old title"),
+      sym("https://pod.example/bookmark"),
+    );
+    const result = updateBookmark(
+      store,
+      sym("https://pod.example/bookmark#it"),
+      "new title",
+    );
+    expect(result.deletions).toContainEqual(
+      st(
+        sym("https://pod.example/bookmark#it"),
+        dct("title"),
+        lit("old title"),
+        sym("https://pod.example/bookmark"),
+      ),
+    );
+  });
 });
