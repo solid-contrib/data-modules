@@ -1,6 +1,6 @@
 import { IndexedFormula, lit, NamedNode, st, sym } from "rdflib";
 import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
-import { bookm, dct } from "../namespaces.js";
+import { bookm, dct, xsd } from "../namespaces.js";
 
 export function updateBookmark(
   store: IndexedFormula,
@@ -8,7 +8,14 @@ export function updateBookmark(
   newTitle?: string,
   newUrl?: string,
 ): UpdateOperation {
-  const insertions = [];
+  const insertions = [
+    st(
+      bookmarkNode,
+      dct("modified"),
+      lit(new Date().toISOString(), undefined, xsd("dateTime")),
+      bookmarkNode.doc(),
+    ),
+  ];
 
   const titleDeletions = store.statementsMatching(
     bookmarkNode,

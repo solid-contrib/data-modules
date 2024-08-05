@@ -55,9 +55,9 @@ _:patch
         <https://pod.test/alice/bookmarks/70501305#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://favorite.example> .
       };
       solid:inserts {
+        <https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/modified> "2024-05-06T07:08:09.123Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
         <https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/title> "My updated website" .
         <https://pod.test/alice/bookmarks/70501305#it> <http://www.w3.org/2002/01/bookmark#recalls> <https://update.example> .
-        <https://pod.test/alice/bookmarks/70501305#it> <http://purl.org/dc/terms/modified> "2024-05-06T07:08:09.123Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
       };   a solid:InsertDeletePatch .`,
     );
   });
