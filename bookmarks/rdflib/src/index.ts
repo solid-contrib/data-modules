@@ -91,9 +91,8 @@ export interface BookmarksModule {
   createBookmark(command: CreateBookmarkCommand): Promise<string>;
 
   /**
-   * Creates a new contact within a given address book
+   * Updates a given bookmark to new values
    * @param command
-   * @return The URI of the newly created contact
    */
   updateBookmark(command: UpdateBookmarkCommand): Promise<void>;
 }
