@@ -21,6 +21,25 @@ export interface CreateBookmarkCommand {
 }
 
 /**
+ * Data needed to update a bookmark
+ */
+export interface UpdateBookmarkCommand {
+  /**
+   * The URI of the bookmark resource to update
+   */
+  uri: string;
+
+  /**
+   * The new human-readable title of the bookmark
+   */
+  newTitle: string | undefined;
+  /**
+   * The new URL the bookmark refers to
+   */
+  newUrl: string | undefined;
+}
+
+/**
  * Object describing potential storage locations for bookmarks.
  */
 export interface BookmarkStorage {
@@ -67,13 +86,14 @@ export interface BookmarksModule {
 
   /**
    * Create a new bookmark at the given storage. Potential storage URLs can be discovered using {@link discoverStorage}.
-   * @param storageUrl
-   * @param title
-   * @param url
+   * @param command
    */
-  createBookmark({
-    storageUrl,
-    title,
-    url,
-  }: CreateBookmarkCommand): Promise<string>;
+  createBookmark(command: CreateBookmarkCommand): Promise<string>;
+
+  /**
+   * Creates a new contact within a given address book
+   * @param command
+   * @return The URI of the newly created contact
+   */
+  updateBookmark(command: UpdateBookmarkCommand): Promise<void>;
 }
