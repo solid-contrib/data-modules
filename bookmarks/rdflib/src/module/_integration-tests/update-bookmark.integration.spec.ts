@@ -3,8 +3,6 @@ import {
   mockTurtleDocument,
 } from "@solid-data-modules/rdflib-utils/test-support";
 
-import { when } from "jest-when";
-import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import { setupModule } from "../../test-support/setupModule";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
@@ -12,8 +10,6 @@ jest.mock("@solid-data-modules/rdflib-utils/identifier");
 describe("update bookmark", () => {
   it("updates the bookmark values and modified timestamp", async () => {
     const authenticatedFetch = jest.fn();
-
-    when(generateId).mockReturnValue("70501305");
 
     jest.useFakeTimers().setSystemTime(new Date("2024-05-06T07:08:09.123Z"));
 
