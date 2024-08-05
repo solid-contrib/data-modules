@@ -9,6 +9,7 @@ import { Fetcher, IndexedFormula, NamedNode, sym, UpdateManager } from "rdflib";
 import {
   createBookmarkWithinContainer,
   createBookmarkWithinDocument,
+  updateBookmark,
 } from "./update-operations/index.js";
 import {
   ContainerQuery,
@@ -97,7 +98,17 @@ export class BookmarksModuleRdfLib implements BookmarksModule {
     return operation.uri;
   }
 
-  async updateBookmark({ uri, newUrl, newTitle }: UpdateBookmarkCommand) {}
+  async updateBookmark({ uri, newTitle, newUrl }: UpdateBookmarkCommand) {
+    const bookmarkNode = sym(uri);
+    await this.support.fetchNode(bookmarkNode);
+    const operation = updateBookmark(
+      this.store,
+      bookmarkNode,
+      newTitle,
+      newUrl,
+    );
+    await executeUpdate(this.fetcher, this.updater, operation);
+  }
 }
 
 function urisOf(nodes: NamedNode[]) {
