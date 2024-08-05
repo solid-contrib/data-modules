@@ -43,6 +43,7 @@
     "rdflib": "2.x"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@solid/community-server": "^7.1.0",
     "@types/jest": "^29.5.12",
     "@types/jest-when": "^3.5.5",
