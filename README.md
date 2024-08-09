@@ -17,11 +17,11 @@ Weekly meeting: Fridays 4pm-5pm Amsterdam time in https://meet.jit.si/solid-data
 ## Data types covered
 ### _(coming soon)_
 Data types for which we will produce Solid Data Modules:
-* bookmarks
+* [bookmarks](./bookmarks)
 * chat
-* contacts
+* [contacts](./contacts)
 * maps
-* tasks
+* [tasks](./tasks)
 
 ## Paradigms covered
 ### _(coming soon)_
