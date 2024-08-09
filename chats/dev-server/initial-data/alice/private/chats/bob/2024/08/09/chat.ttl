@@ -1,0 +1,9 @@
+</alice/private/chats/bob/index.ttl#this>
+    <http://www.w3.org/2005/01/wf/flow#message> <#Msg1723226311805> .
+
+<#Msg1723226311805>
+    <http://rdfs.org/sioc/ns#content>  "Sorry, I have been busy. Hope you are well" ;
+    <http://purl.org/dc/terms/created> "2024-08-09T17:58:31Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://xmlns.com/foaf/0.1/maker>  </bob/profile/card#me> ;
+    <https://w3id.org/security#proofValue>
+                                       "706843e39e7d56a66fb7af0dde585b0afc98a14515c75670047031cce25533948835195d3e32fb1f9f992fe7fcf36539574d01aecb6b69022da06b01c5b86d09" .

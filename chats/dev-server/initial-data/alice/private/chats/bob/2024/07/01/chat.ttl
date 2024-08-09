@@ -1,0 +1,9 @@
+</alice/private/chats/bob/index.ttl#this>
+    <http://www.w3.org/2005/01/wf/flow#message> <#Msg1723225634153> .
+
+<#Msg1723225634153>
+    <http://rdfs.org/sioc/ns#content>  "Hey Bob, what's up?" ;
+    <http://purl.org/dc/terms/created> "2024-07-01T17:47:14Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://xmlns.com/foaf/0.1/maker>  </alice/profile/card#me> ;
+    <https://w3id.org/security#proofValue>
+                                       "3a3609ca321d62f2aa1f6e38dbc05de037ff90b11103df392e8d01ab0254678defcb8a48d45a1a53300159e15f82a6367a1eff08f82c5901b2f944f3e7d17be2" .

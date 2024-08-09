@@ -1,0 +1,1 @@
+<http://localhost:3000/alice/profile/card#me> <http://www.w3.org/ns/solid/terms#privateTypeIndex> <http://localhost:3000/alice/Settings/privateTypeIndex.ttl>.
