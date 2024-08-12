@@ -1,12 +1,15 @@
 import { setupModule } from "../../test-support/setupModule";
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import { when } from "jest-when";
-import { expectPatchRequest } from "@solid-data-modules/rdflib-utils/test-support";
+import {
+  expectPatchRequest,
+  mockNotFound,
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 jest.mock("@solid-data-modules/rdflib-utils/identifier");
 
 describe("create chat", () => {
-  it("creates index file in a new container and returns the minted URI", () => {
+  it("creates index file in a new container and returns the minted URI", async () => {
     // given a random ID is generated
     when(generateId).mockReturnValue("abc123");
 
@@ -14,8 +17,14 @@ describe("create chat", () => {
     const authenticatedFetch = jest.fn();
     const chats = setupModule(authenticatedFetch);
 
+    // and the chat does not exist yet
+    mockNotFound(
+      authenticatedFetch,
+      "https://pod.test/alice/chats/abc123/index.ttl",
+    );
+
     // when a chat is created at a given container
-    const uri = chats.createChat({
+    const uri = await chats.createChat({
       containerUri: "https://pod.test/alice/chats/",
       name: "A new chat",
     });

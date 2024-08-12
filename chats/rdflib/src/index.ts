@@ -2,15 +2,13 @@ import { ChatsModuleRdfLib } from "./module/ChatsModuleRdfLib.js";
 
 export default ChatsModuleRdfLib;
 
-
 export interface ChatsModule {
-
   /**
    * Creates a new chat in the given container
    * @param command
    * @return The URI of the newly created chat
    */
-  createChat(command: CreateChatCommand): string
+  createChat(command: CreateChatCommand): Promise<string>;
 }
 
 /**
@@ -20,9 +18,9 @@ export interface CreateChatCommand {
   /**
    * The URI of the target container
    */
-  containerUri: string,
+  containerUri: string;
   /**
    * The human-readable title for the chat
    */
-  name: string,
+  name: string;
 }
