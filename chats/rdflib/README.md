@@ -51,6 +51,10 @@ const updater = new UpdateManager(store);
 const module: ChatsModule = new ChatsModuleRdfLib({store, fetcher, updater});
 
 // 3️⃣ use the module to interact with chats
+const uri = await module.createChat({
+    containerUri: "http://localhost:3000/alice/public/chats/",
+    name: "My new chat",
+});
 
 ```
 
