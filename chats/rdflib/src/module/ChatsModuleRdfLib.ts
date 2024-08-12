@@ -1,7 +1,8 @@
-import {ChatsModule,} from "../index.js";
-import {Fetcher, IndexedFormula, UpdateManager} from "rdflib";
+import { ChatsModule, CreateChatCommand } from "../index.js";
+import { Fetcher, IndexedFormula, UpdateManager } from "rdflib";
 
-import {ModuleSupport,} from "@solid-data-modules/rdflib-utils";
+import { ModuleSupport } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 
 interface ModuleConfig {
@@ -21,6 +22,11 @@ export class ChatsModuleRdfLib implements ChatsModule {
     this.fetcher = config.fetcher;
     this.updater = config.updater;
     this.support = new ModuleSupport(config);
+  }
+
+  createChat({ containerUri, name }: CreateChatCommand): string {
+    const id = generateId();
+    return `${containerUri}${id}/index.ttl#this`;
   }
 
 }
