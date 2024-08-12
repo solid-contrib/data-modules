@@ -70,6 +70,16 @@ jobs:
         working-directory: ./bookmarks/rdflib
         run: npm run build:doc
 
+######################
+###################### chats/rdflib module
+
+      - name: Install chats/rdflib dev dependencies
+        working-directory: ./chats/rdflib
+        run: npm ci --only=dev
+
+      - name: Build chats/rdflib doc
+        working-directory: ./chats/rdflib
+        run: npm run build:doc
 
 ######################
 ###################### rdflib utils
