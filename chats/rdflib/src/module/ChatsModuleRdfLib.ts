@@ -1,9 +1,10 @@
 import { Chat, ChatsModule, CreateChatCommand } from "../index.js";
-import { Fetcher, IndexedFormula, UpdateManager } from "rdflib";
+import { Fetcher, IndexedFormula, sym, UpdateManager } from "rdflib";
 
 import { executeUpdate, ModuleSupport } from "@solid-data-modules/rdflib-utils";
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import { createChat } from "./update-operations/index.js";
+import { ChatQuery } from "./queries/index.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -33,9 +34,13 @@ export class ChatsModuleRdfLib implements ChatsModule {
   }
 
   async readChat(chatUri: string): Promise<Chat> {
+    const chatNode = sym(chatUri);
+    await this.support.fetchNode(chatNode);
+
+    const name = new ChatQuery(chatNode, this.store).queryTitle();
     return {
       uri: chatUri,
-      name: "An existing chat channel",
+      name,
       latestMessages: [],
     };
   }
