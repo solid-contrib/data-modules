@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changes
+
+- [mockLdpContainer](https://solid-contrib.github.io/data-modules/rdflib-utils/functions/test_support.mockLdpContainer.html)
+  now allows to add additional turtle to include into the mock response
+
 ## 0.4.0
 
 ### Added

@@ -14,7 +14,7 @@ describe("mockResponses", () => {
       <> a ldp:Container, ldp:BasicContainer, ldp:Resource ;
         
       .
-`);
+      `);
     });
 
     it("mocks a container with contents", async () => {
@@ -32,7 +32,27 @@ describe("mockResponses", () => {
       <> a ldp:Container, ldp:BasicContainer, ldp:Resource ;
         ldp:contains <http://container.test/one>; ldp:contains <http://container.test/two>
       .
-`);
+      `);
+    });
+
+    it("mocks a container with contents and more turtle statements", async () => {
+      const fetch = jest.fn();
+      mockLdpContainer(
+        fetch,
+        "http://container.test/",
+        ["http://container.test/one", "http://container.test/two"],
+        `<http://container.test/one> a ldp:Container .`,
+      );
+      const result = await fetch("http://container.test/", {});
+      expect(await result.text()).toEqual(`
+      @prefix dc: <http://purl.org/dc/terms/>.
+      @prefix ldp: <http://www.w3.org/ns/ldp#>.
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+      
+      <> a ldp:Container, ldp:BasicContainer, ldp:Resource ;
+        ldp:contains <http://container.test/one>; ldp:contains <http://container.test/two>
+      .
+      <http://container.test/one> a ldp:Container .`);
     });
   });
 });

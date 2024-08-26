@@ -28,11 +28,13 @@ export function mockTurtleDocument(fetch: jest.Mock, url: string, ttl: string) {
  * @param fetch - A mocked fetch function
  * @param url - The URL to mock
  * @param contains - List of URLs of documents contained in this container
+ * @param moreTurtle - Additional turtle to include into the response
  */
 export function mockLdpContainer(
   fetch: jest.Mock,
   url: string,
   contains: string[] = [],
+  moreTurtle: string = "",
 ) {
   when(fetch)
     .calledWith(url, expect.anything())
@@ -55,7 +57,7 @@ export function mockLdpContainer(
       <> a ldp:Container, ldp:BasicContainer, ldp:Resource ;
         ${contains.map((it) => `ldp:contains <${it}>`).join("; ")}
       .
-`),
+      ${moreTurtle}`),
     } as Response);
 }
 
