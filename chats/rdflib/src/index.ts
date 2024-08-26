@@ -52,4 +52,9 @@ export interface Chat {
 /**
  * Represents a message in a chat
  */
-export interface Message {}
+export interface Message {
+  uri: string;
+  authorWebId: string;
+  text: string;
+  date: Date;
+}

@@ -1,12 +1,5 @@
 import { Chat, ChatsModule, CreateChatCommand } from "../index.js";
-import {
-  Fetcher,
-  IndexedFormula,
-  NamedNode,
-  Node,
-  sym,
-  UpdateManager,
-} from "rdflib";
+import { Fetcher, IndexedFormula, NamedNode, sym, UpdateManager } from "rdflib";
 
 import {
   ContainerQuery,
@@ -18,7 +11,7 @@ import {
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import { createChat } from "./update-operations/index.js";
 import { ChatQuery } from "./queries/index.js";
-import { wf } from "./namespaces.js";
+import { MessagesDocumentQuery } from './queries/MessagesDocumentQuery.js';
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -70,22 +63,13 @@ export class ChatsModuleRdfLib implements ChatsModule {
 
     const latestMonth = await this.fetchLatestSubContainer(latestYear);
     const latestDay = await this.fetchLatestSubContainer(latestMonth);
-    const chatDocument = await this.fetchLatestDocument(latestDay);
+    const messagesDocument = await this.fetchLatestDocument(latestDay);
 
-    const messages: Node[] = this.store.each(
+    return new MessagesDocumentQuery(
       chatNode,
-      wf("message"),
-      undefined,
-      chatDocument,
-    );
-
-    // TODO query actual message
-    const latestMessages = messages.map((it) => ({
-      text: "Hello visitor, welcome to my public chat lobby!",
-      date: new Date("2024-07-01T17:47:14Z"),
-      authorWebId: "http://localhost:3000/alice/profile/card#me",
-    }));
-    return latestMessages;
+      messagesDocument,
+      this.store,
+    ).queryMessages();
   }
 
   private async fetchLatestSubContainer(container: NamedNode) {
