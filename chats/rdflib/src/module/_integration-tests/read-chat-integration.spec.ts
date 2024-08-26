@@ -59,18 +59,21 @@ describe("read chat", () => {
         "https://pod.test/alice/chats/abc123/index.ttl",
         "https://pod.test/alice/chats/abc123/2024/",
       ],
+      `<https://pod.test/alice/chats/abc123/2024/> a ldp:Container .`,
     );
 
     mockLdpContainer(
       authenticatedFetch,
       "https://pod.test/alice/chats/abc123/2024/",
       ["https://pod.test/alice/chats/abc123/2024/07/"],
+      `<https://pod.test/alice/chats/abc123/2024/07/> a ldp:Container .`,
     );
 
     mockLdpContainer(
       authenticatedFetch,
       "https://pod.test/alice/chats/abc123/2024/07/",
       ["https://pod.test/alice/chats/abc123/2024/07/01/"],
+      `<https://pod.test/alice/chats/abc123/2024/07/01/> a ldp:Container .`,
     );
 
     mockLdpContainer(
