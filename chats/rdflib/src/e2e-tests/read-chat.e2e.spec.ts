@@ -26,6 +26,7 @@ describe("read a chat", () => {
     );
     expect(chat.latestMessages).toEqual([
       {
+        uri: "http://localhost:3456/chats/eBIszJ/2024/07/01/chat.ttl#Msg1723225634153",
         text: "Hello visitor, welcome to my public chat lobby!",
         date: new Date("2024-07-01T17:47:14Z"),
         authorWebId: "http://localhost:3000/alice/profile/card#me",

@@ -103,6 +103,7 @@ describe("read chat", () => {
     // then the message is part of the latest messages
     expect(chat.latestMessages).toEqual([
       {
+        uri: "https://pod.test/alice/chats/abc123/2024/07/01/chat.ttl#Msg1723225634153",
         authorWebId: "http://localhost:3000/alice/profile/card#me",
         date: new Date("2024-07-01T17:47:14Z"),
         text: "Hello visitor, welcome to my public chat lobby!",
