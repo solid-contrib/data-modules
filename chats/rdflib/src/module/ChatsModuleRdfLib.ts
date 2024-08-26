@@ -65,9 +65,34 @@ export class ChatsModuleRdfLib implements ChatsModule {
   }
 
   private async fetchLatestMessages(container: NamedNode, chatNode: NamedNode) {
+    const latestYear = await this.fetchLatestSubContainer(container);
+    if (!latestYear) return [];
+
+    const latestMonth = await this.fetchLatestSubContainer(latestYear);
+    const latestDay = await this.fetchLatestSubContainer(latestMonth);
+    const chatDocument = await this.fetchLatestDocument(latestDay);
+
+    const messages: Node[] = this.store.each(
+      chatNode,
+      wf("message"),
+      undefined,
+      chatDocument,
+    );
+
+    // TODO query actual message
+    const latestMessages = messages.map((it) => ({
+      text: "Hello visitor, welcome to my public chat lobby!",
+      date: new Date("2024-07-01T17:47:14Z"),
+      authorWebId: "http://localhost:3000/alice/profile/card#me",
+    }));
+    return latestMessages;
+  }
+
+  private async fetchLatestSubContainer(container: NamedNode) {
     await this.support.fetchNode(container);
+
     const contents = new ContainerQuery(container, this.store).queryContents();
-    const yearContainers = contents.filter((it) => {
+    const childContainers = contents.filter((it) => {
       return this.store.holds(
         it,
         rdf("type"),
@@ -75,52 +100,19 @@ export class ChatsModuleRdfLib implements ChatsModule {
         container.doc(),
       );
     });
-    const anyYear = yearContainers[0];
+    return childContainers[0]; // TODO actually get latest
+  }
 
-    if (!anyYear) return [];
+  private async fetchLatestDocument(container: NamedNode) {
+    await this.support.fetchNode(container);
 
-    await this.support.fetchNode(anyYear);
-
-    const yearContents = new ContainerQuery(
-      anyYear,
-      this.store,
-    ).queryContents();
-    const monthsContainers = yearContents.filter((it) =>
-      this.store.holds(it, rdf("type"), ldp("Container"), anyYear.doc()),
-    );
-    const anyMonth = monthsContainers[0];
-    await this.support.fetchNode(anyMonth);
-
-    const monthContents = new ContainerQuery(
-      anyMonth,
-      this.store,
-    ).queryContents();
-    const dayContainers = monthContents.filter((it) =>
-      this.store.holds(it, rdf("type"), ldp("Container"), anyMonth.doc()),
-    );
-    const anyDay = dayContainers[0];
-    await this.support.fetchNode(anyDay);
-
-    const dayContents = new ContainerQuery(anyDay, this.store).queryContents();
-    const dayFiles = dayContents.filter(
+    const contents = new ContainerQuery(container, this.store).queryContents();
+    const files = contents.filter(
       (it) =>
-        !this.store.holds(it, rdf("type"), ldp("Container"), anyDay.doc()),
+        !this.store.holds(it, rdf("type"), ldp("Container"), container.doc()),
     );
-    const anyFile = dayFiles[0];
-    await this.support.fetchNode(anyFile);
-
-    const messages: Node[] = this.store.each(
-      chatNode,
-      wf("message"),
-      undefined,
-      anyFile,
-    );
-
-    const latestMessages = messages.map((it) => ({
-      text: "Hello visitor, welcome to my public chat lobby!",
-      date: new Date("2024-07-01T17:47:14Z"),
-      authorWebId: "http://localhost:3000/alice/profile/card#me",
-    }));
-    return latestMessages;
+    const anyDocument = files[0]; // TODO actually get latest
+    await this.support.fetchNode(anyDocument);
+    return anyDocument;
   }
 }
