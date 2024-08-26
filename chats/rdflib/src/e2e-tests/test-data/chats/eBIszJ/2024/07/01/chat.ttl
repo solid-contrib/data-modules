@@ -1,4 +1,4 @@
-<http://localhost:3000/alice/public/chats/lobby/index.ttl#this>
+</chats/eBIszJ/index.ttl#this>
     <http://www.w3.org/2005/01/wf/flow#message> <#Msg1723225634153> .
 
 <#Msg1723225634153>
