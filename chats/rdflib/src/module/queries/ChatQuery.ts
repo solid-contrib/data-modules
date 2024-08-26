@@ -16,4 +16,14 @@ export class ChatQuery {
     );
     return title || "";
   }
+
+  queryContainer(): NamedNode {
+    const container = this.chatNode.dir();
+    if (!container) {
+      throw new Error(
+        `The chat node ${this.chatNode.uri} has no parent container`,
+      );
+    }
+    return container!;
+  }
 }

@@ -32,4 +32,21 @@ describe(ChatQuery.name, () => {
       expect(query.queryTitle()).toEqual("");
     });
   });
+
+  describe("query container", () => {
+    it("returns the container of the chat document", () => {
+      const chatNode = sym("https://pod.test/chats/1#this");
+      const query = new ChatQuery(chatNode, graph());
+      const container = query.queryContainer();
+      expect(container).toEqual(sym("https://pod.test/chats/"));
+    });
+
+    it("throws an error if no container can be determined", () => {
+      const chatNode = sym("https://pod.test/");
+      const query = new ChatQuery(chatNode, graph());
+      expect(() => query.queryContainer()).toThrow(
+        new Error("The chat node https://pod.test/ has no parent container"),
+      );
+    });
+  });
 });
