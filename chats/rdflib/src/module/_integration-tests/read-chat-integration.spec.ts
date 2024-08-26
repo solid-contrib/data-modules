@@ -22,6 +22,12 @@ describe("read chat", () => {
         `,
     );
 
+    mockLdpContainer(
+      authenticatedFetch,
+      "https://pod.test/alice/chats/abc123/",
+      ["https://pod.test/alice/chats/abc123/index.ttl"],
+    );
+
     // when a chat is read
     const chat = await chats.readChat(
       "https://pod.test/alice/chats/abc123/index.ttl#this",
@@ -49,7 +55,10 @@ describe("read chat", () => {
     mockLdpContainer(
       authenticatedFetch,
       "https://pod.test/alice/chats/abc123/",
-      ["https://pod.test/alice/chats/abc123/2024/"],
+      [
+        "https://pod.test/alice/chats/abc123/index.ttl",
+        "https://pod.test/alice/chats/abc123/2024/",
+      ],
     );
 
     mockLdpContainer(

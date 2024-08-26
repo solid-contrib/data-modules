@@ -37,7 +37,12 @@ export class ChatsModuleRdfLib implements ChatsModule {
     const chatNode = sym(chatUri);
     await this.support.fetchNode(chatNode);
 
-    const name = new ChatQuery(chatNode, this.store).queryTitle();
+    const chatQuery = new ChatQuery(chatNode, this.store);
+    const name = chatQuery.queryTitle();
+    const container = chatQuery.queryContainer();
+
+    await this.support.fetchNode(container);
+
     return {
       uri: chatUri,
       name,
