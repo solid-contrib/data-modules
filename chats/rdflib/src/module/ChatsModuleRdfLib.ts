@@ -1,4 +1,4 @@
-import { ChatsModule, CreateChatCommand } from "../index.js";
+import { Chat, ChatsModule, CreateChatCommand } from "../index.js";
 import { Fetcher, IndexedFormula, UpdateManager } from "rdflib";
 
 import { executeUpdate, ModuleSupport } from "@solid-data-modules/rdflib-utils";
@@ -30,5 +30,13 @@ export class ChatsModuleRdfLib implements ChatsModule {
     const operation = createChat(mintedUri, name);
     await executeUpdate(this.fetcher, this.updater, operation);
     return mintedUri;
+  }
+
+  async readChat(chatUri: string): Promise<Chat> {
+    return {
+      uri: chatUri,
+      name: "An existing chat channel",
+      latestMessages: [],
+    };
   }
 }
