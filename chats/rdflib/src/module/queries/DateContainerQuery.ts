@@ -20,6 +20,9 @@ export class DateContainerQuery {
         this.container.doc(),
       );
     });
-    return childContainers[0] ?? null; // TODO actually get latest
+
+    const years = childContainers.sort().reverse();
+
+    return years[0] ?? null;
   }
 }
