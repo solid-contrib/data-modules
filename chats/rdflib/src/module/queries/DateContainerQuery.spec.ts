@@ -1,5 +1,5 @@
 import { DateContainerQuery } from "./DateContainerQuery";
-import { graph, sym } from "rdflib";
+import { graph, parse, sym } from "rdflib";
 
 describe(DateContainerQuery.name, () => {
   describe("query latest", () => {
@@ -67,6 +67,56 @@ describe(DateContainerQuery.name, () => {
         store,
       ).queryLatest();
       expect(result).toEqual(null);
+    });
+
+    it("returns the container name with the latest year number", () => {
+      const store = graph();
+
+      parse(
+        `
+      @prefix ldp: <http://www.w3.org/ns/ldp#>.
+      
+      <> ldp:contains  <2022/>, <2024/>, <2023/>.
+      
+  
+      <2022/> a ldp:Container .
+      <2024/> a ldp:Container .
+      <2023/> a ldp:Container .
+      `,
+        store,
+        "https://pod.test/container/",
+      );
+
+      const result = new DateContainerQuery(
+        sym("https://pod.test/container/"),
+        store,
+      ).queryLatest();
+      expect(result).toEqual(sym("https://pod.test/container/2024/"));
+    });
+
+    it("returns the container name with the month / day number", () => {
+      const store = graph();
+
+      parse(
+        `
+      @prefix ldp: <http://www.w3.org/ns/ldp#>.
+      
+      <> ldp:contains  <05/>, <08/>, <06/>.
+      
+  
+      <05/> a ldp:Container .
+      <08/> a ldp:Container .
+      <06/> a ldp:Container .
+      `,
+        store,
+        "https://pod.test/container/2024/",
+      );
+
+      const result = new DateContainerQuery(
+        sym("https://pod.test/container/2024/"),
+        store,
+      ).queryLatest();
+      expect(result).toEqual(sym("https://pod.test/container/2024/08/"));
     });
   });
 });
