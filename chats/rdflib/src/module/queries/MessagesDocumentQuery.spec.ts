@@ -90,6 +90,30 @@ describe(MessagesDocumentQuery.name, () => {
     });
 
     describe("ignores messages", () => {
+      it("that are invalid", () => {
+        const store = graph();
+        parse(
+          `@prefix wf: <http://www.w3.org/2005/01/wf/flow#> .
+
+<https://pod.example/chat/1/index.ttl#this>
+    wf:message <#message-1> .
+
+<#message-1>
+    <http://xmlns.com/foaf/0.1/maker>  <http://localhost:3000/alice/profile/card#me> ;
+. 
+      `,
+          store,
+          "https://pod.example/chat/1/2024/07/30/chat.ttl",
+        );
+
+        const result = new MessagesDocumentQuery(
+          sym("https://pod.example/chat/1/index.ttl#this"),
+          sym("https://pod.example/chat/1/2024/07/30/chat.ttl"),
+          store,
+        ).queryMessages();
+        expect(result).toEqual([]);
+      });
+
       it("that are not linked to the chat", () => {
         const store = graph();
         parse(
