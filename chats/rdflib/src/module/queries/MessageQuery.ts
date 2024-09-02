@@ -11,6 +11,8 @@ export class MessageQuery {
     const text = this.store.anyValue(
       this.messageNode,
       sym("http://rdfs.org/sioc/ns#content"),
+      undefined,
+      this.messageNode.doc(),
     );
 
     if (!text) {
@@ -20,11 +22,15 @@ export class MessageQuery {
     const date = this.store.anyJS(
       this.messageNode,
       sym("http://purl.org/dc/terms/created"),
+      undefined,
+      this.messageNode.doc(),
     );
     if (!date) return null;
     const authorWebId = this.store.anyValue(
       this.messageNode,
       sym("http://xmlns.com/foaf/0.1/maker"),
+      undefined,
+      this.messageNode.doc(),
     );
     if (!authorWebId) {
       return null;
