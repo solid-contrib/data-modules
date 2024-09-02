@@ -11,7 +11,8 @@ import {
 import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 import { createChat } from "./update-operations/index.js";
 import { ChatQuery } from "./queries/index.js";
-import { MessagesDocumentQuery } from './queries/MessagesDocumentQuery.js';
+import { MessagesDocumentQuery } from "./queries/MessagesDocumentQuery.js";
+import { DateContainerQuery } from "./queries/DateContainerQuery.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -62,7 +63,11 @@ export class ChatsModuleRdfLib implements ChatsModule {
     if (!latestYear) return [];
 
     const latestMonth = await this.fetchLatestSubContainer(latestYear);
+    if (!latestMonth) return [];
+
     const latestDay = await this.fetchLatestSubContainer(latestMonth);
+    if (!latestDay) return [];
+
     const messagesDocument = await this.fetchLatestDocument(latestDay);
 
     return new MessagesDocumentQuery(
@@ -74,17 +79,7 @@ export class ChatsModuleRdfLib implements ChatsModule {
 
   private async fetchLatestSubContainer(container: NamedNode) {
     await this.support.fetchNode(container);
-
-    const contents = new ContainerQuery(container, this.store).queryContents();
-    const childContainers = contents.filter((it) => {
-      return this.store.holds(
-        it,
-        rdf("type"),
-        ldp("Container"),
-        container.doc(),
-      );
-    });
-    return childContainers[0]; // TODO actually get latest
+    return new DateContainerQuery(container, this.store).queryLatest();
   }
 
   private async fetchLatestDocument(container: NamedNode) {
