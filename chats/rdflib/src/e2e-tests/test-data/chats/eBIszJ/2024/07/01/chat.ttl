@@ -1,9 +1,17 @@
 </chats/eBIszJ/index.ttl#this>
-    <http://www.w3.org/2005/01/wf/flow#message> <#Msg1723225634153> .
+    <http://www.w3.org/2005/01/wf/flow#message> <#Msg1723225634153>, <#Msg1723225634154> .
 
 <#Msg1723225634153>
     <http://rdfs.org/sioc/ns#content>  "Hello visitor, welcome to my public chat lobby!" ;
     <http://purl.org/dc/terms/created> "2024-07-01T17:47:14Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://xmlns.com/foaf/0.1/maker>  <http://localhost:3000/alice/profile/card#me> ;
+    <https://w3id.org/security#proofValue>
+                                       "3a3609ca321d62f2aa1f6e38dbc05de037ff90b11103df392e8d01ab0254678defcb8a48d45a1a53300159e15f82a6367a1eff08f82c5901b2f944f3e7d17be2" .
+
+
+<#Msg1723225634154>
+    <http://rdfs.org/sioc/ns#content>  "Let me know, if you need anything." ;
+    <http://purl.org/dc/terms/created> "2024-07-01T17:48:24Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
     <http://xmlns.com/foaf/0.1/maker>  <http://localhost:3000/alice/profile/card#me> ;
     <https://w3id.org/security#proofValue>
                                        "3a3609ca321d62f2aa1f6e38dbc05de037ff90b11103df392e8d01ab0254678defcb8a48d45a1a53300159e15f82a6367a1eff08f82c5901b2f944f3e7d17be2" .
