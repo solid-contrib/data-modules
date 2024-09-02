@@ -1,6 +1,6 @@
 {
   "name": "@solid-data-modules/chats-rdflib",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A library to manage chats in Solid Pods based on rdflib.js",
   "type": "module",
   "main": "dist/index.js",
