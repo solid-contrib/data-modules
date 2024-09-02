@@ -1,6 +1,6 @@
-import { IndexedFormula, NamedNode } from "rdflib";
-import { Message } from '../../index.js';
-import { wf } from '../namespaces.js';
+import { IndexedFormula, NamedNode, sym } from "rdflib";
+import { Message } from "../../index.js";
+import { wf } from "../namespaces.js";
 
 export class MessagesDocumentQuery {
   constructor(
@@ -14,12 +14,30 @@ export class MessagesDocumentQuery {
       .each(this.chatNode, wf("message"), undefined, this.messagesDocument)
       .map((it) => it as NamedNode);
 
-    // TODO query actual message
-    return messages.map((it) => ({
-      uri: it.uri,
-      text: "Hello visitor, welcome to my public chat lobby!",
-      date: new Date("2024-07-01T17:47:14Z"),
-      authorWebId: "http://localhost:3000/alice/profile/card#me",
-    }));
+    return messages.map((messageNode) => this.queryMessage(messageNode));
+  }
+
+  private queryMessage(messageNode: NamedNode) {
+    const text =
+      this.store.anyValue(
+        messageNode,
+        sym("http://rdfs.org/sioc/ns#content"),
+      ) ?? "";
+
+    const date = this.store.anyJS(
+      messageNode,
+      sym("http://purl.org/dc/terms/created"),
+    );
+    const authorWebId =
+      this.store.anyValue(
+        messageNode,
+        sym("http://xmlns.com/foaf/0.1/maker"),
+      ) ?? "";
+    return {
+      uri: messageNode.uri,
+      text,
+      date,
+      authorWebId,
+    };
   }
 }
