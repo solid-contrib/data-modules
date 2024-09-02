@@ -31,6 +31,12 @@ describe("read a chat", () => {
         date: new Date("2024-07-01T17:47:14Z"),
         authorWebId: "http://localhost:3000/alice/profile/card#me",
       },
+      {
+        uri: "http://localhost:3456/chats/eBIszJ/2024/07/01/chat.ttl#Msg1723225634154",
+        text: "Let me know, if you need anything.",
+        date: new Date("2024-07-01T17:48:24Z"),
+        authorWebId: "http://localhost:3000/alice/profile/card#me",
+      },
     ]);
   });
 });
