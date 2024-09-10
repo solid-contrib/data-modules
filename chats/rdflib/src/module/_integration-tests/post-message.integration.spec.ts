@@ -16,7 +16,7 @@ describe("post message", () => {
 
     // and today is a specific date
     jest.useFakeTimers({
-      now: new Date("2024-07-30"),
+      now: new Date("2024-07-30T03:04:05.678Z"),
     });
 
     // and a chats module
@@ -64,6 +64,9 @@ _:patch
 
       solid:inserts {
         <https://pod.test/alice/chats/abc123/index.ttl#this> <http://www.w3.org/2005/01/wf/flow#message> <https://pod.test/alice/chats/abc123/2024/07/30/chat.ttl#8c615b> .
+        <https://pod.test/alice/chats/abc123/2024/07/30/chat.ttl#8c615b> <http://rdfs.org/sioc/ns#content> "A new message" .
+        <https://pod.test/alice/chats/abc123/2024/07/30/chat.ttl#8c615b> <http://purl.org/dc/terms/created> "2024-07-30T03:04:05.678Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+        <https://pod.test/alice/chats/abc123/2024/07/30/chat.ttl#8c615b> <http://xmlns.com/foaf/0.1/maker> <https://pod.test/alice/profile/card#me> .
       };   a solid:InsertDeletePatch .`,
     );
   });

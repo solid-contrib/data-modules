@@ -10,7 +10,7 @@ describe("chats", () => {
       authorWebId: "https://localhost:3456/profile/card#me",
     });
     const chat = await chats.readChat(chatUri);
-    expect(chat.latestMessages).toContain(
+    expect(chat.latestMessages).toContainEqual(
       expect.objectContaining({
         uri: messageUri,
         authorWebId: "https://localhost:3456/profile/card#me",
