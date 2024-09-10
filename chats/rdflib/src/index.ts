@@ -15,6 +15,13 @@ export interface ChatsModule {
    * @param chatUri
    */
   readChat(chatUri: string): Promise<Chat>;
+
+  /**
+   * Post a new message to an existing chat
+   * @param command
+   * @return The URI of the newly created message
+   */
+  postMessage(command: PostMessageCommand): Promise<string>;
 }
 
 /**
@@ -53,8 +60,38 @@ export interface Chat {
  * Represents a message in a chat
  */
 export interface Message {
+  /**
+   * URI identifying the message
+   */
   uri: string;
+  /**
+   * WebID of the message author
+   */
   authorWebId: string;
+  /**
+   * Text of the message
+   */
   text: string;
+  /**
+   * Date and time the message was posted
+   */
   date: Date;
+}
+
+/**
+ * Data needed to post a new message
+ */
+export interface PostMessageCommand {
+  /**
+   * URI of the chat to post to
+   */
+  chatUri: string;
+  /**
+   * Text of the message to post
+   */
+  text: string;
+  /**
+   * WebID of the message author
+   */
+  authorWebId: string;
 }

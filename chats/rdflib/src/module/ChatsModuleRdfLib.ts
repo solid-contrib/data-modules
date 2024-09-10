@@ -1,4 +1,9 @@
-import { Chat, ChatsModule, CreateChatCommand } from "../index.js";
+import {
+  Chat,
+  ChatsModule,
+  CreateChatCommand,
+  PostMessageCommand,
+} from "../index.js";
 import { Fetcher, IndexedFormula, NamedNode, sym, UpdateManager } from "rdflib";
 
 import {
@@ -93,5 +98,10 @@ export class ChatsModuleRdfLib implements ChatsModule {
     const anyDocument = files[0]; // this assumes there is one and only one leaf document containing the chat messages (typically chat.ttl)
     await this.support.fetchNode(anyDocument);
     return anyDocument;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  postMessage(command: PostMessageCommand): Promise<string> {
+    throw new Error("Method not implemented.");
   }
 }
