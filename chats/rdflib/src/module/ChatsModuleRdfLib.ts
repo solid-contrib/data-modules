@@ -18,6 +18,7 @@ import { createChat } from "./update-operations/index.js";
 import { ChatQuery } from "./queries/index.js";
 import { MessagesDocumentQuery } from "./queries/MessagesDocumentQuery.js";
 import { DateContainerQuery } from "./queries/DateContainerQuery.js";
+import { mintMessageUri } from './uris/index.js';
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -101,7 +102,7 @@ export class ChatsModuleRdfLib implements ChatsModule {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  postMessage(command: PostMessageCommand): Promise<string> {
-    throw new Error("Method not implemented.");
+  async postMessage({ chatUri }: PostMessageCommand): Promise<string> {
+    return mintMessageUri(sym(chatUri));
   }
 }
