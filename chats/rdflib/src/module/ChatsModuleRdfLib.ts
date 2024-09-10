@@ -19,7 +19,7 @@ import { ChatQuery } from "./queries/index.js";
 import { MessagesDocumentQuery } from "./queries/MessagesDocumentQuery.js";
 import { DateContainerQuery } from "./queries/DateContainerQuery.js";
 import { mintMessageUri } from "./uris/index.js";
-import { postMessage } from './update-operations/post-message.js';
+import { postMessage } from "./update-operations/post-message.js";
 
 interface ModuleConfig {
   store: IndexedFormula;
@@ -103,10 +103,14 @@ export class ChatsModuleRdfLib implements ChatsModule {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async postMessage({ chatUri }: PostMessageCommand): Promise<string> {
+  async postMessage({
+    chatUri,
+    text,
+    authorWebId,
+  }: PostMessageCommand): Promise<string> {
     const chatNode = sym(chatUri);
     const messageUri = mintMessageUri(chatNode);
-    const operation = postMessage(messageUri, chatNode);
+    const operation = postMessage(messageUri, text, authorWebId, chatNode);
     await executeUpdate(this.fetcher, this.updater, operation);
     return messageUri;
   }
