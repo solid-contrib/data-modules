@@ -1,6 +1,19 @@
 # Bookmarks Data Module using vanilla JavaScript
 
 See [Docs](https://solid-contrib.github.io/data-modules/bookmarks-vanilla/index.html) for more information about this module.
+
+You can build it with:
+```
+git clone https://github.com/solid-contrib/data-modules
+cd data-modules
+cd bookmarks/vanilla
+npm install
+npm run build
+npm run build:bundle
+cp dist/solid-bookmarks.js .
+```
+You can also download the [raw file directly from github](https://raw.githubusercontent.com/solid-contrib/data-modules/refs/heads/main/bookmarks/vanilla/solid-bookmarks.js).
+
 # How to use this module
 
 install it as a dependency to you application
