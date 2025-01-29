@@ -12,8 +12,6 @@ and how they evolve.
 
 [Our plan](https://hackmd.io/@michielbdejong/HyIMjmoxn)
 
-Weekly meeting: Fridays 4pm-5pm Amsterdam time in https://meet.jit.si/solid-data-modules
-
 ## Data types covered
 ### _(coming soon)_
 Data types for which we will produce Solid Data Modules:
