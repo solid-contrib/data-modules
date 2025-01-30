@@ -29,7 +29,9 @@ const Bookmarks: FC = () => {
 
   useEffect(() => {
     (async () => {
+      console.log('bookmarks usuable yet?');
       if (!userSession) return;
+      console.log('yes!');
       const factory = await BookmarkFactory.getInstance(
         {
           webId: userSession?.info.webId ?? "",
