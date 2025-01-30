@@ -69,8 +69,10 @@ export function bootSoukai(fetch?: Fetch) {
     TypeIndex: SolidTypeIndex,
     SolidTypeIndex: SolidTypeIndex,
   });
-  console.log('setEngine');
+  console.log('calling setEngine now');
   setEngine(new LogEngine(new SolidEngine(fetch)));
+  console.log('call to setEngine done');
+
 }
 
 type FetchContainrURLArgs = {
