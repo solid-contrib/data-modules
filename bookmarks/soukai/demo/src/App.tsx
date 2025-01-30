@@ -14,9 +14,7 @@ function App() {
     (async () => {
       await handleRedirectAfterLogin(async (loggedInSession) => {
         setUserSession(loggedInSession);
-        bootSoukai(loggedInSession.fetch)
-
-
+        bootSoukai(loggedInSession.fetch);
       });
     })();
   }, []);
