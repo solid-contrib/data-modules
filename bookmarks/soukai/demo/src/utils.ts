@@ -7,7 +7,7 @@ import {
   logout,
 } from "@inrupt/solid-client-authn-browser";
 import { Bookmark } from "../../src/modules/Bookmarks";
-import { bootModels, getEngine, setEngine } from "soukai";
+import { bootModels, getEngine, setEngine, LogEngine } from "soukai";
 import {
   Fetch,
   SolidContainer,
@@ -70,7 +70,7 @@ export function bootSoukai(fetch?: Fetch) {
     SolidTypeIndex: SolidTypeIndex,
   });
   console.log('setEngine');
-  setEngine(new SolidEngine(fetch));
+  setEngine(new LogEngine(new SolidEngine(fetch)));
 }
 
 type FetchContainrURLArgs = {
