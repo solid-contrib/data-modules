@@ -3,7 +3,7 @@
 
   "client_id": "https://sosobo.5apps.com/clientid.jsonld",
   "client_name": "Solid Soukai Bookmarks",
-  "redirect_uris": ["https://sosobo.5apps.com/"],
+  "redirect_uris": ["http://localhost:5173/"],
   "grant_types" : ["refresh_token","authorization_code"],
   "response_types" : ["code"],
   "default_max_age" : 3600,

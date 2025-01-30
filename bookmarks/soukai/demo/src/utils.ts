@@ -32,7 +32,7 @@ export async function doLogin() {
   await login({
     clientName: "solid-soukai-bookmarks",
     oidcIssuer: "https://pivot.pondersource.com",
-    // clientId: "https://sosobo.5apps.com/clientid.jsonld"
+    clientId: "https://sosobo.5apps.com/clientid.jsonld"
   });
 }
 
