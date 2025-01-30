@@ -30,9 +30,9 @@ import { BookmarkModel, TopicModel } from "./components/Bookmarks";
 
 export async function doLogin() {
   await login({
-    clientName: "solid-soukai-app",
-    oidcIssuer: "https://solidcommunity.net",
-    redirectUrl: window.location.href,
+    clientName: "solid-soukai-bookmarks",
+    oidcIssuer: "https://pivot.pondersource.com",
+    clientId: "sosobo.5apps.com/clientid.jsonld"
   });
 }
 

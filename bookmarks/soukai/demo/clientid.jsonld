@@ -1,0 +1,11 @@
+{
+  "@context": ["https://www.w3.org/ns/solid/oidc-context.jsonld"],
+
+  "client_id": "https://sosobo.5apps.com/clientid.jsonld",
+  "client_name": "Solid Soukai Bookmarks",
+  "redirect_uris": ["https://sosobo.5apps.com/"],
+  "grant_types" : ["refresh_token","authorization_code"],
+  "response_types" : ["code"],
+  "default_max_age" : 3600,
+  "require_auth_time" : true
+}
