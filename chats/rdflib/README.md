@@ -35,7 +35,7 @@ You can use the module directly in the browser (without any install or build ste
 
 ```typescript
 import {Fetcher, graph, UpdateManager} from "rdflib";
-import ChatsModuleRdfLib, { ChatsModule } from "@solid-data-modules/chat-rdflib";
+import ChatsModuleRdfLib, { ChatsModule } from "@solid-data-modules/chats-rdflib";
 
 // 1️⃣ create rdflib store, fetcher and updater as usual
 const store = graph();
