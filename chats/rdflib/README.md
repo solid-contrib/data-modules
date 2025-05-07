@@ -39,11 +39,15 @@ import ChatsModuleRdfLib, { ChatsModule } from "@solid-data-modules/chats-rdflib
 
 // 1️⃣ create rdflib store, fetcher and updater as usual
 const store = graph();
+const options = {
+        // 💡 pass an authenticated fetch
+        // to be able to access private resources,
+        // see https://linkeddata.github.io/rdflib.js/doc/interfaces/AutoInitOptions.html
+        /* fetch: authenticatedFetch */
+};
 const fetcher = new Fetcher(
         store,
-        // 💡 pass an authenticated fetch
-        // to be able to access private resources*
-        /* fetch: authenticatedFetch */
+        options,
 );
 const updater = new UpdateManager(store);
 
