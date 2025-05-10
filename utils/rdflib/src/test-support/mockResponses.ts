@@ -5,8 +5,14 @@ import { when } from "jest-when";
  * @param fetch - A mocked fetch function
  * @param url - The URL to mock
  * @param ttl - The mocked turtle file content
+ * @param additionalHeaders - Additional headers to include in the response
  */
-export function mockTurtleDocument(fetch: jest.Mock, url: string, ttl: string) {
+export function mockTurtleDocument(
+  fetch: jest.Mock,
+  url: string,
+  ttl: string,
+  additionalHeaders: Record<string, string> = {},
+) {
   when(fetch)
     .calledWith(url, expect.anything())
     .mockResolvedValue({
@@ -18,6 +24,7 @@ export function mockTurtleDocument(fetch: jest.Mock, url: string, ttl: string) {
         link: '<http://www.w3.org/ns/ldp#Resource>; rel="type"',
         "wac-allow": 'user="read write append control",public="read"',
         "accept-patch": "text/n3",
+        ...additionalHeaders,
       }),
       text: () => Promise.resolve(ttl),
     } as Response);
