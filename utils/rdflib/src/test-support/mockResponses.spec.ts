@@ -1,7 +1,7 @@
 import { mockLdpContainer, mockTurtleDocument } from "./mockResponses";
 
 describe("mockResponses", () => {
-  describe("mockTurtleResponse", () => {
+  describe(mockTurtleDocument.name, () => {
     it("mocks a turtle document body", async () => {
       const fetch = jest.fn();
       mockTurtleDocument(
@@ -46,7 +46,7 @@ describe("mockResponses", () => {
     });
   });
 
-  describe("mockLdpContainer", () => {
+  describe(mockLdpContainer.name, () => {
     it("mocks a container without contents", async () => {
       const fetch = jest.fn();
       mockLdpContainer(fetch, "http://container.test/");
