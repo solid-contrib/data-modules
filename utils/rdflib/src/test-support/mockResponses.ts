@@ -36,12 +36,14 @@ export function mockTurtleDocument(
  * @param url - The URL to mock
  * @param contains - List of URLs of documents contained in this container
  * @param moreTurtle - Additional turtle to include into the response
+ * @param additionalHeaders - Additional headers to include in the response
  */
 export function mockLdpContainer(
   fetch: jest.Mock,
   url: string,
   contains: string[] = [],
   moreTurtle: string = "",
+  additionalHeaders: Record<string, string> = {},
 ) {
   when(fetch)
     .calledWith(url, expect.anything())
@@ -54,6 +56,7 @@ export function mockLdpContainer(
         link: '<http://www.w3.org/ns/ldp#Container>; rel="type"',
         "wac-allow": 'user="read write append control",public="read"',
         "accept-patch": "text/n3",
+        ...additionalHeaders,
       }),
       text: () =>
         Promise.resolve(`
