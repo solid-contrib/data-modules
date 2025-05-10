@@ -1,7 +1,52 @@
-import { mockLdpContainer } from "./mockResponses";
+import { mockLdpContainer, mockTurtleDocument } from "./mockResponses";
 
 describe("mockResponses", () => {
-  describe("mockLdpContainer", () => {
+  describe(mockTurtleDocument.name, () => {
+    it("mocks a turtle document body", async () => {
+      const fetch = jest.fn();
+      mockTurtleDocument(
+        fetch,
+        "http://document.test/",
+        `<> <> "Some content" .`,
+      );
+      const result = await fetch("http://document.test/", {});
+      expect(await result.text()).toEqual('<> <> "Some content" .');
+    });
+
+    it("mocks standard turtle document headers", async () => {
+      const fetch = jest.fn();
+      mockTurtleDocument(
+        fetch,
+        "http://document.test/",
+        `<> <> "Some content" .`,
+      );
+      const result: Response = await fetch("http://document.test/", {});
+      expect(result.headers.get("Content-Type")).toEqual("text/turtle");
+      expect(result.headers.get("Link")).toEqual(
+        '<http://www.w3.org/ns/ldp#Resource>; rel="type"',
+      );
+      expect(result.headers.get("Wac-Allow")).toEqual(
+        'user="read write append control",public="read"',
+      );
+      expect(result.headers.get("Accept-Patch")).toEqual("text/n3");
+    });
+
+    it("mocks additional headers as provided", async () => {
+      const fetch = jest.fn();
+      mockTurtleDocument(
+        fetch,
+        "http://document.test/",
+        `<> <> "Some content" .`,
+        {
+          "X-My-Header": "MyValue",
+        },
+      );
+      const result: Response = await fetch("http://document.test/", {});
+      expect(result.headers.get("X-My-Header")).toEqual("MyValue");
+    });
+  });
+
+  describe(mockLdpContainer.name, () => {
     it("mocks a container without contents", async () => {
       const fetch = jest.fn();
       mockLdpContainer(fetch, "http://container.test/");
@@ -53,6 +98,29 @@ describe("mockResponses", () => {
         ldp:contains <http://container.test/one>; ldp:contains <http://container.test/two>
       .
       <http://container.test/one> a ldp:Container .`);
+    });
+
+    it("mocks standard ldp container headers", async () => {
+      const fetch = jest.fn();
+      mockLdpContainer(fetch, "http://container.test/");
+      const result: Response = await fetch("http://container.test/", {});
+      expect(result.headers.get("Content-Type")).toEqual("text/turtle");
+      expect(result.headers.get("Link")).toEqual(
+        '<http://www.w3.org/ns/ldp#Container>; rel="type"',
+      );
+      expect(result.headers.get("Wac-Allow")).toEqual(
+        'user="read write append control",public="read"',
+      );
+      expect(result.headers.get("Accept-Patch")).toEqual("text/n3");
+    });
+
+    it("mocks additional headers as provided", async () => {
+      const fetch = jest.fn();
+      mockLdpContainer(fetch, "http://document.test/", undefined, undefined, {
+        "X-My-Header": "MyValue",
+      });
+      const result: Response = await fetch("http://document.test/", {});
+      expect(result.headers.get("X-My-Header")).toEqual("MyValue");
     });
   });
 });
