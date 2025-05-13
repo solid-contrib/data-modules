@@ -77,7 +77,7 @@ node ./examples/<some-example>.mjs
 
 ### Available features
 
-For a description of all features available please take a look at the [module API documentation](https://solid-contrib.github.io/data-modules/chat-rdflib-api/interfaces/ChatsModule.html).
+For a description of all features available please take a look at the [module API documentation](https://solid-contrib.github.io/data-modules/chats-rdflib-api/interfaces/ChatsModule.html).
 
 ## Development
 
