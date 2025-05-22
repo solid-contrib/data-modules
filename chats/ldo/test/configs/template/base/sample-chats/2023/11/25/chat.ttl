@@ -1,0 +1,40 @@
+@prefix : <#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix sioc: <http://rdfs.org/sioc/ns#>.
+@prefix wf: <http://www.w3.org/2005/01/wf/flow#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix c: </profile/card#>.
+@prefix terms: <https://liqid.chat/terms/>.
+@prefix in: <../../../index.ttl#>.
+
+:6def4609-3a97-44a7-ac5f-7cb8d2c5d2e0
+    dct:created "2023-11-25T20:58:26.606Z"^^xsd:dateTime;
+    sioc:content "thmooove created \"Scatterverse \"";
+    foaf:maker c:me;
+    terms:liqidChatSignedCredential
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWtlciI6Imh0dHBzOi8vdGhtb29vdmUuc29saWRjb21tdW5pdHkubmV0L3Byb2ZpbGUvY2FyZCNtZSIsInRpbWVDcmVhdGVkIjoiMjAyMy0xMS0yNVQyMDo1ODoyNi42MDZaIiwiY29udGVudCI6eyJ0ZXh0IjpbInRobW9vb3ZlIGNyZWF0ZWQgXCJTY2F0dGVydmVyc2UgXCIiXX0sImlhdCI6MTcwMDk0NTkwN30.OVpr5_NDFvSbNuvIhyEHgYD8rK9dhvWzR64Fyx7TkC0".
+:bf343557-915b-4302-8377-d6e98d0963fc
+    dct:created "2023-11-25T21:34:17.354Z"^^xsd:dateTime;
+    sioc:content "If youre reading this, ily ";
+    foaf:maker c:me;
+    terms:liqidChatSignedCredential
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWtlciI6Imh0dHBzOi8vdGhtb29vdmUuc29saWRjb21tdW5pdHkubmV0L3Byb2ZpbGUvY2FyZCNtZSIsInRpbWVDcmVhdGVkIjoiMjAyMy0xMS0yNVQyMTozNDoxNy4zNTRaIiwiY29udGVudCI6eyJ0ZXh0IjpbIklmIHlvdXJlIHJlYWRpbmcgdGhpcywgaWx5ICJdfSwiaWF0IjoxNzAwOTQ4MDU3fQ.DYrhabM0FB1aD0-GRadSK7CmHaU4CUU1xCh_VlOVwFw".
+:c22cf637-7a5e-4c1f-b83d-74eeb6638657
+    dct:created "2023-11-25T20:59:49.014Z"^^xsd:dateTime;
+    sioc:content "How many people actively use this?";
+    foaf:maker c:me;
+    terms:liqidChatSignedCredential
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWtlciI6Imh0dHBzOi8vdGhtb29vdmUuc29saWRjb21tdW5pdHkubmV0L3Byb2ZpbGUvY2FyZCNtZSIsInRpbWVDcmVhdGVkIjoiMjAyMy0xMS0yNVQyMDo1OTo0OS4wMTRaIiwiY29udGVudCI6eyJ0ZXh0IjpbIkhvdyBtYW55IHBlb3BsZSBhY3RpdmVseSB1c2UgdGhpcz8iXX0sImlhdCI6MTcwMDk0NTk4OX0.kilA6CjLNqCX6ELQ3Kou8ZUbQoZIa20L72sXlTN6U7s".
+:cb1a3293-d890-4d16-b462-ee60fceb3bc2
+    dct:created "2023-11-25T20:58:43.163Z"^^xsd:dateTime;
+    sioc:content "this is pretty clean ";
+    foaf:maker c:me;
+    terms:liqidChatSignedCredential
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWtlciI6Imh0dHBzOi8vdGhtb29vdmUuc29saWRjb21tdW5pdHkubmV0L3Byb2ZpbGUvY2FyZCNtZSIsInRpbWVDcmVhdGVkIjoiMjAyMy0xMS0yNVQyMDo1ODo0My4xNjNaIiwiY29udGVudCI6eyJ0ZXh0IjpbInRoaXMgaXMgcHJldHR5IGNsZWFuICJdfSwiaWF0IjoxNzAwOTQ1OTIzfQ.nhJznQld5UeqEZxZX5OVaukK8loGKFct0iafgXcY4bA".
+in:this
+    wf:message
+        :6def4609-3a97-44a7-ac5f-7cb8d2c5d2e0,
+        :bf343557-915b-4302-8377-d6e98d0963fc,
+        :c22cf637-7a5e-4c1f-b83d-74eeb6638657,
+        :cb1a3293-d890-4d16-b462-ee60fceb3bc2 .
