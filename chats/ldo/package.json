@@ -43,6 +43,7 @@
   "dependencies": {
     "@ldo/connected": "^1.0.0-alpha.18",
     "@ldo/connected-solid": "^1.0.0-alpha.18",
-    "@ldo/ldo": "^1.0.0-alpha.14"
+    "@ldo/ldo": "^1.0.0-alpha.14",
+    "uuid": "^11.1.0"
   }
 }
