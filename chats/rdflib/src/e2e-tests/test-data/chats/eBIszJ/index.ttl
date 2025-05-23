@@ -1,0 +1,2 @@
+<#this> a <http://www.w3.org/ns/pim/meeting#LongChat>;
+    <http://purl.org/dc/elements/1.1/title> "An existing chat channel".

@@ -1,14 +1,14 @@
-import { AddressBookQuery } from "../queries/AddressBookQuery";
+import { AddressBookQuery } from "../queries/AddressBookQuery.js";
 import { lit, st, sym } from "rdflib";
-import { rdf, vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 
-import { NewContact } from "../../index";
-import { UpdateOperation } from "./index";
+import { NewContact } from "../../index.js";
+import { rdf, UpdateOperation } from "@solid-data-modules/rdflib-utils";
 
 export function createNewContact(
   addressBook: AddressBookQuery,
   newContact: NewContact,
-): UpdateOperation {
+): UpdateOperation & { uri: string } {
   const contactNode = addressBook.proposeNewContactNode();
   const nameEmailIndex = addressBook.queryNameEmailIndex();
   if (!nameEmailIndex) {

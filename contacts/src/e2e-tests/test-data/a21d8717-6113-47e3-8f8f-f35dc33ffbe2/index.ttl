@@ -1,0 +1,4 @@
+<#this> a <http://www.w3.org/2006/vcard/ns#AddressBook>;
+        <http://purl.org/dc/elements/1.1/title> "Business contacts";
+        <http://www.w3.org/2006/vcard/ns#nameEmailIndex> <http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/people.ttl>;
+        <http://www.w3.org/2006/vcard/ns#groupIndex> <http://localhost:3456/a21d8717-6113-47e3-8f8f-f35dc33ffbe2/groups.ttl>.

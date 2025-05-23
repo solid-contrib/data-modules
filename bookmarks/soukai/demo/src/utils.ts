@@ -1,5 +1,5 @@
 import {
-  ISessionInfo,
+  // ISessionInfo,
   Session,
   getDefaultSession,
   handleIncomingRedirect,
@@ -7,7 +7,7 @@ import {
   logout,
 } from "@inrupt/solid-client-authn-browser";
 import { Bookmark } from "../../src/modules/Bookmarks";
-import { bootModels, getEngine, setEngine } from "soukai";
+import { bootModels, getEngine, setEngine, LogEngine } from "soukai";
 import {
   Fetch,
   SolidContainer,
@@ -30,9 +30,9 @@ import { BookmarkModel, TopicModel } from "./components/Bookmarks";
 
 export async function doLogin() {
   await login({
-    clientName: "solid-soukai-app",
-    oidcIssuer: "https://solidcommunity.net",
-    redirectUrl: window.location.href,
+    clientName: "solid-soukai-bookmarks",
+    oidcIssuer: "https://pivot.pondersource.com",
+    clientId: "https://sosobo.5apps.com/clientid.jsonld"
   });
 }
 
@@ -47,7 +47,7 @@ export function doLogout() {
 export async function handleRedirectAfterLogin(
   cb: (loggedInSession: Session) => void
 ) {
-  const sessionInfo: ISessionInfo | undefined = await handleIncomingRedirect({
+  /*const sessionInfo: ISessionInfo | undefined =*/ await handleIncomingRedirect({
     restorePreviousSession: true,
   }); // no-op if not part of login redirect
   const session = getDefaultSession();
@@ -59,7 +59,9 @@ export async function handleRedirectAfterLogin(
 }
 
 export function bootSoukai(fetch?: Fetch) {
+  console.log('bootSolidModels');
   bootSolidModels();
+  console.log('bootModels');
   bootModels({
     Bookmark: Bookmark,
     BookmarkModel: BookmarkModel,
@@ -67,7 +69,10 @@ export function bootSoukai(fetch?: Fetch) {
     TypeIndex: SolidTypeIndex,
     SolidTypeIndex: SolidTypeIndex,
   });
-  setEngine(new SolidEngine(fetch));
+  console.log('calling setEngine now');
+  setEngine(new LogEngine(new SolidEngine(fetch)));
+  console.log('call to setEngine done');
+
 }
 
 type FetchContainrURLArgs = {
@@ -138,12 +143,12 @@ export const fetchContainerUrl = async (args: FetchContainrURLArgs) => {
 };
 
 // export const findOrCreateTasksContainer = async (session: any): Promise<SolidContainer> => {
-export const findOrCreateTasksContainer = async (session: any) => {
+export const findOrCreateTasksContainer = async (/*session: any*/) => {
   // const name = 'Bookmarks';
   // const url = "https://reza-soltani.solidcommunity.net/bookmarks";
   // const typeIndex = await Solid.findOrCreatePrivateTypeIndex();
-  const typeIndexUrl =
-    "https://reza-soltani.solidcommunity.net/settings/privateTypeIndex.ttl";
+  // const typeIndexUrl =
+  //   "https://reza-soltani.solidcommunity.net/settings/privateTypeIndex.ttl";
   // const containers = await SolidContainer.withEngine(getEngine()).fromTypeIndex(typeIndexUrl, Bookmark);
   // return (
   //     containers.find((container) => container.url === url)

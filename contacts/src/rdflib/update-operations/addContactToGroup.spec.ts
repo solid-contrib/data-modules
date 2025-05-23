@@ -1,8 +1,8 @@
-import { addContactToGroup } from "./addContactToGroup";
-import { ContactQuery } from "../queries";
-import { GroupQuery } from "../queries/GroupQuery";
+import { addContactToGroup } from "./addContactToGroup.js";
+import { ContactQuery } from "../queries/index.js";
+import { GroupQuery } from "../queries/GroupQuery.js";
 import { lit, st, sym } from "rdflib";
-import { vcard } from "../namespaces";
+import { vcard } from "../namespaces.js";
 
 describe("addContactToGroup", () => {
   it("adds the contact as a group member", () => {

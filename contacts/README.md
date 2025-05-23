@@ -12,17 +12,37 @@ interoperable way.
 
 ## Usage
 
-### Installation
+### Installation via npm
 
 ```shell
 npm install rdflib @solid-data-modules/contacts-rdflib
+```
+
+### Usage in the brower via CDN
+
+You can use the module directly in the browser (without any install or build step) by using the [esm.sh CDN](https://esm.sh/) and an import map:
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "@solid-data-modules/contacts-rdflib": "https://esm.sh/@solid-data-modules/contacts-rdflib",
+      "rdflib": "https://esm.sh/rdflib"
+    }
+  }
+</script>
+<script type="module">
+  import ContactsModuleRdfLib from "@solid-data-modules/contacts-rdflib";
+  import { Fetcher, graph, UpdateManager } from "rdflib";
+  // ... use the module as described in the quick start
+</script>
 ```
 
 ### Quick start
 
 ```typescript
 import {Fetcher, graph, UpdateManager} from "rdflib";
-import {ContactsModuleRdfLib as ContactsModule} from "@solid-data-module/contacts-rdflib";
+import ContactsModuleRdfLib, { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 
 // 1️⃣ create rdflib store, fetcher and updater as usual
 const store = graph();
@@ -35,37 +55,39 @@ const fetcher = new Fetcher(
 const updater = new UpdateManager(store);
 
 // 2️⃣ create the contacts module
-return new ContactsModule({store, fetcher, updater});
+const module: ContactsModule = new ContactsModuleRdfLib({store, fetcher, updater});
 
 // 3️⃣ use the module to interact with address books and contacts
-const uri = await contacts.createAddressBook({
-  container: "https://pod.example/alice/",
+const uri = await module.createAddressBook({
+  containerUri: "https://pod.example/alice/",
   name: "new address book"
 })
 
-const contactUri = await contacts.createNewContact({
-  addressBook: uri,
+const contactUri = await module.createNewContact({
+  addressBookUri: uri,
   contact: {
       name: "Maurice Moss",
       email: "maurice.moss@reynholm-industries.example",
-      phone: "0118-999-881-99-9119-725-3"
+      phoneNumber: "0118-999-881-99-9119-725-3"
   },
 });
 
-const addressBook = await contacts.readAddressBook(uri)
+const addressBook = await module.readAddressBook(uri)
 console.log(addressBook)
 ```
 
 ### Example scripts
 
-Executable example scripts how to use the module can be found in [./examples](./examples) folder. To run a script call it like
+Executable example scripts how to use the module can be found in [./examples](./examples) folder.
+
+The [development server](#development-server) needs to be **running** and **initialized** for this.
+
+After that you can run an example script like this:
 
 ```shell
 npm run build
 node ./examples/read-address-book.mjs
 ```
-
-The [development server](#development-server) needs to be running for this.
 
 ### Available features
 
@@ -99,14 +121,18 @@ npm run build
 
 ### Development server
 
+#### Start server
+
 You can start a development solid server via:
 
 ```shell
 npm run pod
 ```
 
-This will seed an account and pod for test user alice. Find the credentials of
+This will seed an account and an _empty_ pod for test user alice. Find the credentials of
 that account in [./dev-server/seed.json](./dev-server/seed.json)
+
+#### Initialize example data
 
 To add some example data to this pod run
 
@@ -121,3 +147,10 @@ npm run pod:clean
 ```
 
 and repeat from start of the section.
+
+## Funding
+
+This project is funded through [NGI0 Entrust](https://nlnet.nl/entrust), a fund established by [NLnet](https://nlnet.nl) with financial support from the European Commission's [Next Generation Internet](https://ngi.eu) program. Learn more at the [NLnet project page](https://nlnet.nl/SolidDataModules).
+
+[<img src="https://nlnet.nl/logo/banner.png" alt="NLnet foundation logo" width="20%" />](https://nlnet.nl)
+[<img src="https://nlnet.nl/image/logos/NGI0_tag.svg" alt="NGI Zero Logo" width="20%" />](https://nlnet.nl/entrust)

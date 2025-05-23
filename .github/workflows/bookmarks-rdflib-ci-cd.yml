@@ -1,0 +1,89 @@
+name: Bookmarks rdflib CI/CD
+
+on:
+  push:
+    paths:
+      - bookmarks/rdflib/**
+      - .github/workflows/bookmarks-rdflib-ci-cd.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./bookmarks/rdflib/
+    strategy:
+      matrix:
+        node-version: [ 20 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
+      - run: npm run test:e2e
+      - name: Save e2e test data
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-data
+          path: |
+            bookmarks/rdflib/src/e2e-tests/.test-data/
+          retention-days: 1
+      - name: Save build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            bookmarks/rdflib/dist/
+            bookmarks/rdflib/README.md
+            bookmarks/rdflib/package.json
+          retention-days: 1
+
+  npm-publish:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      prereleaseVersion: ${{ steps.prerelease.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: rlespinasse/github-slug-action@v4.4.1
+      - name: prerelease version
+        run: |
+          echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
+        id: prerelease
+      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
+      - uses: JS-DevTools/npm-publish@v3
+        name: Publish @solid-data-modules/bookmarks-rdflib
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: ${{ env.GITHUB_REF_SLUG }}
+          access: public
+
+  npm-release-latest:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: JS-DevTools/npm-publish@v3
+        name: Release @solid-data-modules/bookmarks-rdflib
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+          access: public

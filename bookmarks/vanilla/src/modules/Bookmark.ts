@@ -18,6 +18,7 @@ import {
 } from "@inrupt/solid-client";
 import { getThingAll, removeThing } from "@inrupt/solid-client";
 import {
+    AS,
     BOOKMARK,
     DCTERMS,
     FOAF,
@@ -27,7 +28,7 @@ import {
 import { namedNode } from '@rdfjs/data-model';
 import { __DC_UPDATED, __crdt_createdAt, __crdt_updatedAt, __crdt_resource } from "../constants";
 import { TypeIndexHelper } from "@rezasoltani/solid-typeindex-support";
-import { isValidUrl } from "../utils";
+import { isValidUrl, merge } from "../utils";
 
 /**
  * Interface for the shape of a bookmark object that can be created.
@@ -74,35 +75,41 @@ export class Bookmark {
      *
      * @param fetch - The fetch function to use for network requests
      * @param webId - The webId of the user to get bookmark registries for
-     * @param defaultRegisteryUrl - The default container url
+     * @param defaultPrivateBookmarkDocUrl - Where to store the bookmarks if no type registration is found
      * @returns A promise resolving to an array of registry URL strings
      * @internal
      */
-    public static async getRegisteryUrls(
+    public static async getAllBookmarkDocUrls(
         fetch: typeof globalThis.fetch,
         webId: string,
-        defaultRegisteryUrl?: string
+        defaultPrivateBookmarkDocUrl?: string
     ): Promise<string[]> {
-        const { instanceContainers, instances } = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true)
-
+        const privateEntriesOne = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, true);
+        const publicEntriesOne = await TypeIndexHelper.getFromTypeIndex(webId!, BOOKMARK.Bookmark, fetch, false);
+        const instancesOne = merge(privateEntriesOne.instances, publicEntriesOne.instances);
+        const privateEntriesTwo = await TypeIndexHelper.getFromTypeIndex(webId!, AS.Note, fetch, true);
+        const publicEntriesTwo = await TypeIndexHelper.getFromTypeIndex(webId!, AS.Note, fetch, false);
+        const instancesTwo = merge(privateEntriesTwo.instances, publicEntriesTwo.instances);
+        const instances = merge(instancesOne, instancesTwo);
+        // console.log(instances);
         if (!!instances.length) {
-            return instances
+            return instances as string[];
         } else {
             const podToUse = (await getPodUrlAll(webId!, { fetch: fetch }))[0];
 
             const baseURL = podToUse ? podToUse : webId?.split("/profile")[0]
 
-            defaultRegisteryUrl = `${baseURL}${defaultRegisteryUrl ?? '/bookmarks/index.ttl'}`;
+            defaultPrivateBookmarkDocUrl = `${baseURL}${defaultPrivateBookmarkDocUrl ?? '/bookmarks/index.ttl'}`;
 
-            const defaultIndexDataset = await getSolidDataset(defaultRegisteryUrl, { fetch: fetch });
+            const defaultIndexDataset = await getSolidDataset(defaultPrivateBookmarkDocUrl, { fetch: fetch });
 
             if (!defaultIndexDataset) {
-                await saveSolidDatasetAt(defaultRegisteryUrl, createSolidDataset(), { fetch: fetch });
+                await saveSolidDatasetAt(defaultPrivateBookmarkDocUrl, createSolidDataset(), { fetch: fetch });
             }
 
-            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registery", BOOKMARK.Bookmark, fetch, defaultRegisteryUrl, false, true)
+            await TypeIndexHelper.registerInTypeIndex(webId!, "bookmarks_registry", BOOKMARK.Bookmark, fetch, defaultPrivateBookmarkDocUrl, false, true)
 
-            return [defaultRegisteryUrl];
+            return [defaultPrivateBookmarkDocUrl];
         }
     }
 
@@ -111,27 +118,51 @@ export class Bookmark {
      *
      * @param fetch - The fetch function to use for network requests.
      * @param webId - The user's webId.
-     * @param defaultRegisteryUrl - The default container url
+     * @param defaultPrivateBookmarkDocUrl - The default container url
      * @returns A promise resolving to an array of the user's bookmarks.
      */
     public static async getAll(
         fetch: typeof globalThis.fetch,
         webId: string,
-        defaultRegisteryUrl?: string,
+        defaultPrivateBookmarkDocUrl?: string,
     ): Promise<IBookmark[]> {
-        const indexUrls = await this.getRegisteryUrls(fetch, webId, defaultRegisteryUrl);
+        const bookmarkDocUrls = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
         try {
-            const all = indexUrls.map(async (indexUrl) => {
-                const ds = await getSolidDataset(indexUrl, { fetch: fetch });
-
-                const things = getThingAll(ds)
-
+            const all = bookmarkDocUrls.map(async (bookmarkDocUrl) => {
+                const ds = await getSolidDataset(bookmarkDocUrl, { fetch: fetch });
+                // console.log('data set for', bookmarkDocUrl);
+                const things = getThingAll(ds).filter(thing => {
+                    // console.log('thing', thing, thing.predicates, thing.predicates[RDF.type], thing.predicates[RDF.type].namedNodes);
+                    if (thing && thing.predicates && thing.predicates[RDF.type] && thing.predicates[RDF.type].namedNodes) {
+                        const types = thing.predicates[RDF.type].namedNodes;
+                        // console.log("thing types", types, JSON.stringify(types));
+                        if (types && types.find((rdfType: string) => rdfType === BOOKMARK.Bookmark)) {
+                            // console.log('found bookmark (type one)', thing.url);
+                            return true;
+                        }
+                        if (types && types.find((rdfType: string) => rdfType === "http://www.w3.org/2002/01/bookmark#BookMark")) {
+                            // console.log('found bookmark (type two)', thing.url);
+                            return true;
+                        }
+                        if (types && types.find((rdfType: string) => rdfType === AS.Note)) {
+                            // console.log('found bookmark (type three)', thing.url);
+                            return true;
+                        }
+                        if (types && types.find((rdfType: string) => rdfType === "http://soukai-solid.com/crdt/Metadata")) {
+                            // console.log('found Soukai metadata', thing.url);
+                            return true;
+                        }
+                    }
+                    // console.log('found non-bookmark', thing.url);
+                    return false;
+                });
+                // console.log('things', things);
                 const bookmarks = await things.map(thing => this.mapBookmark(thing))
 
                 const resources = bookmarks.filter(Bookmark => !Bookmark.url.endsWith('-metadata'))
                 const metadatas = bookmarks.filter(Bookmark => Bookmark.url.endsWith('-metadata'))
 
-                const responce = resources.map(bookmark => {
+                const response = resources.map(bookmark => {
                     const metadata = metadatas.find((meta: any) => meta.resource === bookmark.url) as any
 
                     return {
@@ -141,7 +172,7 @@ export class Bookmark {
                     }
                 })
 
-                return responce
+                return response
             })
             const allPromise = Promise.all([...all]);
             const values = (await allPromise).flat();
@@ -211,14 +242,14 @@ export class Bookmark {
      * @param payload - The bookmark data.
      * @param fetch - The fetch function.
      * @param webId - The user's WebID.
-     * @param defaultRegisteryUrl - The default container url
+     * @param defaultPrivateBookmarkDocUrl - Doc to store the bookmark in if no type registration is foundj
      * @returns A promise resolving to true if the bookmark was created, false otherwise.
      */
     public static async create(
         payload: ICreateBookmark,
         fetch: typeof globalThis.fetch,
         webId: string,
-        defaultRegisteryUrl?: string,
+        defaultPrivateBookmarkDocUrl?: string,
     ): Promise<boolean> {
         const { title, link, creator, topic } = payload;
 
@@ -226,9 +257,9 @@ export class Bookmark {
         if (creator && !isValidUrl(creator))
             throw new Error("creator is not a valid URL");
 
-        const [indexUrl] = await this.getRegisteryUrls(fetch, webId, defaultRegisteryUrl);
+        const [bookmarkDocUrl] = await this.getAllBookmarkDocUrls(fetch, webId, defaultPrivateBookmarkDocUrl);
 
-        const ds = await getSolidDataset(indexUrl, { fetch: fetch });
+        const ds = await getSolidDataset(bookmarkDocUrl, { fetch: fetch });
 
         let newBookmarkThing = createThing();
 
@@ -277,7 +308,7 @@ export class Bookmark {
 
         const updatedBookmarkList = setThing(ds, newBookmarkThing);
         const updatedDataset = await saveSolidDatasetAt(
-            indexUrl,
+            bookmarkDocUrl,
             updatedBookmarkList,
             { fetch: fetch }
         );
@@ -346,7 +377,7 @@ export class Bookmark {
         const updated = this.mapUpdated(thing);
         const creator = this.mapCreator(thing);
         const resource = getNamedNode(thing, __crdt_resource)?.value;
-        return {
+        const ret = {
             url,
             title,
             link,
@@ -356,6 +387,8 @@ export class Bookmark {
             ...(creator && { creator }),
             ...(resource && { resource }),
         };
+        // console.log('mapped bookmark', thing.predicates, ret);
+        return ret;
     }
 
     /**
@@ -369,6 +402,7 @@ export class Bookmark {
         return (
             getLiteral(thing, DCTERMS.title)?.value ??
             getLiteral(thing, RDFS.label)?.value ??
+            getLiteral(thing, AS.name)?.value ??
             ""
         );
     }
@@ -381,9 +415,11 @@ export class Bookmark {
      * @internal
      */
     private static mapLink(thing: ThingPersisted): string {
+        // console.log('mapping link', getLiteral(thing, BOOKMARK.recalls)?.value, )
         return (
             getLiteral(thing, BOOKMARK.recalls)?.value ??
             getNamedNode(thing, BOOKMARK.recalls)?.value ??
+            getNamedNode(thing, AS.url)?.value ??
             ""
         );
     }
@@ -398,6 +434,7 @@ export class Bookmark {
     private static mapCreated(thing: ThingPersisted): string | undefined {
         return (
             getLiteral(thing, DCTERMS.created)?.value ??
+            getLiteral(thing, AS.published)?.value ??
             getLiteral(thing, __crdt_createdAt)?.value
         );
     }
@@ -426,6 +463,7 @@ export class Bookmark {
     private static mapCreator(thing: ThingPersisted): string | undefined {
         return (
             getNamedNode(thing, DCTERMS.creator)?.value ??
+            getNamedNode(thing, AS.actor)?.value ??
             getNamedNode(thing, FOAF.maker)?.value
         );
     }

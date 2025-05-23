@@ -25,11 +25,23 @@ import {
   IBookmark,
 } from "../../../../src";
 
-type IProps = {};
+declare global {
+  interface Window {
+    Bookmark?: Bookmark;
+    fetcher?: unknown;
+    webId?: unknown;
+  }
+}
+window.Bookmark =  Bookmark || {};
 
-const Bookmarks: FC<IProps> = ({ }) => {
+type IProps = object;
+
+const Bookmarks: FC<IProps> = () => {
   const [bookmarkToUpdate, setBookmarkToUpdate] = useState<undefined | IBookmark>(undefined);
   const { session } = useSession();
+  window.fetcher = session?.fetch;
+  window.webId = session?.info?.webId;
+
   const { info: { isLoggedIn } } = session;
 
   const [bookmarkTitle, setbookmarkTitle] = useState("");
@@ -37,13 +49,24 @@ const Bookmarks: FC<IProps> = ({ }) => {
 
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
+  let loading = false;
+
   async function loadBookmarks() {
+    if (loading) {
+      console.log("Already loading, skip");
+      return;
+    }
+    console.log("Loading bookmarks");
+    loading = true;
     const list = await Bookmark.getAll(session.fetch, session.info.webId!);
     setBookmarks(list);
+    loading = false;
+    console.log("Loaded bookmarks");
   }
 
   useEffect(() => {
     if (session && isLoggedIn) loadBookmarks();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, isLoggedIn]);
 
   const handleSubmit = async () => {
@@ -53,8 +76,9 @@ const Bookmarks: FC<IProps> = ({ }) => {
         title: bookmarkTitle,
         link: bookmarkLink,
       }
-      const res = await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
-      console.log(res)
+      await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
+      // const res = await Bookmark.update(bookmarkToUpdate.url, payload, session.fetch)
+      // console.log(res)
 
 
       loadBookmarks()
@@ -65,7 +89,7 @@ const Bookmarks: FC<IProps> = ({ }) => {
       setBookmarkToUpdate(undefined);
     } else {
       // TODO: Create
-      const updatedDataset = await Bookmark.create(
+      await Bookmark.create(
         {
           title: bookmarkTitle,
           link: bookmarkLink,

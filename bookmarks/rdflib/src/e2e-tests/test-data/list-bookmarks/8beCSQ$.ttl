@@ -1,0 +1,4 @@
+<#it>
+    a                                            <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/title>             "Existing bookmark" ;
+    <http://www.w3.org/2002/01/bookmark#recalls> <https://existing-bookmark.example> .

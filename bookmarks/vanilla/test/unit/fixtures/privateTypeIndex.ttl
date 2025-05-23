@@ -15,7 +15,7 @@
     a solid:TypeRegistration;
     solid:forClass schem:Movie;
     solid:instanceContainer mov: .
-:bookmarks_registery
+:bookmarks_registry
     a solid:TypeRegistration;
     solid:forClass bookm:Bookmark;
     solid:instance </bookmarks/index.ttl>.

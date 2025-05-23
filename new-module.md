@@ -49,10 +49,10 @@ import { TypeIndexHelper } from "solid-typeindex-support";
 
 export class Bookmark {
     private static async getIndexUrls(session): Promise<string[]> {
-        const registeries = await TypeIndexHelper.getFromTypeIndex(session.info.webId!, session.fetch, true)
+        const registries = await TypeIndexHelper.getFromTypeIndex(session.info.webId!, session.fetch, true)
 
-        if (!!registeries?.length) {
-            return registeries
+        if (!!registries?.length) {
+            return registries
         } else {
             const pods = (await getPodUrlAll(session.info.webId!, { fetch: session.fetch }))[0];
 

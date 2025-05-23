@@ -1,0 +1,9 @@
+@prefix :      <#>.
+@prefix terms: <http://www.w3.org/ns/solid/terms#>.
+@prefix meeting: <http://www.w3.org/ns/pim/meeting#>.
+
+
+<#LongChat>
+    a              terms:TypeRegistration ;
+    terms:forClass meeting:LongChat ;
+    terms:instance </alice/public/chats/lobby/index.ttl#this> .

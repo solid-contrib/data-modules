@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
     "outDir": "dist",
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "es2020",
+    "lib": ["es2020", "DOM"],
+    "module": "ES2020",
+    "moduleResolution": "bundler",
     "strict": true,
-    "skipLibCheck": true,
-    "declaration": true
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "allowJs": true
   },
   "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts", "src/test-support"]
+  "exclude": ["**/*.spec.ts", "src/test-support", "src/e2e-tests"]
 }

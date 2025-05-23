@@ -1,7 +1,7 @@
 import { IndexedFormula, isNamedNode, NamedNode, sym } from "rdflib";
-import { dc, vcard } from "../namespaces";
-import { Contact, Group } from "../../index";
-import { v4 as uuid } from "uuid";
+import { dc, vcard } from "../namespaces.js";
+import { Contact, Group } from "../../index.js";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 export class AddressBookQuery {
   private addressBookDoc: NamedNode;
@@ -22,7 +22,7 @@ export class AddressBookQuery {
   }
 
   private proposeNewNode(containerPath: string) {
-    const id = uuid();
+    const id = generateId();
     const baseUri = this.addressBookNode.dir()?.uri;
     return sym(`${baseUri}${containerPath}/${id}/index.ttl#this`);
   }

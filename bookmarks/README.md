@@ -5,9 +5,9 @@ Implemented conventions
 
 ## Usage
 To use the Bookmarks data module, first decide if you want to use it on top of:
-* @inrupt/solid-client
-* rdflib-js (not implemented yet)
-* soukai
+* [@inrupt/solid-client](./vanilla)
+* [rdflib](./rdflib)
+* [soukai](./soukai)
 * LDO (not implemented yet)
 
 See the applicable subfolder

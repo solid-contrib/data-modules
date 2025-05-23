@@ -4,3 +4,8 @@
 <Person/1973dcec-e71c-476c-87db-0d3332291214/index.ttl#this>
     vcard:inAddressBook <index.ttl#this> ;
     vcard:fn            "Molly Braaten" .
+
+<Person/968b9718-036c-40a6-832b-a0732402d8e1/index.ttl#this>
+    vcard:inAddressBook <index.ttl#this> ;
+    vcard:fn            "Bran Breda" .
+

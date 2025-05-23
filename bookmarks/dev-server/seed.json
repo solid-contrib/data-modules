@@ -1,0 +1,11 @@
+[
+  {
+    "email": "alice@mail.test",
+    "password": "test",
+    "pods": [
+      {
+        "name": "alice"
+      }
+    ]
+  }
+]

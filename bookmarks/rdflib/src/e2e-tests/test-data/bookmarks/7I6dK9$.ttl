@@ -1,0 +1,5 @@
+<#it>
+    a                                            <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/title>             "Some Bookmark" ;
+    <http://www.w3.org/2002/01/bookmark#recalls> <https://nice-page.example> ;
+    <http://purl.org/dc/terms/created>           "2024-07-25T19:53:51.751Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

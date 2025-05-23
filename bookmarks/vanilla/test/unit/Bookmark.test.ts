@@ -38,7 +38,7 @@ afterEach(() => {
 
 describe("Bookmark", () => {
 
-    it("The getIndexUrl method should return index url with registery exists in typeIndex", async () => {
+    it("The getIndexUrl method should return index url with registry exists in typeIndex", async () => {
         const podUrls = ["https://fake-pod.net/"];
         const expectedIndexUrl = ["https://fake-pod.net/bookmarks/index.ttl"];
 
@@ -47,7 +47,7 @@ describe("Bookmark", () => {
         jest.spyOn(TypeIndexHelper, "getFromTypeIndex").mockReturnValue(Promise.resolve({ instanceContainers: [], instances }));
         jest.spyOn(inruptClient, "getPodUrlAll").mockReturnValue(Promise.resolve(podUrls));
 
-        const res = await Bookmark.getRegisteryUrls(session.fetch, session.info.webId!);
+        const res = await Bookmark.getAllBookmarkDocUrls(session.fetch, session.info.webId!);
 
         expect(inruptClient.getPodUrlAll).toHaveBeenCalledTimes(0);
 
@@ -70,13 +70,13 @@ describe("Bookmark", () => {
             }
         };
 
-        jest.spyOn(Bookmark, "getRegisteryUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
+        jest.spyOn(Bookmark, "getAllBookmarkDocUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseObject));
 
         const res = await Bookmark.getAll(session.fetch, session.info.webId!);
 
-        expect(Bookmark.getRegisteryUrls).toHaveBeenCalled();
+        expect(Bookmark.getAllBookmarkDocUrls).toHaveBeenCalled();
 
         expect(res).toEqual(expected);
 
@@ -104,7 +104,7 @@ describe("Bookmark", () => {
             }
         }
 
-        jest.spyOn(Bookmark, "getRegisteryUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
+        jest.spyOn(Bookmark, "getAllBookmarkDocUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
         jest.spyOn(inruptClient, "getThing").mockReturnValue(JSON.parse(loadFixture("things/one.json")));
@@ -142,7 +142,7 @@ describe("Bookmark", () => {
             }
         }
 
-        jest.spyOn(Bookmark, "getRegisteryUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
+        jest.spyOn(Bookmark, "getAllBookmarkDocUrls").mockReturnValue(Promise.resolve(defaultBookmarksDocUrl));
 
         jest.spyOn(session, "fetch").mockReturnValue(Promise.resolve(responseGet));
 
@@ -152,7 +152,7 @@ describe("Bookmark", () => {
 
         const res = await Bookmark.create(payload, session.fetch, session.info.webId!);
 
-        expect(Bookmark.getRegisteryUrls).toHaveBeenCalled();
+        expect(Bookmark.getAllBookmarkDocUrls).toHaveBeenCalled();
 
         expect(res).toEqual(true);
 

@@ -40,6 +40,7 @@ jobs:
           name: build
           path: |
             contacts/dist/
+            contacts/README.md
             contacts/package.json
           retention-days: 1
 

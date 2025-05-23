@@ -1,14 +1,15 @@
 import { lit, st, sym } from "rdflib";
-import { v4 as uuid } from "uuid";
-import { dc, vcard } from "../namespaces";
 
-import { UpdateOperation } from "./index";
+import { dc, vcard } from "../namespaces.js";
+
+import { UpdateOperation } from "@solid-data-modules/rdflib-utils";
+import { generateId } from "@solid-data-modules/rdflib-utils/identifier";
 
 export function createAddressBook(
   container: string,
   name: string,
-): UpdateOperation {
-  const id = uuid();
+): UpdateOperation & { uri: string } {
+  const id = generateId();
   const uri = `${container}${id}/index.ttl#this`;
   const nameEmailIndexUri = `${container}${id}/people.ttl`;
   const groupIndexUri = `${container}${id}/groups.ttl`;
@@ -34,6 +35,6 @@ export function createAddressBook(
     uri,
     deletions: [],
     insertions,
-    filesToCreate: [{ uri: nameEmailIndexUri }, { uri: groupIndexUri }],
+    filesToCreate: [{ url: nameEmailIndexUri }, { url: groupIndexUri }],
   };
 }

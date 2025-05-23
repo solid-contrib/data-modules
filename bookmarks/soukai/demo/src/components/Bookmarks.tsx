@@ -29,7 +29,9 @@ const Bookmarks: FC = () => {
 
   useEffect(() => {
     (async () => {
+      console.log('bookmarks usuable yet?');
       if (!userSession) return;
+      console.log('yes!');
       const factory = await BookmarkFactory.getInstance(
         {
           webId: userSession?.info.webId ?? "",
@@ -128,10 +130,7 @@ const Bookmarks: FC = () => {
                         });
 
                         const bookmark = await factory.get(b.url);
-                        console.log(
-                          "🚀 ~ file: Bookmarks.tsx:122 ~ <ButtononClick={ ~ bookmark:",
-                          bookmark?.getAttributes()
-                        );
+                        console.log("🚀 ~ file: Bookmarks.tsx:122 ~ <ButtononClick={ ~ bookmark:", bookmark?.getAttributes());
                       }}
                     >
                       GET

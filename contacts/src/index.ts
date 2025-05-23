@@ -1,6 +1,17 @@
-export { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib";
+import { ContactsModuleRdfLib } from "./rdflib/ContactsModuleRdfLib.js";
+
+export default ContactsModuleRdfLib;
 
 export interface ContactsModule {
+  /**
+   * Lists all known address books of the given Solid user.
+   * Private instances will only be listed, if the fetcher has access to the preferences document and
+   * the private type index, otherwise only public instances will be returned and the privateUris will be an empty array.
+   * @param webId - The WebID of the user whose address books to list
+   * @return The URIs of the address books grouped by public (listed) and private (unlisted) instances
+   */
+  listAddressBooks(webId: string): Promise<AddressBookLists>;
+
   /**
    * Creates a new address book in the given container
    * @param command
@@ -9,6 +20,7 @@ export interface ContactsModule {
   createAddressBook({
     containerUri,
     name,
+    ownerWebId,
   }: CreateAddressBookCommand): Promise<string>;
 
   /**
@@ -36,6 +48,12 @@ export interface ContactsModule {
   readContact(uri: string): Promise<FullContact>;
 
   /**
+   * Changes the name of the given contact to a new value
+   * @param command
+   */
+  renameContact(command: RenameContactCommand): Promise<void>;
+
+  /**
    * Creates a new group within a given address book
    * @param command
    * @return The URI of the newly created group
@@ -57,6 +75,56 @@ export interface ContactsModule {
    * @param command
    */
   addContactToGroup(command: AddContactToGroupCommand): Promise<void>;
+
+  /**
+   * Removes an existing contact from an existing group
+   * @param command
+   */
+  removeContactFromGroup(command: RemoveContactFromGroupCommand): Promise<void>;
+
+  /**
+   * Adds a new phone number to the given contact
+   *
+   * @param command
+   * @return The URI of the newly created phone number resource
+   */
+  addNewPhoneNumber(command: AddNewPhoneNumberCommand): Promise<string>;
+
+  /**
+   * Adds a new email address to the given contact
+   *
+   * @param command
+   * @return The URI of the newly created email address resource
+   */
+  addNewEmailAddress(command: AddNewEmailAddressCommand): Promise<string>;
+
+  /**
+   * Removes the given phone number from the given contact
+   *
+   * @param command
+   */
+  removePhoneNumber(command: RemovePhoneNumberCommand): Promise<void>;
+
+  /**
+   * Updates the given phone number to a new value
+   *
+   * @param command
+   */
+  updatePhoneNumber(command: UpdatePhoneNumberCommand): Promise<void>;
+
+  /**
+   * Updates the given email address to a new value
+   *
+   * @param command
+   */
+  updateEmailAddress(command: UpdateEmailAddressCommand): Promise<void>;
+
+  /**
+   * Removes the given email address from the given contact
+   *
+   * @param command
+   */
+  removeEmailAddress(command: RemoveEmailAddressCommand): Promise<void>;
 }
 
 /**
@@ -71,6 +139,11 @@ export interface CreateAddressBookCommand {
    * The human-readable title for the address book
    */
   name: string;
+  /**
+   * WebID of the Solid user who creates the address book.
+   * If given, the private type index of that user will be updated to include the new address book.
+   */
+  ownerWebId?: string;
 }
 
 /**
@@ -85,6 +158,10 @@ export interface CreateNewContactCommand {
    * The data of the contact to create
    */
   contact: NewContact;
+  /**
+   * URIs of existing groups to add the contact to
+   */
+  groupUris?: string[];
 }
 
 /**
@@ -104,6 +181,20 @@ export interface AddressBook {
   title: string;
   contacts: Contact[];
   groups: Group[];
+}
+
+/**
+ * Lists URIs of address book found in index documents
+ */
+export interface AddressBookLists {
+  /**
+   * URIs listed in the public type index
+   */
+  publicUris: string[];
+  /**
+   * URIS listed in the private type index. Stays empty if the index is not accessible.
+   */
+  privateUris: string[];
 }
 
 /**
@@ -204,4 +295,116 @@ export interface AddContactToGroupCommand {
    * The URI of an existing contact, that should be added to the group
    */
   groupUri: string;
+}
+
+/**
+ * Data needed to remove an existing contact from an existing group
+ */
+export interface RemoveContactFromGroupCommand {
+  /**
+   * The URI of an existing group, from that the contact should be removed
+   */
+  contactUri: string;
+  /**
+   * The URI of an existing contact, that should be removed to the group
+   */
+  groupUri: string;
+}
+
+/**
+ * Data needed to add a phone number to an existing contact
+ */
+export interface AddNewPhoneNumberCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   * The phone number to add (RFC 3966 telephone-subscriber part format)
+   */
+  newPhoneNumber: string;
+}
+
+/**
+ * Data needed to remove a phone number from an existing contact
+ */
+export interface RemovePhoneNumberCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   *  The URI of the phone number resource to remove
+   */
+  phoneNumberUri: string;
+}
+
+/**
+ * Data needed to remove an email address from an existing contact
+ */
+export interface AddNewEmailAddressCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   * The email address to add
+   */
+  newEmailAddress: string;
+}
+
+/**
+ * Data needed to remove an email address from an existing contact
+ */
+export interface RemoveEmailAddressCommand {
+  /**
+   * The URI of the contact
+   */
+  contactUri: string;
+  /**
+   * The URI of the email address resource to remove
+   */
+  emailAddressUri: string;
+}
+
+/**
+ * Data needed to update an existing phone number
+ */
+export interface UpdatePhoneNumberCommand {
+  /**
+   * The URI of the phone number to update
+   */
+  phoneNumberUri: string;
+  /**
+   * The new phone number (RFC 3966 telephone-subscriber part format)
+   */
+  newPhoneNumber: string;
+}
+
+/**
+ * Data needed to update an existing email address
+ */
+export interface UpdateEmailAddressCommand {
+  /**
+   * The URI of the email address to update
+   */
+  emailAddressUri: string;
+  /**
+   * The new email address
+   */
+  newEmailAddress: string;
+}
+
+/**
+ * Data needed to rename a contact
+ */
+export interface RenameContactCommand {
+  /**
+   * The URI of the contact to rename
+   */
+  contactUri: string;
+  /**
+   * The new name
+   */
+  newName: string;
 }

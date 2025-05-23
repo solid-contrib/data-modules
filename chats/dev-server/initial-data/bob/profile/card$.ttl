@@ -1,0 +1,17 @@
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+
+<http://localhost:3000/bob/profile/card>
+    a                 foaf:PersonalProfileDocument ;
+    foaf:maker        <#me> ;
+    foaf:primaryTopic <#me> .
+
+<#me>
+    a                                                foaf:Person ;
+    solid:oidcIssuer                                 <http://localhost:3000/> ;
+    <http://www.w3.org/2006/vcard/ns#fn>             "Bob" ;
+    <http://www.w3.org/2006/vcard/ns#role>           "Test User" ;
+    solid:publicTypeIndex                            <http://localhost:3000/alice/profile/publicTypeIndex.ttl> ;
+    solid:privateTypeIndex                           <http://localhost:3000/alice/Settings/privateTypeIndex.ttl> ;
+    <http://www.w3.org/ns/pim/space#preferencesFile> <http://localhost:3000/alice/Settings/Preferences.ttl> .
+

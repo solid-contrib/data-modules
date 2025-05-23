@@ -1,0 +1,9 @@
+<#6c0b5b5d>
+    a                                            <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/title>             "Old title" ;
+    <http://www.w3.org/2002/01/bookmark#recalls> <https://old-site.example> .
+
+<#eb282827>
+    a                                            <http://www.w3.org/2002/01/bookmark#Bookmark> ;
+    <http://purl.org/dc/terms/title>             "Delete me" ;
+    <http://www.w3.org/2002/01/bookmark#recalls> <https://soon-gone.example> .

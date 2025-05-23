@@ -1,4 +1,7 @@
 # data-modules
+This project is [funded](https://nlnet.nl/project/SolidDataModules/) by <img src="https://nlnet.nl/logo/banner.svg" style="width: 5%; margin: 0 1% 0 1%;">
+/ <img src="https://nlnet.nl/image/logos/NGI0Entrust_tag.svg" style="width: 5%; margin: 0 1% 0 1%;">
+
 Solid Data Modules are snippets of JavaScript code that handle the reading and writing of one specific
 type of data in the user's Solid pod, regardless of how the different data formats used by various Solid apps,
 and how they evolve.
@@ -9,19 +12,15 @@ and how they evolve.
 
 [Our plan](https://hackmd.io/@michielbdejong/HyIMjmoxn)
 
-Weekly meeting: Fridays 4pm-5pm Amsterdam time in https://meet.jit.si/solid-data-modules
-
 ## Data types covered
-### _(coming soon)_
 Data types for which we will produce Solid Data Modules:
-* bookmarks
-* chat
-* contacts
-* maps
-* tasks
+* [bookmarks](./bookmarks)
+* [chats](./chats)
+* [contacts](./contacts)
+* [profile](./profile) (stub)
+* [tasks](./tasks) (coming soon)
 
 ## Paradigms covered
-### _(coming soon)_
 The "vanilla" version of each of these data modules will be usable in combination with just an
 authenticated fetcher, such as [Solid Auth Fetcher](https://github.com/solid-contrib/solid-auth-fetcher),
 or the fetcher from the [Inrupt JS Libs](https://docs.inrupt.com/developer-tools/javascript/client-libraries/authentication/).

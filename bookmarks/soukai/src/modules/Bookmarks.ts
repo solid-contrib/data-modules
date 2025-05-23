@@ -110,7 +110,7 @@ export class BookmarkFactory {
 
   private constructor(
     private containerUrls: string[] = [],
-    private instancesUrls: string[] = []
+    // private instancesUrls: string[] = []
   ) { }
 
 
@@ -140,7 +140,7 @@ export class BookmarkFactory {
 
         const _containers = [...new Set([...instanceContainers, ...instanceParents])]
 
-        BookmarkFactory.instance = new BookmarkFactory(_containers, []);
+        BookmarkFactory.instance = new BookmarkFactory(_containers/*, []*/);
       } else {
         const podToUse = args?.webId.split("profile")[0];
 
@@ -148,9 +148,9 @@ export class BookmarkFactory {
 
         defaultContainerUrl = `${baseURL}${defaultContainerUrl ?? "bookmarks/"}`;
 
-        await TypeIndexHelper.registerInTypeIndex(args?.webId!, "bookmarks_registery", Bookmark.rdfsClasses[0], fetch, defaultContainerUrl, true, true)
+        await TypeIndexHelper.registerInTypeIndex(args?.webId!, "bookmarks_registry", Bookmark.rdfsClasses[0], fetch, defaultContainerUrl, true, true)
 
-        BookmarkFactory.instance = new BookmarkFactory([defaultContainerUrl], []);
+        BookmarkFactory.instance = new BookmarkFactory([defaultContainerUrl]/*, []*/);
       }
     }
     return BookmarkFactory.instance;

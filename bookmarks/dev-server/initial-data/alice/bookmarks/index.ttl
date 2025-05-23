@@ -1,0 +1,10 @@
+@prefix :      <#>.
+@prefix terms: <http://purl.org/dc/terms/>.
+@prefix bookm: <http://www.w3.org/2002/01/bookmark#>.
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#>.
+
+<#1>
+    a             bookm:Bookmark ;
+    terms:created "2024-05-22T18:38:48Z"^^xsd:dateTime ;
+    terms:title   "Solid Project Homepage" ;
+    bookm:recalls <https://solidproject.org> .

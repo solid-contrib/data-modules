@@ -60,9 +60,42 @@ jobs:
         run: npm run build:doc
 
 ######################
+###################### bookmarks/rdflib module
+
+      - name: Install bookmarks/rdflib dev dependencies
+        working-directory: ./bookmarks/rdflib
+        run: npm ci --only=dev
+
+      - name: Build bookmarks/rdflib doc
+        working-directory: ./bookmarks/rdflib
+        run: npm run build:doc
+
+######################
+###################### chats/rdflib module
+
+      - name: Install chats/rdflib dev dependencies
+        working-directory: ./chats/rdflib
+        run: npm ci --only=dev
+
+      - name: Build chats/rdflib doc
+        working-directory: ./chats/rdflib
+        run: npm run build:doc
+
+######################
+###################### rdflib utils
+
+      - name: Install rdflib utils dev dependencies
+        working-directory: ./utils/rdflib
+        run: npm ci --only=dev
+
+      - name: Build utils/rdflib doc
+        working-directory: ./utils/rdflib
+        run: npm run build:doc
+
+######################
 
       - name: Upload pages
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'gh-pages'
 
@@ -75,4 +108,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4

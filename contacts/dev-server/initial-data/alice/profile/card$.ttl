@@ -6,5 +6,7 @@
     foaf:primaryTopic <#me>.
 <#me> a foaf:Person;
     solid:oidcIssuer <http://localhost:3000/>;
-    <http://www.w3.org/ns/pim/space#preferencesFile> <http://localhost:3000/alice/Settings/Preferences.ttl>;
-    solid:publicTypeIndex <http://localhost:3000/alice/profile/publicTypeIndex.ttl>.
+    <http://www.w3.org/2006/vcard/ns#fn> "Alice";
+    <http://www.w3.org/2006/vcard/ns#role> "Test User";
+    solid:publicTypeIndex <http://localhost:3000/alice/profile/publicTypeIndex.ttl>;
+    <http://www.w3.org/ns/pim/space#preferencesFile> <http://localhost:3000/alice/Settings/Preferences.ttl>.
