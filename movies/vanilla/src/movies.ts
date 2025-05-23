@@ -21,19 +21,32 @@ export type Interpretation = {
   watchActions: WatchAction[];
 }
 
-export async function fetchList(
-  folderUri: string,
-  authenticatedFetcher: typeof globalThis.fetch,
-): Promise<Interpretation> {
-  const indexRet = await authenticatedFetcher(folderUri, {
+async function getJsonLd(uri: string,
+  authenticatedFetcher: typeof globalThis.fetch): Promise<object[]> {
+  const res = await authenticatedFetcher(uri, {
     headers: {
       Accept: 'application/ld+json',
     },
   });
-  const index = await indexRet.json();
-  console.log(index);
-  return {
+  return res.json();
+}
+
+export async function fetchList(
+  folderUri: string,
+  aFetch: typeof globalThis.fetch,
+): Promise<Interpretation> {
+  const index = await getJsonLd(folderUri, aFetch);
+  const ret = {
     listings: [],
     watchActions: [],
   };
+
+  await Promise.all(index.map(async (entry: object) => {
+    if (entry['@id'] === folderUri) {
+      return;
+    }
+    const listing = await getJsonLd(entry['@id'], aFetch);
+    ret.listings.push(listing);
+  }));
+  return ret;
 }

@@ -8,4 +8,5 @@ const authenticatedFetch = await v7.getAuthenticatedFetch({
   provider: process.env.SOLID_SERVER,
 });
 const listUrl = 'https://michielbdejong.solidcommunity.net/movies/';
-await fetchList(listUrl, authenticatedFetch);
+const interpretation = await fetchList(listUrl, authenticatedFetch);
+interpretation.listings.forEach(listing => console.log(listing));
