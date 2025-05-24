@@ -4,6 +4,7 @@ To use this Solid Data Module you need an authenticated fetch function. In Node.
 
 Data schemas supported:
 * Solid OS Issue Pane
+* [Solid Hello World](https://hello.0data.app/solid/)
 
 ### Usage
 Set up a typescript project, install [solid-data-module-tasks](https://www.npmjs.com/package/solid-data-module-tasks) from NPM, and create a `.env` file like this:
@@ -13,9 +14,12 @@ SOLID_EMAIL=michielbdejong@users.css.pod
 SOLID_PASSWORD=...
 ```
 
-Make sure there is a Solid OS issue tracker at `trackerUrl`. You can create this through the Solid OS web interface of solidcommunity.net.
+Edit line 9 of `node_modules/solid-data-module-tasks/build/src/example.js` to point to a folder
+where you can create a Solid OS issue tracker (through the Solid OS web interface of solidcommunity.net for instance) and a 0data issue tracker through [Solid Hello World](https://hello.0data.app/solid/).
 
-Then save, build and run the following TypeScript file:
+If you now run `node node_modules/solid-data-module-tasks/build/src/example.js` you will see a list of issues that is combined from your 0data issue tracker and your Solid OS issue tracker at that same URL.
+
+You can also save, build and run the following TypeScript file:
 ```ts
 import 'dotenv/config';
 import { v7 } from 'css-authn';

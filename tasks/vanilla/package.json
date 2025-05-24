@@ -1,6 +1,6 @@
 {
   "name": "solid-data-module-tasks",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Solid Data Module for tasks and issue tracking",
   "type": "module",
   "engines": {
@@ -50,6 +50,8 @@
   "author": "Michiel de Jong <michiel@unhosted.org>",
   "license": "MIT",
   "dependencies": {
+    "css-authn": "^0.2.1",
+    "dotenv": "^16.5.0",
     "tslib": "~2.8"
   },
   "volta": {
