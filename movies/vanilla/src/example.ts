@@ -5,23 +5,21 @@ import { fetchList, Interpretation } from './main.js';
 let authenticatedFetch: Awaited<ReturnType<typeof v7.getAuthenticatedFetch>>;
 
 try {
-    authenticatedFetch = await v7.getAuthenticatedFetch({
-        email: process.env.SOLID_EMAIL,
-        password: process.env.SOLID_PASSWORD,
-        provider: process.env.SOLID_SERVER,
-    });
-} catch(e) {
-    console.log('Could not connect to your pod');
+  authenticatedFetch = await v7.getAuthenticatedFetch({
+    email: process.env.SOLID_EMAIL,
+    password: process.env.SOLID_PASSWORD,
+    provider: process.env.SOLID_SERVER,
+  });
+} catch (e) {
+  console.error('Could not connect to your pod', e);
 }
 
 let interpretation: Interpretation;
 try {
-
-    const listUrl = 'https://michielbdejong.solidcommunity.net/movies/';
-    interpretation = await fetchList(listUrl, authenticatedFetch);
-} catch(e) {
-    console.error('Could not fetch your movies folder');
+  const listUrl = 'https://michielbdejong.solidcommunity.net/movies/';
+  interpretation = await fetchList(listUrl, authenticatedFetch);
+} catch (e) {
+  console.error('Could not fetch your movies folder', e);
 }
-interpretation.listings.forEach(listing => console.log(listing));
-interpretation.watchActions.forEach(watchAction => console.log(watchAction));
-
+interpretation.listings.forEach((listing) => console.log(listing));
+interpretation.watchActions.forEach((watchAction) => console.log(watchAction));
