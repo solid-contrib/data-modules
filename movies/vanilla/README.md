@@ -16,7 +16,7 @@ pnpm start
 ```
 
 The output will look something like this:
-```json
+```javascript
 {
   created: 2020-07-17T16:40:29.000Z,
   modified: 2020-08-06T14:09:18.000Z,
