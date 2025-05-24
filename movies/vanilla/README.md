@@ -1,8 +1,8 @@
 # Solid Data Module for Movies
 
 Data schemas supported:
-* Media Kraken as-is
-* Media Kraken with correctly typed links
+* Media Kraken as-is in May 2025
+* Media Kraken with [correctly typed links](https://github.com/NoelDeMartin/media-kraken/issues/41)
 
 ### Usage
 Set up a typescript project, install [solid-data-module-tasks](https://www.npmjs.com/package/solid-data-module-tasks) from NPM, and create a `.env` file like this:
