@@ -1,6 +1,6 @@
 {
   "name": "solid-data-module-movies",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Solid Data Module for tracking movies",
   "type": "module",
   "engines": {
