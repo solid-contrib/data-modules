@@ -280,7 +280,7 @@ export async function addIssue(
   solid:inserts {
   ${inserts.join('\n')}
 }.`;
-  const ret = await authenticatedFetcher(localState.tracker.stateUri, {
+  await authenticatedFetcher(localState.tracker.stateUri, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'text/n3',
@@ -312,7 +312,7 @@ export async function addComment(
   solid:inserts {
   ${inserts.join('\n')}
 }.`;
-  const ret = await authenticatedFetcher(localState.tracker.stateUri, {
+  await authenticatedFetcher(localState.tracker.stateUri, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'text/n3',
