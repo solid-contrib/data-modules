@@ -3,8 +3,8 @@
 To use this Solid Data Module you need an authenticated fetch function. In Node.JS, when working against a CSS or Pivot server such as solidcommnunity.net, you can use [css-authn](https://www.npmjs.com/package/css-authn#usage) for this. In the browser, you can use [Inrupt Solid Client](https://docs.inrupt.com/developer-tools/javascript/client-libraries/authentication/).
 
 Data schemas supported:
-* Solid OS Issue Pane
-* [Solid Hello World](https://hello.0data.app/solid/)
+* Solid OS Issue Pane (using `index.ttl#this` and `state.ttl`)
+* [Solid Hello World](https://hello.0data.app/solid/) (using one file per task, with `schema:Action`)
 
 ### Usage
 Set up a typescript project, install [solid-data-module-tasks](https://www.npmjs.com/package/solid-data-module-tasks) from NPM, and create a `.env` file like this:
