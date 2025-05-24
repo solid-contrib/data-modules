@@ -128,7 +128,6 @@ function lastWord(str: string): string {
 }
 
 function isUplink(entry: object, indexUri: string, stateUri: string): boolean {
-  // console.log('checking for uplink', getJsonLdId(entry), indexUri, entry['http://www.w3.org/2005/01/wf/flow#stateStore'], stateUri);
   return (
     getJsonLdId(entry) === indexUri &&
     getJsonLdLinkField(
@@ -140,7 +139,6 @@ function isUplink(entry: object, indexUri: string, stateUri: string): boolean {
 
 function getIssueState(entry: object): string | undefined {
   const typeStr = getJsonLdType(entry);
-  // console.log('checking issue state', typeStr);
   if (
     typeof typeStr === 'string' &&
     typeStr.startsWith('http://www.w3.org/2005/01/wf/flow#')
@@ -199,14 +197,11 @@ function interpret({
     [uri: string]: InterpretedComment;
   } = {};
   state.forEach((entry: TrackerStateEntry) => {
-    // console.log('state entry', JSON.stringify(entry, null, 2));
     if (isUplink(entry, indexUri, stateUri)) {
-      // console.log('uplink found');
       return;
     }
     const issueState = getIssueState(entry);
     if (typeof issueState === 'string') {
-      // console.log('issue');
       ret.issues[getJsonLdId(entry)] = {
         // tracker: getJsonLdLinkField(entry, 'http://www.w3.org/2005/01/wf/flow#tracker'),
         title: getJsonLdStringField(
@@ -231,15 +226,12 @@ function interpret({
       text: getJsonLdStringField(entry, 'http://rdfs.org/sioc/ns#content'),
       created: getJsonLdDateField(entry, 'http://purl.org/dc/terms/created'),
     };
-    console.log(comment);
     if (
       typeof comment.author === 'string' &&
       typeof comment.text === 'string' &&
       comment.created instanceof Date
     ) {
-      // console.log('issue');
       comments[getJsonLdId(entry)] = comment as InterpretedComment;
-      // console.log('comment found', comment);
       return;
     }
     console.error(entry);
@@ -275,12 +267,6 @@ export async function addIssue(
   authenticatedFetcher: typeof globalThis.fetch,
 ): Promise<string> {
   const id = `${localState.tracker.stateUri}#Iss${randomUUID()}`;
-  console.log(
-    localState.tracker.stateUri,
-    title,
-    description,
-    typeof authenticatedFetcher,
-  );
   const inserts = [
     `<${id}> a <http://www.w3.org/2005/01/wf/flow#Open>.`,
     `<${id}> <http://www.w3.org/2005/01/wf/flow#tracker> <${localState.tracker.indexUri}>.`,
@@ -301,7 +287,6 @@ export async function addIssue(
     },
     body,
   });
-  console.log(ret.status);
   return id;
 }
 
@@ -315,12 +300,6 @@ export async function addComment(
   authenticatedFetcher: typeof globalThis.fetch,
 ): Promise<string> {
   const id = `${localState.tracker.stateUri}#Msg${randomUUID()}`;
-  console.log(
-    localState.tracker.stateUri,
-    author,
-    text,
-    typeof authenticatedFetcher,
-  );
   const inserts = [
     `<${issueUri}> <http://www.w3.org/2005/01/wf/flow#message> <${id}>.`,
     `<${id}> <http://xmlns.com/foaf/0.1/maker> <${author}>.`,
@@ -340,6 +319,5 @@ export async function addComment(
     },
     body,
   });
-  console.log(ret.status);
   return id;
 }
