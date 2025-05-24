@@ -4,7 +4,7 @@ export function getJsonLdFields(
   subPred: string,
 ): string[] {
   if (Array.isArray(entry[pred])) {
-    return entry[pred].map(obj => obj[subPred]);
+    return entry[pred].map((obj) => obj[subPred]);
   }
   return [];
 }

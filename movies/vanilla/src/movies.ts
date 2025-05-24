@@ -75,10 +75,13 @@ export async function fetchList(
                 thing,
                 'https://schema.org/description',
               ),
-              image: getJsonLdLinkOrStringField(thing, 'https://schema.org/image'),
+              image: getJsonLdLinkOrStringField(
+                thing,
+                'https://schema.org/image',
+              ),
               name: getJsonLdStringField(thing, 'https://schema.org/name'),
               sameAs: thing['https://schema.org/sameAs'].map(
-                (x) => (x['@id'] || x['@value']),
+                (x) => x['@id'] || x['@value'],
               ) as string[],
             },
           });
@@ -95,7 +98,10 @@ export async function fetchList(
               'https://schema.org/startTime',
             ),
             endTime: getJsonLdDateField(thing, 'https://schema.org/endTime'),
-            listingId: getJsonLdLinkOrStringField(thing, 'https://schema.org/object'),
+            listingId: getJsonLdLinkOrStringField(
+              thing,
+              'https://schema.org/object',
+            ),
           });
         } else {
           console.log('thing type not recognised', thing);
