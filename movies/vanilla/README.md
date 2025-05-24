@@ -5,7 +5,7 @@ Data schemas supported:
 * Media Kraken with [correctly typed links](https://github.com/NoelDeMartin/media-kraken/issues/41)
 
 ### Usage
-Set up a typescript project, install [solid-data-module-tasks](https://www.npmjs.com/package/solid-data-module-tasks) from NPM, and create a `.env` file like this:
+Set up a typescript project, install [solid-data-module-movies](https://www.npmjs.com/package/solid-data-module-movies) from NPM, and create a `.env` file like this:
 ```env
 SOLID_SERVER=https://solidcommunity.net
 SOLID_EMAIL=michielbdejong@users.css.pod
@@ -14,9 +14,7 @@ SOLID_PASSWORD=...
 
 Edit line 19 of `src/example.ts` to point to your movies folder on your pod.
 ```sh
-pnpm install
-pnpm build
-pnpm start
+node node_modules/solid-data-module-movies/build/src/example.js
 ```
 
 The output will look something like this:
@@ -41,4 +39,15 @@ The output will look something like this:
   endTime: 2022-05-17T14:50:44.000Z,
   listingId: 'https://michielbdejong.solidcommunity.net/movies/the-green-mile-1999#it'
 }
+```
+
+## Development
+Put a .env like [above](#usage) in the root of your local check-out this repo and:
+
+```sh
+pnpm install
+pnpm lint
+pnpm prettier
+pnpm build
+pnpm start
 ```
