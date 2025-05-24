@@ -11,7 +11,7 @@ SOLID_EMAIL=michielbdejong@users.css.pod
 SOLID_PASSWORD=...
 ```
 
-Make sure there is a Solid OS issue tracker at `trackerUrl`. You can create this through the web interface of Pivot.
+Make sure there is a Solid OS issue tracker at `trackerUrl`. You can create this through the Solid OS web interface of solidcommunity.net.
 
 Then save, build and run the following TypeScript file:
 ```ts
