@@ -261,6 +261,19 @@ export async function fetchTracker(
   return interpret({ index, state });
 }
 
+export async function fetchContainer(
+  uri: string,
+  authenticatedFetcher: typeof globalThis.fetch,
+): Promise<Interpretation> {
+  const indexRet = await authenticatedFetcher(uri, {
+    headers: {
+      Accept: 'application/ld+json',
+    },
+  });
+  const docs = await indexRet.json();
+  return docs;
+}
+
 export async function addIssue(
   localState: Interpretation,
   { title, description }: { title: string; description: string },
