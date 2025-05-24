@@ -10,3 +10,4 @@ const authenticatedFetch = await v7.getAuthenticatedFetch({
 const listUrl = 'https://michielbdejong.solidcommunity.net/movies/';
 const interpretation = await fetchList(listUrl, authenticatedFetch);
 interpretation.listings.forEach(listing => console.log(listing));
+interpretation.watchActions.forEach(watchAction => console.log(watchAction));
