@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { v7 } from 'css-authn';
-import { fetchContainer } from 'solid-data-module-tasks';
+import { fetchContainerAndTracker } from 'solid-data-module-tasks';
 
 const authenticatedFetch = await v7.getAuthenticatedFetch({
   email: process.env.SOLID_EMAIL,
@@ -8,5 +8,5 @@ const authenticatedFetch = await v7.getAuthenticatedFetch({
   provider: process.env.SOLID_SERVER,
 });
 const containerUrl = 'https://michielbdejong.solidcommunity.net/tasks/';
-const output = await fetchContainer(containerUrl, authenticatedFetch);
+const output = await fetchContainerAndTracker(containerUrl, authenticatedFetch);
 console.log(output);

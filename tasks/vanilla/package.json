@@ -1,6 +1,6 @@
 {
   "name": "solid-data-module-tasks",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Solid Data Module for tasks and issue tracking",
   "type": "module",
   "engines": {
