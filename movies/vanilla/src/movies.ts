@@ -1,6 +1,6 @@
 import {
   getJsonLdDateField,
-  getJsonLdLinkField,
+  getJsonLdLinkOrStringField,
   getJsonLdStringField,
 } from './jsonld.js';
 
@@ -75,11 +75,11 @@ export async function fetchList(
                 thing,
                 'https://schema.org/description',
               ),
-              image: getJsonLdStringField(thing, 'https://schema.org/image'), // sic: string instead of link here
+              image: getJsonLdLinkOrStringField(thing, 'https://schema.org/image'),
               name: getJsonLdStringField(thing, 'https://schema.org/name'),
               sameAs: thing['https://schema.org/sameAs'].map(
-                (x) => x['@value'],
-              ) as string[], // sic: string instead of link here
+                (x) => (x['@id'] || x['@value']),
+              ) as string[],
             },
           });
         } else if (
@@ -95,7 +95,7 @@ export async function fetchList(
               'https://schema.org/startTime',
             ),
             endTime: getJsonLdDateField(thing, 'https://schema.org/endTime'),
-            listingId: getJsonLdLinkField(thing, 'https://schema.org/object'),
+            listingId: getJsonLdLinkOrStringField(thing, 'https://schema.org/object'),
           });
         } else {
           console.log('thing type not recognised', thing);

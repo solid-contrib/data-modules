@@ -1,10 +1,22 @@
+export function getJsonLdFields(
+  entry: object,
+  pred: string,
+  subPred: string,
+): string[] {
+  if (Array.isArray(entry[pred])) {
+    return entry[pred].map(obj => obj[subPred]);
+  }
+  return [];
+}
+
 export function getJsonLdField(
   entry: object,
   pred: string,
   subPred: string,
 ): string | undefined {
-  if (Array.isArray(entry[pred]) && entry[pred].length === 1) {
-    return entry[pred][0][subPred];
+  const results = getJsonLdFields(entry, pred, subPred);
+  if (results.length === 1) {
+    return results[0];
   }
   return undefined;
 }
@@ -44,6 +56,19 @@ export function getJsonLdStringField(
   pred: string,
 ): string | undefined {
   return getJsonLdField(entry, pred, '@value');
+}
+
+// use this function to deal with cases where
+// links might be incorrectly stored as strings
+export function getJsonLdLinkOrStringField(
+  entry: object,
+  pred: string,
+): string | undefined {
+  let ret = getJsonLdLinkField(entry, pred);
+  if (typeof ret === 'undefined') {
+    ret = getJsonLdStringField(entry, pred);
+  }
+  return ret;
 }
 
 export function getJsonLdStringFieldMulti(
