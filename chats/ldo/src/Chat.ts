@@ -91,7 +91,8 @@ export class Chat {
     const [mostRecentMessage] = this.getMessagesForMessageResource(
       this.todaysMessageResource
     );
-    this.mostRecentMessageDate = mostRecentMessage.created2;
+    if (mostRecentMessage)
+      this.mostRecentMessageDate = mostRecentMessage.created2;
 
     return this.todaysMessageResource;
   }
@@ -104,15 +105,18 @@ export class Chat {
   private async getPreviousMessageResource(
     currentResource: SolidLeaf
   ): Promise<SolidLeaf | undefined> {
+
     const getPreviousContainer = (
       list: (SolidContainer | SolidResource)[],
       target: SolidContainer
-    ): SolidContainer | undefined =>
-      [...list]
+    ): SolidContainer | undefined => {
+      const sorted = [...list]
         .filter((item): item is SolidContainer => item.type === "SolidContainer")
-        .sort((a, b) => a.uri.localeCompare(b.uri))
-        .slice(0, list.findIndex(i => i.uri === target.uri))
-        .pop();
+        .sort((a, b) => a.uri.localeCompare(b.uri));
+      const sliced = sorted.slice(0, sorted.findIndex(i => i.uri === target.uri));
+      
+      return sliced.pop();
+    }
 
     const getMostRecentContainer = (
       list: (SolidContainer | SolidResource)[]
@@ -164,10 +168,9 @@ export class Chat {
   private async startNotificationSubscription() {
     await this.ensureTodaysMessageResource();
     if (this.subscriptionCallback) {
-      this.subscriptionId = await this.todaysMessageResource!
-        .subscribeToNotifications();
-      // Set up a callback when a new message is coming in
+      console.log(this.todaysMessageResource!.isPresent());
       this.internalCallback = () => {
+        console.log("Callback Called:", this.todaysMessageResource!);
         const messages = this.getMessagesForMessageResource(
           this.todaysMessageResource!
         );
@@ -179,10 +182,10 @@ export class Chat {
           this.subscriptionCallback?.(newMessages);
         }
       }
-      this.dataset.on(
-        [null, null, null, namedNode(this.todaysMessageResource!.uri)],
-        this.internalCallback.bind(this)
-      )
+      this.subscriptionId = await this.todaysMessageResource!
+        .subscribeToNotifications({
+          onNotification: this.internalCallback.bind(this),
+        });
     }
   }
 
@@ -196,8 +199,6 @@ export class Chat {
         .unsubscribeFromNotifications(this.subscriptionId);
       this.subscriptionId = undefined;
     }
-    if (this.internalCallback)
-      this.dataset.removeListenerFromAllEvents(this.internalCallback);
   }
 
   /**
@@ -207,11 +208,13 @@ export class Chat {
    */
   private getMessagesForMessageResource(resource: SolidLeaf): ChatMessageShape[] {
     const chatMessageList = this.dataset
-      .usingType(ChatMessageListShapeShapeType)
-      .fromSubject(`${resource}#this`);
-    return chatMessageList
-      .message?.toArray()
-      .sort((a, b) => a.created2.localeCompare(b.created2)) ?? [];
+      .usingType(ChatMessageShapeShapeType)
+      .matchObject(
+        `${this.chatResource.uri}#this`,
+        "http://www.w3.org/2005/01/wf/flow#message",
+        `${resource.uri}`);
+    return chatMessageList.toArray()
+      .sort((a, b) => b.created2.localeCompare(a.created2)) ?? [];
   }
 
   /**
@@ -237,7 +240,6 @@ export class Chat {
    */
   public async getChatInfo(): Promise<ChatShape> {
     const result = throwIfErrOrAbsent(await this.chatResource.readIfUnfetched());
-    console.log(result);
 
     return this.dataset.usingType(ChatShapeShapeType)
       .fromSubject(`${this.chatResource.uri}#this`);
@@ -290,23 +292,26 @@ export class Chat {
     const cChatMessageList = messageTransaction
       .usingType(ChatMessageListShapeShapeType)
       .write(this.todaysMessageResource!.uri)
-      .fromSubject(`${this.todaysMessageResource!.uri}#this`);
+      .fromSubject(`${this.chatResource.uri}#this`);
+
+    const messageDate = new Date().toISOString();
 
     cChatMessageList.message?.add({
       "@id": `${this.todaysMessageResource!.uri}#${v4()}`,
       content,
       maker: { "@id": makerWebId },
-      created2: new Date().toISOString(),
-    })
+      created2: messageDate,
+    });
 
-    throwIfErr(await messageTransaction.commitToRemote());
+    const result = throwIfErr(await messageTransaction.commitToRemote());
+    this.mostRecentMessageDate = messageDate;
   }
 
   /**
    * Returns an iterator to fetch paginated messages.
    * @returns 
    */
-  public getMessageIterator(): AsyncIterator<ChatMessageShape[]> {
+  public getMessageIterator(): AsyncGenerator<ChatMessageShape[]> {
     const self = this;
 
     async function* messageGenerator(): AsyncGenerator<ChatMessageShape[]> {

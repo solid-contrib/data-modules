@@ -1,7 +1,7 @@
 import { ResourceInfo } from "@ldo/test-solid-server";
 
 export const testFiles: ResourceInfo = {
-  slug: "sample-chats2/",
+  slug: "placeholder/",
   isContainer: true,
   contains: [] 
 }

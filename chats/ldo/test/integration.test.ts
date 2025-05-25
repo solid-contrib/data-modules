@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { setupServer } from "@ldo/test-solid-server";
 import { testFiles } from "./testFiles.helper";
 import path from "path";
@@ -12,6 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const BASE_URI = "http://localhost:3003/example/";
+const WEB_ID = "http://example.com/profile/card#me"
 const SAMPLE_CHAT_1_CONTAINER_URI = `${BASE_URI}sample-chat-1/`;
 const SAMPLE_CHAT_1_INDEX_URI = `${SAMPLE_CHAT_1_CONTAINER_URI}index.ttl`;
 const SAMPLE_CHAT_1_INDEX_INFO: ChatShape = {
@@ -23,12 +24,6 @@ const SAMPLE_CHAT_1_INDEX_INFO: ChatShape = {
 }
 const SAMPLE_CHAT_1_MESSAGE_RESOURCE_1_URI = `${SAMPLE_CHAT_1_CONTAINER_URI}2023/11/25/index.ttl`;
 const SAMPLE_CHAT_1_MESSAGE_RESOURCE_1__MESSAGES: ChatMessageShape[] = [
-  {
-    "@id": `${SAMPLE_CHAT_1_MESSAGE_RESOURCE_1_URI}#6def4609-3a97-44a7-ac5f-7cb8d2c5d2e0`,
-    created2: "2023-11-25T20:58:26.606Z",
-    content: 'thmooove created "Scatterverse "',
-    maker: { "@id": "http://example.com/profile/card#me" }
-  },
   {
     "@id": `${SAMPLE_CHAT_1_MESSAGE_RESOURCE_1_URI}#bf343557-915b-4302-8377-d6e98d0963fc`,
     created2: "2023-11-25T21:34:17.354Z",
@@ -46,7 +41,13 @@ const SAMPLE_CHAT_1_MESSAGE_RESOURCE_1__MESSAGES: ChatMessageShape[] = [
     created2: "2023-11-25T20:58:43.163Z",
     content: "this is pretty clean ",
     maker: { "@id": "http://example.com/profile/card#me" }
-  }
+  },
+  {
+    "@id": `${SAMPLE_CHAT_1_MESSAGE_RESOURCE_1_URI}#6def4609-3a97-44a7-ac5f-7cb8d2c5d2e0`,
+    created2: "2023-11-25T20:58:26.606Z",
+    content: 'thmooove created "Scatterverse "',
+    maker: { "@id": "http://example.com/profile/card#me" }
+  },
 ]
 const SAMPLE_CHAT_1_MESSAGE_RESOURCE_2_URI = `${SAMPLE_CHAT_1_CONTAINER_URI}2024/11/27/index.ttl`;
 const SAMPLE_CHAT_1_MESSAGE_RESOURCE_2_MESSAGES = [
@@ -75,13 +76,73 @@ describe("integration", () => {
   beforeEach(() => {
     dataset = createConnectedLdoDataset([solidConnectedPlugin]);
     sample1Chat = new Chat(SAMPLE_CHAT_1_CONTAINER_URI, dataset);
-  })
+  });
 
-  it("Fetches chat information", async () => {
+  afterEach(async () => {
+    if (sample1Chat) {
+      await sample1Chat.destroy();
+    }
+  });
+
+  it("Fetches chat information and messages", async () => {
     const chatInfo = await sample1Chat.getChatInfo();
     expect(chatInfo["@id"]).toBe(SAMPLE_CHAT_1_INDEX_INFO["@id"]);
     expect(chatInfo.author).toEqual(SAMPLE_CHAT_1_INDEX_INFO.author);
     expect(chatInfo.created).toBe(SAMPLE_CHAT_1_INDEX_INFO.created);
     expect(chatInfo.title).toBe(SAMPLE_CHAT_1_INDEX_INFO.title);
+
+    const messageIterator = sample1Chat.getMessageIterator();
+    const messageGroups: ChatMessageShape[][] = [];
+    for await (const item of messageIterator) {
+      messageGroups.push(item);
+    }
+    const messages = messageGroups.flat();
+    expect(messages.length).toBe(5);
+    expect(messages[0].content).toBe(SAMPLE_CHAT_1_MESSAGE_RESOURCE_2_MESSAGES[0].content);
+    expect(messages[1].content).toBe(SAMPLE_CHAT_1_MESSAGE_RESOURCE_1__MESSAGES[0].content);
+    expect(messages[2].content).toBe(SAMPLE_CHAT_1_MESSAGE_RESOURCE_1__MESSAGES[1].content);
+    expect(messages[3].content).toBe(SAMPLE_CHAT_1_MESSAGE_RESOURCE_1__MESSAGES[2].content);
+    expect(messages[4].content).toBe(SAMPLE_CHAT_1_MESSAGE_RESOURCE_1__MESSAGES[3].content);
+  });
+
+  it("Creates a new chat and sets the info", async () => {
+    const sample2Chat = new Chat(`${BASE_URI}sample-chat-2/`, dataset);
+    await sample2Chat.createChat({
+      type: { "@id": "LongChat" },
+      author: { "@id": WEB_ID },
+      created: (new Date()).toISOString(),
+      title: "Cool Chat",
+    });
+
+    const chatInfo = await sample2Chat.getChatInfo();
+    expect(chatInfo.title).toBe("Cool Chat");
+
+    await sample2Chat.setChatInfo({
+      title: "Uncool Chat",
+    });
+
+    const chatInfo2 = await sample2Chat.getChatInfo();
+    expect(chatInfo2.title).toBe("Uncool Chat");    
+  });
+
+  it.only("Sends a message to a chat", async () => {
+    const sample3Chat = new Chat(`${BASE_URI}sample-chat-3/`, dataset);
+    await sample3Chat.createChat({
+      type: { "@id": "LongChat" },
+      author: { "@id": WEB_ID },
+      created: (new Date()).toISOString(),
+      title: "Sample3 Chat",
+    })
+
+    await sample3Chat.sendMessage("Test Content", WEB_ID);
+
+    const messageIterator = sample3Chat.getMessageIterator();
+    const messageGroups: ChatMessageShape[][] = [];
+    for await (const item of messageIterator) {
+      messageGroups.push(item);
+    }
+    const messages = messageGroups.flat();
+    expect(messages.length).toBe(1);
+    expect(messages[0].content).toBe("Test Content");
   });
 });
