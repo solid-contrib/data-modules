@@ -80,7 +80,7 @@ describe("integration", () => {
   it("Fetches chat information", async () => {
     const chatInfo = await sample1Chat.getChatInfo();
     expect(chatInfo["@id"]).toBe(SAMPLE_CHAT_1_INDEX_INFO["@id"]);
-    expect(chatInfo.author).toBe(SAMPLE_CHAT_1_INDEX_INFO.author);
+    expect(chatInfo.author).toEqual(SAMPLE_CHAT_1_INDEX_INFO.author);
     expect(chatInfo.created).toBe(SAMPLE_CHAT_1_INDEX_INFO.created);
     expect(chatInfo.title).toBe(SAMPLE_CHAT_1_INDEX_INFO.title);
   });

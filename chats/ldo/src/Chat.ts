@@ -3,7 +3,7 @@ import { SolidConnectedPlugin, SolidContainer, SolidContainerUri, SolidLeaf, Sol
 import { ChatMessageShape, ChatShape } from "./.ldo/longChat.typings.js";
 import { scheduleNewDayTrigger } from "./util/scheduleNewDayTrigger.js";
 import { ChatMessageListShapeShapeType, ChatMessageShapeShapeType, ChatShapeShapeType } from "./.ldo/longChat.shapeTypes.js";
-import { getResource, throwIfErr } from "./util/resultHelpers.js";
+import { getResource, throwIfErr, throwIfErrOrAbsent } from "./util/resultHelpers.js";
 import { v4 } from "uuid";
 import { namedNode } from "@ldo/rdf-utils";
 export class Chat {
@@ -126,7 +126,7 @@ export class Chat {
       container: SolidContainer
     ): Promise<SolidLeaf | undefined> => {
       const indexResource = container.child("index.ttl");
-      throwIfErr(await indexResource.readIfUnfetched());
+      throwIfErrOrAbsent(await indexResource.readIfUnfetched());
       return indexResource;
     };
 
@@ -135,7 +135,7 @@ export class Chat {
       levels: number
     ): Promise<SolidLeaf | undefined> => {
       if (levels === 0) return getIndexIfExists(container);
-      throwIfErr(await container.readIfUnfetched());
+      throwIfErrOrAbsent(await container.readIfUnfetched());
       const mostRecent = getMostRecentContainer(container.children());
       if (!mostRecent) return undefined;
       return drillDownMostRecent(mostRecent, levels - 1);
@@ -145,10 +145,10 @@ export class Chat {
     const levelNames = ["Month", "Year", "Eternity"]; // Logical structure
     for (let depth = 0; depth < levelNames.length; depth++) {
       const parent = await container.getParentContainer() as SolidContainer;
-      throwIfErr(await parent.readIfUnfetched());
+      throwIfErrOrAbsent(await parent.readIfUnfetched());
       const previous = getPreviousContainer(parent.children(), container);
       if (previous) {
-        throwIfErr(await previous.readIfUnfetched());
+        throwIfErrOrAbsent(await previous.readIfUnfetched());
         return drillDownMostRecent(previous, depth); // Drill into [day, month, year]
       }
       container = parent;
@@ -236,10 +236,11 @@ export class Chat {
    * @returns 
    */
   public async getChatInfo(): Promise<ChatShape> {
-    throwIfErr(await this.chatResource.readIfUnfetched());
+    const result = throwIfErrOrAbsent(await this.chatResource.readIfUnfetched());
+    console.log(result);
 
     return this.dataset.usingType(ChatShapeShapeType)
-      .fromSubject(this.chatResource.uri);
+      .fromSubject(`${this.chatResource.uri}#this`);
   }
 
   public async setChatInfo(chatInfo: Partial<ChatShape>): Promise<void> {
@@ -250,7 +251,7 @@ export class Chat {
     const cChatInfo = chatInfoTransaction
       .usingType(ChatShapeShapeType)
       .write(this.chatResource.uri)
-      .fromSubject(this.chatResource.uri);
+      .fromSubject(`${this.chatResource.uri}#this`);
     Object.assign(cChatInfo, chatInfo);
     throwIfErr(await chatInfoTransaction.commitToRemote());
   }
