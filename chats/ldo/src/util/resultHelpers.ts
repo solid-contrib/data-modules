@@ -1,5 +1,3 @@
-import { ConnectedResult, SuccessResult } from "@ldo/connected";
-
 type NonError<T> = T extends { isError: true } ? never : T;
 
 export function throwIfErr<Results extends { isError: boolean }>(

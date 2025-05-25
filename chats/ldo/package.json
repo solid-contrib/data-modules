@@ -32,8 +32,8 @@
     "build:ldo": "ldo build --input src/.shapes --output src/.ldo"
   },
   "devDependencies": {
-    "@ldo/cli": "^1.0.0-alpha.15",
-    "@ldo/test-solid-server": "^1.0.0-alpha.14",
+    "@ldo/cli": "^1.0.0-alpha.21",
+    "@ldo/test-solid-server": "^1.0.0-alpha.24",
     "@types/jsonld": "^1.5.15",
     "@types/node": "^22.15.21",
     "@types/shexj": "^2.1.7",
@@ -41,9 +41,9 @@
     "vitest": "^3.1.4"
   },
   "dependencies": {
-    "@ldo/connected": "^1.0.0-alpha.18",
-    "@ldo/connected-solid": "^1.0.0-alpha.18",
-    "@ldo/ldo": "^1.0.0-alpha.14",
+    "@ldo/connected": "^1.0.0-alpha.24",
+    "@ldo/connected-solid": "^1.0.0-alpha.24",
+    "@ldo/ldo": "^1.0.0-alpha.21",
     "uuid": "^11.1.0"
   }
 }

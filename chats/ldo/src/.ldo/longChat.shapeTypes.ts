@@ -1,12 +1,12 @@
 import { ShapeType } from "@ldo/ldo";
-import { longChatSchema } from "./longChat.schema";
-import { longChatContext } from "./longChat.context";
+import { longChatSchema } from "./longChat.schema.js";
+import { longChatContext } from "./longChat.context.js";
 import {
   ChatShape,
   ChatParticipationShape,
   ChatMessageListShape,
   ChatMessageShape,
-} from "./longChat.typings";
+} from "./longChat.typings.js";
 
 /**
  * =============================================================================
@@ -27,11 +27,11 @@ export const ChatShapeShapeType: ShapeType<ChatShape> = {
  * ChatParticipationShape ShapeType
  */
 export const ChatParticipationShapeShapeType: ShapeType<ChatParticipationShape> =
-  {
-    schema: longChatSchema,
-    shape: "https://shaperepo.com/schemas/longChat#ChatParticipationShape",
-    context: longChatContext,
-  };
+{
+  schema: longChatSchema,
+  shape: "https://shaperepo.com/schemas/longChat#ChatParticipationShape",
+  context: longChatContext,
+};
 
 /**
  * ChatMessageListShape ShapeType

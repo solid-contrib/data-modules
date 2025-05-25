@@ -4,7 +4,7 @@
 @prefix sioc: <http://rdfs.org/sioc/ns#>.
 @prefix wf: <http://www.w3.org/2005/01/wf/flow#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix c: </profile/card#>.
+@prefix c: <http://example.com/profile/card#>.
 @prefix terms: <https://liqid.chat/terms/>.
 @prefix in: <../../../index.ttl#>.
 

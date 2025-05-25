@@ -1,12 +1,11 @@
 import { ConnectedLdoDataset } from "@ldo/connected";
 import { SolidConnectedPlugin, SolidContainer, SolidContainerUri, SolidLeaf, SolidLeafUri, SolidResource } from "@ldo/connected-solid";
-import { ChatMessageShape, ChatShape } from "./.ldo/longChat.typings";
-import { scheduleNewDayTrigger } from "./util/scheduleNewDayTrigger";
-import { ChatMessageListShapeShapeType, ChatMessageShapeShapeType, ChatShapeShapeType } from "./.ldo/longChat.shapeTypes";
-import { getResource, throwIfErr } from "./util/resultHelpers";
+import { ChatMessageShape, ChatShape } from "./.ldo/longChat.typings.js";
+import { scheduleNewDayTrigger } from "./util/scheduleNewDayTrigger.js";
+import { ChatMessageListShapeShapeType, ChatMessageShapeShapeType, ChatShapeShapeType } from "./.ldo/longChat.shapeTypes.js";
+import { getResource, throwIfErr } from "./util/resultHelpers.js";
 import { v4 } from "uuid";
-import { namedNode } from "@rdfjs/data-model";
-
+import { namedNode } from "@ldo/rdf-utils";
 export class Chat {
   public readonly containerResource: SolidContainer;
   public readonly chatResource: SolidLeaf;
@@ -310,6 +309,7 @@ export class Chat {
     const self = this;
 
     async function* messageGenerator(): AsyncGenerator<ChatMessageShape[]> {
+      await self.ensureTodaysMessageResource();
       let currentResource: SolidLeaf | undefined = self.todaysMessageResource;
 
       while (currentResource) {
