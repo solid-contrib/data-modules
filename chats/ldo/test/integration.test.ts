@@ -3,8 +3,8 @@ import { setupServer } from "@ldo/test-solid-server";
 import { testFiles } from "./testFiles.helper";
 import path from "path";
 import { fileURLToPath } from "url";
-import { ConnectedLdoDataset, createConnectedLdoDataset } from "@ldo/connected";
-import { solidConnectedPlugin, SolidConnectedPlugin } from "@ldo/connected-solid";
+import { ConnectedLdoDataset } from "@ldo/connected";
+import { createSolidLdoDataset, SolidConnectedPlugin } from "@ldo/connected-solid";
 import { Chat } from "../src";
 import { ChatMessageShape, ChatShape } from "../src/.ldo/longChat.typings";
 
@@ -74,7 +74,7 @@ describe("integration", () => {
   let sample1Chat: Chat;
 
   beforeEach(() => {
-    dataset = createConnectedLdoDataset([solidConnectedPlugin]);
+    dataset = createSolidLdoDataset();
     sample1Chat = new Chat(SAMPLE_CHAT_1_CONTAINER_URI, dataset);
   });
 
@@ -125,7 +125,7 @@ describe("integration", () => {
     expect(chatInfo2.title).toBe("Uncool Chat");    
   });
 
-  it.only("Sends a message to a chat", async () => {
+  it("Sends a message to a chat", async () => {
     const sample3Chat = new Chat(`${BASE_URI}sample-chat-3/`, dataset);
     await sample3Chat.createChat({
       type: { "@id": "LongChat" },
