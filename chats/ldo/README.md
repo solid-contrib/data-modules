@@ -1,14 +1,5 @@
 # Chats - Data Module (LDO)
 
-A chat module for solid written with LDO.
-
-Okay, I can help you update the README.md file with installation and usage documentation.
-
-Here's an updated version of your README.md:
-Markdown
-
-# Chats - Data Module (LDO)
-
 A chat module for Solid written with LDO.
 
 ## Installation
