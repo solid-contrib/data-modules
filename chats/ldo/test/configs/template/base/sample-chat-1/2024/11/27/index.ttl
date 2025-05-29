@@ -1,0 +1,18 @@
+@prefix : <#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix sioc: <http://rdfs.org/sioc/ns#>.
+@prefix wf: <http://www.w3.org/2005/01/wf/flow#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix c: <https://juliusisnya.solidcommunity.net/profile/card#>.
+@prefix terms: <https://liqid.chat/terms/>.
+@prefix ind: <../../../index.ttl#>.
+
+:d4d513fa-23e0-4726-89aa-f5e433bb6c58
+    dct:created "2024-11-07T08:52:38.447Z"^^xsd:dateTime;
+    sioc:content "Hi";
+    foaf:maker c:me;
+    terms:liqidChatSignedCredential
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWtlciI6Imh0dHBzOi8vanVsaXVzaXNueWEuc29saWRjb21tdW5pdHkubmV0L3Byb2ZpbGUvY2FyZCNtZSIsInRpbWVDcmVhdGVkIjoiMjAyNC0xMS0wN1QwODo1MjozOC40NDdaIiwiY29udGVudCI6eyJ0ZXh0IjpbIkhpIl19LCJpYXQiOjE3MzA5Njk1NTh9.cplII8sYJmji8Jy1GC554J2tYNXAk8Vil-PbYnfVwbw".
+ind:this wf:message :d4d513fa-23e0-4726-89aa-f5e433bb6c58 .
+

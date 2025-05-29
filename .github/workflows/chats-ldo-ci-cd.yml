@@ -1,0 +1,71 @@
+name: Chats LDO CI/CD
+
+on:
+  push:
+    paths:
+      - chats/ldo/**
+      - .github/workflows/chats-ldo-ci-cd.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./chats/ldo/
+    strategy:
+      matrix:
+        node-version: [ 20 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  npm-publish:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      prereleaseVersion: ${{ steps.prerelease.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: rlespinasse/github-slug-action@v4.4.1
+      - name: prerelease version
+        run: |
+          echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
+        id: prerelease
+      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
+      - uses: JS-DevTools/npm-publish@v3
+        name: Publish @solid-data-modules/chats-ldo
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: ${{ env.GITHUB_REF_SLUG }}
+          access: public
+
+  npm-release-latest:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: JS-DevTools/npm-publish@v3
+        name: Release @solid-data-modules/chats-ldo
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+          access: public

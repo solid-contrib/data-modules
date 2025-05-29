@@ -1,0 +1,50 @@
+{
+  "name": "@solid-data-modules/chats-ldo",
+  "version": "1.0.0",
+  "description": "A library to mangage chats in Solid Pods built with LDO",
+  "keywords": [
+    "solid",
+    "data-modules",
+    "chat",
+    "chats",
+    "ldo"
+  ],
+  "license": "MIT",
+  "author": "Jackson Morgan",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "rimraf dist && npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "test": "vitest run --coverage",
+    "prepublishOnly": " npm run build",
+    "build:ldo": "ldo build --input src/.shapes --output src/.ldo"
+  },
+  "devDependencies": {
+    "@ldo/cli": "^1.0.0-alpha.21",
+    "@ldo/test-solid-server": "^1.0.0-alpha.24",
+    "@types/jsonld": "^1.5.15",
+    "@types/node": "^22.15.21",
+    "@types/shexj": "^2.1.7",
+    "@vitest/coverage-istanbul": "^3.1.4",
+    "rimraf": "^6.0.1",
+    "vitest": "^3.1.4"
+  },
+  "dependencies": {
+    "@ldo/connected": "^1.0.0-alpha.24",
+    "@ldo/connected-solid": "^1.0.0-alpha.24",
+    "@ldo/ldo": "^1.0.0-alpha.21",
+    "uuid": "^11.1.0"
+  }
+}

@@ -9,3 +9,4 @@
 Currently the following implementations for Chat data modules exist:
 
 - [rdflib](./rdflib)
+- [ldo](./ldo)
