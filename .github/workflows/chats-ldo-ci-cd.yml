@@ -25,6 +25,15 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
+      - name: Save build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            chats/ldo/dist/
+            chats/ldo/README.md
+            chats/ldo/package.json
+          retention-days: 1
 
   npm-publish:
     if: github.ref == 'refs/heads/main'
