@@ -16,13 +16,13 @@ export function scheduleNewDayTrigger(onNewDay: () => void): () => void {
 
   const msUntilNextMidnight = nextUtcMidnight.getTime() - now.getTime();
 
-  timer = setTimeout(() => {
+  timeoutId = setTimeout(() => {
     onNewDay();
-    timer = setInterval(onNewDay, 24 * 60 * 60 * 1000); // every 24 hours
+    intervalId = setInterval(onNewDay, 24 * 60 * 60 * 1000); // every 24 hours
   }, msUntilNextMidnight);
 
   return () => {
-    clearTimeout(timer);
-    clearInterval(timer); // works even if it's not an interval yet
+    clearTimeout(timeoutId);
+    clearInterval(intervalId);
   };
 }
