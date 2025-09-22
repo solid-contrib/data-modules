@@ -1,4 +1,4 @@
-import { server } from "./globalSetup.js";
+import { server } from "./globalSetup.cjs";
 
 export default async function () {
   console.log("stopping test server...");
